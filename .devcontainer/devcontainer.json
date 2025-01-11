@@ -1,0 +1,39 @@
+{
+	"name": "Ubuntu Robust",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"terminal.integrated.defaultProfile.linux": "bash"
+			},
+			"extensions": [
+				"ms-vscode.cpptools-extension-pack",
+				"ms-azuretools.vscode-docker",
+				"github.copilot",
+				"ms-vscode.hexeditor",
+				"kube.42header",
+				"dokca.42-ft-count-line",
+				"mariusvanwijk-joppekoers.codam-norminette-3"
+			]
+		}
+	},
+	"remoteUser": "root",
+	"mounts": [
+		"source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.gitconfig,target=/root/.gitconfig,type=bind,consistency=cached"
+	],
+	"workspaceFolder": "/workspace",
+	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+	"postCreateCommand": "git config --global --add safe.directory /workspace",
+	"features": {
+	  "ghcr.io/devcontainers/features/desktop-lite:1": {}
+	},
+	"forwardPorts": [6080],
+	"portsAttributes": {
+	  "6080": {
+		"label": "desktop"
+	  }
+	}
+}

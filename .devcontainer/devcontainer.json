@@ -40,5 +40,5 @@
 	],
 	"workspaceFolder": "/workspace",
 	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
-	"postCreateCommand": "git config --global --add safe.directory /workspace && git submodule update --init --remote --recursive && git checkout dev"
+	"postCreateCommand": "git config --global --add safe.directory /workspace && git submodule update --init --remote --recursive && cd minishell && git checkout dev"
 }

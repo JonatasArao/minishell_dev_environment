@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 16:46:28 by gugomes-          #+#    #+#             */
-/*   Updated: 2025/01/14 16:47:45 by marvin           ###   ########.fr       */
+/*   Updated: 2025/01/14 16:51:43 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,5 +15,6 @@
 int main()
 {
     write(1, "Hello World!\n", 13);
+    write(1, "testing codespace\n", 18);
     return (0);
 }

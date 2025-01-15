@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   readline.c                                         :+:      :+:    :+:   */
+/*   interactive_prompt-jarao-de.c                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 17:13:35 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/01/13 17:45:09 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:30:55 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,24 +29,20 @@
  * if (strcmp(input, "sair") == 0) - Compara a entrada com a string "sair".
  * Se forem iguais, saímos do loop.
  *
+ * Define a resposta apropriada com base na entrada
+ * set_response(&response, input) - Define a função de resposta apropriada
+ * com base na entrada do usuário. A função verifica a string de entrada e
+ * compara com valores predefinidos ("ola", "sim", "nao"). Se houver uma
+ * correspondência, a função de resposta correspondente é atribuída ao ponteiro
+ * de função 'execute' na estrutura 'response'. Se não houver correspondência,
+ * a função 'response_default' é atribuída.
+ *
  * Adiciona a linha lida ao histórico
  * add_history(input) - Adiciona a linha digitada ao histórico de comandos
  * do readline.
  *
- * Informa ao readline que uma nova linha está sendo iniciada
- * rl_on_new_line() - Informa ao readline que uma nova linha está sendo
- * iniciada.
- *
- * Substitui a linha atual pela nova linha "Nova linha substituída"
- * rl_replace_line("Nova linha substituída", 0) - Substitui a linha atual
- * pela string fornecida.
- *
- * Redesenha a linha atual
- * rl_redisplay() - Redesenha a linha atual no prompt.
- *
- * Imprime a linha lida
- * printf("Você digitou: %s\n", input) - Imprime a linha digitada pelo
- * usuário.
+ * Executa a resposta definida
+ * response.execute() - Chama a função de resposta definida anteriormente.
  *
  * Libera a memória alocada para a entrada
  * free(input) - Libera a memória alocada para a linha digitada.
@@ -56,9 +52,47 @@
  * readline.
  */
 
+typedef struct s_response
+{
+	void	(*execute)(void);
+}	t_response;
+
+void	response_ola(void)
+{
+	printf("Olá, tudo bem?\n");
+}
+
+void	response_sim(void)
+{
+	printf("Que bom\n");
+}
+
+void	response_nao(void)
+{
+	printf("Que pena\n");
+}
+
+void	response_default(void)
+{
+	printf("Desculpe, não entendi.\n");
+}
+
+void	set_response(t_response *response, const char *input)
+{
+	if (strcmp(input, "ola") == 0)
+		response->execute = response_ola;
+	else if (strcmp(input, "sim") == 0)
+		response->execute = response_sim;
+	else if (strcmp(input, "nao") == 0)
+		response->execute = response_nao;
+	else
+		response->execute = response_default;
+}
+
 int	main(void)
 {
-	char	*input;
+	char		*input;
+	t_response	response;
 
 	while (1)
 	{
@@ -70,11 +104,9 @@ int	main(void)
 			free(input);
 			break ;
 		}
+		set_response(&response, input);
 		add_history(input);
-		rl_on_new_line();
-		rl_replace_line("Nova linha substituída", 0);
-		rl_redisplay();
-		printf("\nVocê digitou: %s\n", input);
+		response.execute();
 		free(input);
 	}
 	rl_clear_history();

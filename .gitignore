@@ -2,3 +2,4 @@
 *.out
 *.so
 *.dylib
+tests/minishell_tests

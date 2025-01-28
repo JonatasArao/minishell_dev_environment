@@ -6,19 +6,21 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:17:33 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/01/21 15:13:39 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/01/28 14:42:53 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mock.h"
 
-// Global variables to control the behavior of the mock malloc function
-int mock_malloc_memset_active = 0; // Flag to activate memset in malloc
-int mock_malloc_failure_active = 0; // Flag to activate malloc failure
-int mock_malloc_failure_threshold = 1; // Call count at which malloc should fail
-int mock_malloc_failure_counter = 0; // Counter for the number of malloc calls
-int mock_malloc_counter_active = 0; // Flag to activate counter behavior in malloc
-int mock_malloc_counter; // Counter to keep track of malloc calls
+// Global variable to control the mock malloc behavior
+t_malloc_control malloc_control = {
+	.failure_counter = 0,
+	.failure_threshold = 0,
+	.failure_active = 1,
+	.counter = 0,
+	.counter_active = 0,
+	.memset_active = 0
+};
 
 // Mock malloc function
 void* malloc(size_t size) {
@@ -38,20 +40,20 @@ void* malloc(size_t size) {
 	}
 
 	// If failure mode is active and the call count matches, return NULL
-	if (mock_malloc_failure_active) {
-		mock_malloc_failure_counter++;
-		if (mock_malloc_failure_counter >= mock_malloc_failure_threshold) {
-			mock_malloc_failure_counter = 0;
+	if (malloc_control.failure_active) {
+		malloc_control.failure_counter++;
+		if (malloc_control.failure_counter >= malloc_control.failure_threshold) {
+			malloc_control.failure_counter = 0;
 			return (NULL);
 		}
 	}
 
 	// If counter behavior is active, increment the counter
-	if (mock_malloc_counter_active)
-		mock_malloc_counter++;
+	if (malloc_control.counter_active)
+		malloc_control.counter++;
 
 	// If memset mode is active, allocate memory and set it to 0xFF
-	if (mock_malloc_memset_active) {
+	if (malloc_control.memset_active) {
 		void *tmp = original_malloc(size + 1); // Allocate extra byte for memset
 		if (tmp != NULL) {
 			memset(tmp, 0xFF, size + 1); // Set allocated memory to 0xFF

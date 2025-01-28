@@ -58,11 +58,12 @@ run: all
 # Clean object files
 clean:
 	$(RM) $(MSH_OBJS) $(MSH_OBJS_DIR) $(OBJS) $(OBJS_DIR)
+	@make clean -C $(MOCK_LIB)
 	@make clean -C $(LIBFT_DIR)
 
 # Full clean: clean object files and the executable
 fclean: clean
-	$(RM) $(NAME) $(LIBFT_LIB)
+	$(RM) $(NAME) $(MOCK_LIB) $(LIBFT_LIB)
 
 # Full rebuild: clean and build everything
 re: fclean all

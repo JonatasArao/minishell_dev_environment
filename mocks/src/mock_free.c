@@ -6,15 +6,17 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:17:33 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/01/21 15:13:20 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/01/28 14:43:07 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mock.h"
 
-// Global variables to control the behavior of the mock free function
-int mock_free_counter_active = 0; // Flag to activate counter behavior in free
-int mock_free_counter; // Counter to keep track of free calls
+// Global variable to control the mock free function
+t_free_control free_control = {
+	.counter = 0,
+	.counter_active = 0
+};
 
 // Mock free function
 void free(void *ptr) {
@@ -33,8 +35,8 @@ void free(void *ptr) {
 	}
 
 	// If counter behavior is active, increment the counter
-	if (mock_free_counter_active)
-		mock_free_counter++;
+	if (free_control.counter_active)
+		free_control.counter++;
 
 	// Call the original free function
 	original_free(ptr);

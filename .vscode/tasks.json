@@ -21,6 +21,17 @@
 			},
 			"group": "build",
 			"problemMatcher": "$gcc"
+		},
+		{
+			"label": "build prototype",
+			"type": "shell",
+			"command": "make",
+			"args": ["${fileBasenameNoExtension}.out"],
+			"options": {
+				"cwd": "${workspaceFolder}/prototype"
+			},
+			"group": "build",
+			"problemMatcher": "$gcc"
 		}
 	]
 }

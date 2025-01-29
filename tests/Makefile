@@ -36,11 +36,12 @@ else ifeq ($(UNAME_S), Linux)
 endif
 MOCK_DIR = ../mocks
 MOCK_LIB = $(MOCK_DIR)/libmocks.$(SHARED_LIB_EXT)
+MOCK_HEADER_DIR = $(MOCK_DIR)/inc
 
 # Directories and files for the tests
 HEADER_DIR = inc
 HEADER = $(HEADER_DIR)/minishell_tests.h
-INCLUDES = $(MSH_INCLUDES) -I$(HEADER_DIR)
+INCLUDES = $(MSH_INCLUDES) -I$(HEADER_DIR) -I$(MOCK_HEADER_DIR)
 SRC_DIR = src
 SRC_FILES = main.c \
 			parse/test_extract_token.c
@@ -58,7 +59,7 @@ run: all
 # Clean object files
 clean:
 	$(RM) $(MSH_OBJS) $(MSH_OBJS_DIR) $(OBJS) $(OBJS_DIR)
-	@make clean -C $(MOCK_LIB)
+	@make clean -C $(MOCK_DIR)
 	@make clean -C $(LIBFT_DIR)
 
 # Full clean: clean object files and the executable

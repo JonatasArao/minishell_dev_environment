@@ -21,7 +21,8 @@ INCLUDES = -I$(HEADER_DIR)
 
 SRC_DIR = src
 FUNC =	malloc \
-		free
+		free \
+		readline
 FUNC_FILES = $(addsuffix .c, $(addprefix mock_, $(FUNC)))
 SRCS	=	$(addprefix $(SRC_DIR)/, $(FUNC_FILES))
 

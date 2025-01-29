@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y sudo debianutils gcc=4:9.3.0-1ubuntu2 clang make=4.2.1-1.2 gdb=9.2-0ubuntu1~20.04.2 valgrind=1:3.15.0-1ubuntu9.1 python3 python3-pip python3-dev=3.8.2-0ubuntu2 python3-venv build-essential curl vim nano git zsh git-core openssh-client lsb-release ca-certificates tree bsdmainutils libx11-dev libxext-dev && \
+    apt-get install -y sudo debianutils gcc=4:9.3.0-1ubuntu2 clang make=4.2.1-1.2 gdb=9.2-0ubuntu1~20.04.2 valgrind=1:3.15.0-1ubuntu9.1 python3 python3-pip python3-dev=3.8.2-0ubuntu2 python3-venv build-essential curl vim nano git zsh git-core openssh-client lsb-release ca-certificates tree bsdmainutils libx11-dev libxext-dev libreadline-dev && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 

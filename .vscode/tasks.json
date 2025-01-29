@@ -1,0 +1,26 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "build minishell tests",
+			"type": "shell",
+			"command": "make",
+			"options": {
+				"cwd": "${workspaceFolder}/tests"
+			},
+			"group": "build",
+			"problemMatcher": "$gcc"
+		},
+		{
+			"label": "build minishell",
+			"type": "shell",
+			"command": "make",
+			"args": ["debug"],
+			"options": {
+				"cwd": "${workspaceFolder}/minishell"
+			},
+			"group": "build",
+			"problemMatcher": "$gcc"
+		}
+	]
+}

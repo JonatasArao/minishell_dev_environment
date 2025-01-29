@@ -1,7 +1,8 @@
 {
 	"files.associations": {
-		"readline.h": "c",
-		"minishell.h": "c",
-		"libft.h": "c"
+		"mock.h": "c",
+		"minishell_tests.h": "c",
+		"stdlib.h": "c",
+		"minishell.h": "c"
 	}
 }

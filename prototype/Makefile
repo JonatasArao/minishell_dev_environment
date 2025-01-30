@@ -5,6 +5,9 @@ LIBFT_DIR = ../minishell/libft
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
 INCLUDES = -I$(LIBFT_DIR)
 
+clean:
+	rm -f *.out
+
 %.out: %.c $(LIBFT_LIB) $(HEADER)
 	$(CC) $(CFLAGS) $(INCLUDES) $< $(LDFLAGS) -o $@
 

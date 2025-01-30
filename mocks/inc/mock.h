@@ -6,10 +6,9 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 15:12:57 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/01/29 10:20:19 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/01/30 07:36:04 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef MOCK_H
 # define MOCK_H
@@ -32,15 +31,16 @@
  * free operations.
  *
  * @var s_free_control::counter_active
- * Member 'counter_active' indicates the number of currently active free operations.
+ * Member 'counter_active' indicates the number of currently active free
+ * operations.
  *
  * @var s_free_control::counter
  * Member 'counter' indicates the total number of free operations.
  */
 typedef struct s_free_control{
-	int counter_active;
-	int counter;
-} t_free_control;
+	int	counter_active;
+	int	counter;
+}	t_free_control;
 
 /**
  * @struct s_malloc_control
@@ -68,13 +68,13 @@ typedef struct s_free_control{
  * Threshold value to trigger memory allocation failure.
  */
 typedef struct s_malloc_control {
-	int memset_active;
-	int counter_active;
-	int counter;
-	int failure_active;
-	int failure_counter;
-	int failure_threshold;
-} t_malloc_control;
+	int	memset_active;
+	int	counter_active;
+	int	counter;
+	int	failure_active;
+	int	failure_counter;
+	int	failure_threshold;
+}	t_malloc_control;
 
 /**
  * @struct s_readline_control
@@ -103,13 +103,14 @@ typedef struct s_malloc_control {
  * A predefined response that the readline function should return.
  */
 typedef struct s_readline_control{
-	int counter_active;
-	int counter;
-	int failure_active;
-	int failure_counter;
-	int failure_threshold;
-	char *predefined_response;
-} t_readline_control;
+	int		counter_active;
+	int		counter;
+	int		failure_active;
+	int		failure_counter;
+	int		failure_threshold;
+	int		current_response_counter;
+	char	**predefined_response;
+}	t_readline_control;
 
 // Malloc control functions
 /**
@@ -119,7 +120,7 @@ typedef struct s_readline_control{
  * a counter each time a malloc operation is performed. It is useful for
  * debugging and ensuring that memory is being allocated and freed correctly.
  */
-void			activate_malloc_counter(void);
+void				mk_malloc_activate_counter(void);
 /**
  * @brief Deactivates the malloc counter.
  *
@@ -127,7 +128,7 @@ void			activate_malloc_counter(void);
  * used for tracking memory allocations in the program. Once deactivated,
  * the malloc counter will no longer track memory allocations.
  */
-void			deactivate_malloc_counter(void);
+void				mk_malloc_deactivate_counter(void);
 /**
  * @brief Resets the internal counter used to track the number of malloc calls.
  *
@@ -135,23 +136,26 @@ void			deactivate_malloc_counter(void);
  * reset the count of memory allocations made via malloc. It can be useful
  * for verifying that memory allocation behavior is as expected.
  */
-void			reset_malloc_counter(void);
+void				mk_malloc_reset_counter(void);
 /**
- * @brief Activates a mode where malloc will fail after a certain number of allocations.
+ * @brief Activates a mode where malloc will fail after a certain number of
+ * allocations.
  *
- * This function sets a threshold for the number of successful malloc calls. Once the threshold
- * is reached, subsequent malloc calls will fail, simulating a memory allocation failure.
+ * This function sets a threshold for the number of successful malloc calls.
+ * Once the threshold is reached, subsequent malloc calls will fail, simulating
+ * a memory allocation failure.
  *
- * @param threshold The number of successful malloc calls before failure mode is activated.
+ * @param threshold The number of successful malloc calls before failure mode
+ * is activated.
  */
-void			activate_malloc_failure_mode(size_t threshold);
+void				mk_malloc_activate_failure_mode(size_t threshold);
 /**
  * @brief Deactivates the malloc failure mode.
  *
  * This function disables the mode where malloc is forced to fail,
  * allowing memory allocations to proceed normally.
  */
-void			deactivate_malloc_failure_mode(void);
+void				mk_malloc_deactivate_failure_mode(void);
 /**
  * @brief Activates a mode where malloc and memset operations are mocked.
  *
@@ -161,7 +165,7 @@ void			deactivate_malloc_failure_mode(void);
  * that memory-related operations are handled correctly without actually
  * performing them.
  */
-void			activate_malloc_memset_mode(void);
+void				mk_malloc_activate_memset_mode(void);
 /**
  * @brief Deactivates the malloc memset mode.
  *
@@ -169,7 +173,7 @@ void			activate_malloc_memset_mode(void);
  * combined with memset. It is typically used in testing or
  * debugging scenarios to control memory allocation behavior.
  */
-void			deactivate_malloc_memset_mode(void);
+void				mk_malloc_deactivate_memset_mode(void);
 /**
  * @brief Resets the malloc control mechanism.
  *
@@ -178,7 +182,7 @@ void			deactivate_malloc_memset_mode(void);
  * debugging environment to ensure that the state of memory allocation
  * is clean and consistent before running a new test or operation.
  */
-void			reset_malloc_control(void);
+void				mk_malloc_reset_control(void);
 /**
  * @brief Retrieves the current status of the malloc control.
  *
@@ -187,7 +191,7 @@ void			reset_malloc_control(void);
  *
  * @return t_malloc_control The current status of the malloc control.
  */
-t_malloc_control	get_malloc_control_status(void);
+t_malloc_control	mk_malloc_get_control_status(void);
 
 // Free control functions
 /**
@@ -197,14 +201,14 @@ t_malloc_control	get_malloc_control_status(void);
  * to help identify memory leaks or improper memory management within the
  * application.
  */
-void			activate_free_counter(void);
+void				mk_free_activate_counter(void);
 /**
  * @brief Deactivates the free counter.
  *
  * This function is used to deactivate the free counter mechanism.
  * It should be called when the free counter is no longer needed.
  */
-void			deactivate_free_counter(void);
+void				mk_free_deactivate_counter(void);
 /**
  * @brief Resets the free counter to its initial state.
  *
@@ -213,7 +217,7 @@ void			deactivate_free_counter(void);
  * debugging context to ensure that memory management operations are
  * being tracked accurately.
  */
-void			reset_free_counter(void);
+void				mk_free_reset_counter(void);
 /**
  * @brief Resets the free control mechanism.
  *
@@ -221,7 +225,7 @@ void			reset_free_counter(void);
  * the freeing of resources. It should be called to ensure that the
  * control state is properly initialized or reset.
  */
-void			reset_free_control(void);
+void				mk_free_reset_control(void);
 /**
  * @brief Retrieves the current status of the free control mechanism.
  *
@@ -230,7 +234,7 @@ void			reset_free_control(void);
  *
  * @return t_free_control The current status of the free control mechanism.
  */
-t_free_control	get_free_control_status(void);
+t_free_control		mk_free_get_control_status(void);
 
 // Readline control functions
 /**
@@ -240,7 +244,7 @@ t_free_control	get_free_control_status(void);
  * of the number of lines read. It is typically used in scenarios where
  * monitoring the number of lines read from an input source is necessary.
  */
-void			activate_readline_counter(void);
+void				mk_readline_activate_counter(void);
 /**
  * @brief Deactivates the readline counter.
  *
@@ -248,24 +252,25 @@ void			activate_readline_counter(void);
  * readline operations. It can be useful in scenarios where the readline
  * counter is no longer needed or should be reset.
  */
-void			deactivate_readline_counter(void);
+void				mk_readline_deactivate_counter(void);
 /**
  * @brief Activates the readline failure mode.
  *
- * This function sets the readline failure mode to be activated after a specified
- * number of successful readline calls. Once the threshold is reached, subsequent
- * readline calls will simulate a failure.
+ * This function sets the readline failure mode to be activated after a
+ * specified number of successful readline calls. Once the threshold is
+ * reached, subsequent readline calls will simulate a failure.
  *
- * @param threshold The number of successful readline calls before failure mode is activated.
+ * @param threshold The number of successful readline calls before failure
+ * mode is activated.
  */
-void			activate_readline_failure_mode(int threshold);
+void				mk_readline_activate_failure_mode(int threshold);
 /**
  * @brief Deactivates the readline failure mode.
  *
  * This function is used to turn off the failure mode for the readline
  * functionality, restoring normal operation.
  */
-void			deactivate_readline_failure_mode(void);
+void				mk_readline_deactivate_failure_mode(void);
 /**
  * @brief Sets a predefined response for the readline function.
  *
@@ -273,9 +278,10 @@ void			deactivate_readline_failure_mode(void);
  * by the readline function. This is useful for testing purposes where you want
  * to simulate user input.
  *
- * @param response The predefined response to be used by readline.
+ * @param response A null-terminated array of strings to be used as responses
+ * by readline.
  */
-void			set_readline_predefined_response(const char *response);
+void				mk_readline_set_predefined_response(const char **response);
 /**
  * @brief Clears the predefined response for readline.
  *
@@ -283,7 +289,7 @@ void			set_readline_predefined_response(const char *response);
  * readline function, ensuring that subsequent calls to readline do not
  * return any previously set responses.
  */
-void			clear_readline_predefined_response(void);
+void				mk_readline_clear_predefined_response(void);
 /**
  * @brief Resets the readline control settings to their default state.
  *
@@ -291,7 +297,7 @@ void			clear_readline_predefined_response(void);
  * control settings, ensuring that the readline environment is returned
  * to its initial configuration.
  */
-void			reset_readline_control(void);
+void				mk_readline_reset_control(void);
 /**
  * @brief Retrieves the current status of the readline control.
  *
@@ -300,6 +306,6 @@ void			reset_readline_control(void);
  *
  * @return t_readline_control The current status of the readline control.
  */
-t_readline_control	get_readline_control_status(void);
+t_readline_control	mk_readline_get_control_status(void);
 
 #endif

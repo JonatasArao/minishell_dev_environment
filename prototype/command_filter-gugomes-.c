@@ -6,7 +6,7 @@
 /*   By: gugomes- <gugomes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 11:00:12 by gugomes-          #+#    #+#             */
-/*   Updated: 2025/01/30 12:13:44 by gugomes-         ###   ########.fr       */
+/*   Updated: 2025/01/30 12:25:09 by gugomes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,37 +17,9 @@
 #include <readline/history.h>
 #include <ctype.h>
 
-int contains_redirection_in(char *str) {
-	return (ft_strnstr(str, "<", ft_strlen(str)) != NULL);
-}
-
-int contains_redirection_out(char *str) {
-	return (ft_strnstr(str, ">", ft_strlen(str)) != NULL);
-}
-
-int contains_redirection_in_append(char *str) {
-	return (ft_strnstr(str, "<<", ft_strlen(str)) != NULL);
-}
-
-int contains_redirection_out_append(char *str) {
-	return (ft_strnstr(str, ">>", ft_strlen(str)) != NULL);
-}
-
-int contains_pipe(char *str) {
-	return (ft_strnstr(str, "|", ft_strlen(str)) != NULL);
-}
-
-int is_special_char(char c) {
-	return (c == '<' || c == '>' || c == '|');
-}
-
-int valid_command(char *str)
+int is_special_char(char c)
 {
-	return contains_redirection_in(str) \
-		|| contains_redirection_out(str) \
-		|| contains_redirection_in_append(str) \
-		|| contains_redirection_out_append(str) \
-		|| contains_pipe(str);
+ 	return (c == '<' || c == '>' || c == '|');
 }
 
 typedef struct s_token

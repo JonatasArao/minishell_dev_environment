@@ -4,6 +4,7 @@
 		"minishell_tests.h": "c",
 		"stdlib.h": "c",
 		"minishell.h": "c",
-		"readline.h": "c"
+		"readline.h": "c",
+		"libft.h": "c"
 	}
 }

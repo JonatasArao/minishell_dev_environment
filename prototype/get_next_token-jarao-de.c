@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_word-jarao-de.c                           :+:      :+:    :+:   */
+/*   get_next_token-jarao-de.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 08:55:13 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/01/30 10:33:48 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/01/30 11:23:14 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <ctype.h>
 #include <string.h>
 
-char	*get_next_word(char const *s)
+char	*get_next_token(char const *s)
 {
 	char			*word;
 	char			quote_char;
@@ -42,6 +42,8 @@ char	*get_next_word(char const *s)
 	return (word);
 }
 
+
+
 int	main(void)
 {
 	const char	*str;
@@ -53,7 +55,7 @@ int	main(void)
 	{
 		while (*str && ft_isspace(*str))
 			str++;
-		word = get_next_word(str);
+		word = get_next_token(str);
 		if (!word)
 			break ;
 		printf("Word: %s\n", word);

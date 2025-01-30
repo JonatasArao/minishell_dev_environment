@@ -3,6 +3,7 @@
 		"mock.h": "c",
 		"minishell_tests.h": "c",
 		"stdlib.h": "c",
-		"minishell.h": "c"
+		"minishell.h": "c",
+		"readline.h": "c"
 	}
 }

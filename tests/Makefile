@@ -44,7 +44,8 @@ HEADER = $(HEADER_DIR)/minishell_tests.h
 INCLUDES = $(MSH_INCLUDES) -I$(HEADER_DIR) -I$(MOCK_HEADER_DIR)
 SRC_DIR = src
 SRC_FILES = main.c \
-			parse/test_extract_token.c
+			parse/test_get_token_end.c \
+			parse/test_get_next_token.c
 SRC = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJS_DIR = objs
 OBJS = $(addprefix $(OBJS_DIR)/, $(subst /,-, $(SRC_FILES:.c=.o)))

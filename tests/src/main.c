@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gugomes- <gugomes-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:26:10 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/01/30 10:37:27 by gugomes-         ###   ########.fr       */
+/*   Updated: 2025/01/31 10:11:39 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,10 @@
 
 int	main(void)
 {
-	t_readline_control readline_control;
-
-	(void) readline_control;
-	set_readline_predefined_response("hello");
-	activate_readline_failure_mode(2);
-	readline_control = get_readline_control_status();
-	program_main();
-	readline_control = get_readline_control_status();
+	printf(COLORIZE("File: parse/extract_token\n", STYLE_BOLD, COLOR_MAGENTA));
+	printf(COLORIZE("Testing function: get_token_end\n", STYLE_BOLD, COLOR_CYAN));
+	test_get_token_end();
+	printf(COLORIZE("Testing function: get_next_token\n", STYLE_BOLD, COLOR_CYAN));
+	test_get_next_token();
 	return (0);
 }

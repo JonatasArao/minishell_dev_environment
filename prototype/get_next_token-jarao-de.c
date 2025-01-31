@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 08:55:13 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/01/30 14:38:34 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/01/31 07:10:55 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,10 @@ size_t	get_token_end(const char *s, unsigned int start)
 
 	end = start;
 	quote_char = 0;
-	if (ft_strchr(">|<", s[start]))
-	{
-		if (!ft_strncmp("<<", &s[start], 2) || !ft_strncmp(">>", &s[start], 2))
-			end += 2;
-		else
-			end += 1;
-	}
+	if (!ft_strncmp("<<", &s[start], 2) || !ft_strncmp(">>", &s[start], 2))
+		end += 2;
+	else if (ft_strchr(">|<", s[start]))
+		end += 1;
 	else
 	{
 		while (s[end] && ((!ft_isspace(s[end]) && !ft_strchr(">|<", s[end]))
@@ -66,7 +63,7 @@ int	main(void)
 	const char	*str;
 	char		*word;
 
-	str = "echo '<<This >is <a >>test' | grep 'test' > output.txt && cat < input.txt | sort >> sorted_output.txt";
+	str = "echo '<<This >is <a >>test'|grep 'test'>output.txt && cat<input.txt|sort >> sorted_output.txt";
 	while (*str)
 	{
 		while (*str && ft_isspace(*str))

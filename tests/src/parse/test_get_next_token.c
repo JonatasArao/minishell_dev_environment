@@ -6,12 +6,12 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:26:01 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/01/31 10:47:11 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/01/31 11:56:33 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_tests.h"
-# include "minunit.h"
+#include "minunit.h"
 
 MU_TEST(test_get_next_token_word)
 {
@@ -32,6 +32,7 @@ MU_TEST(test_get_next_token_word)
 	free(expected_result);
 	free(actual_result);
 }
+
 MU_TEST(test_get_next_token_multiple_words)
 {
 	// ARRANGE

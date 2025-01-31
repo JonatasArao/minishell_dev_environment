@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:26:10 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/01/31 10:11:39 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/01/31 11:37:13 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,5 +19,7 @@ int	main(void)
 	test_get_token_end();
 	printf(COLORIZE("Testing function: get_next_token\n", STYLE_BOLD, COLOR_CYAN));
 	test_get_next_token();
+	printf(COLORIZE("Testing function: extract_token\n", STYLE_BOLD, COLOR_CYAN));
+	test_extract_token();
 	return (0);
 }

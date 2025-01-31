@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 08:55:13 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/01/31 07:10:55 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/01/31 10:05:28 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ size_t	get_token_end(const char *s, unsigned int start)
 	size_t	end;
 	char	quote_char;
 
+	if (s[start] == '\0' || s[start] == ' ' || start >= ft_strlen(s))
+		return (start);
 	end = start;
 	quote_char = 0;
 	if (!ft_strncmp("<<", &s[start], 2) || !ft_strncmp(">>", &s[start], 2))
@@ -52,6 +54,8 @@ char	*get_next_token(char const *s)
 	while (s[start] && ft_isspace(s[start]))
 		start++;
 	end = get_token_end(s, start);
+	if (start == end)
+		return (NULL);
 	word = ft_substr(s, start, end - start);
 	if (!word)
 		return (NULL);

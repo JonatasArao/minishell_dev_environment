@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 08:45:19 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/01/30 07:43:25 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/01/31 07:13:42 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,11 @@ void	mk_readline_activate_counter(void)
 void	mk_readline_deactivate_counter(void)
 {
 	readline_control.counter_active = 0;
+}
+
+void	mk_readline_reset_counter(void)
+{
+	readline_control.counter = 0;
 }
 
 void	mk_readline_activate_failure_mode(int threshold)

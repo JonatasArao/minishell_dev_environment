@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 15:12:57 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/01/30 07:36:04 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/01/31 07:15:35 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,6 +253,14 @@ void				mk_readline_activate_counter(void);
  * counter is no longer needed or should be reset.
  */
 void				mk_readline_deactivate_counter(void);
+/**
+ * @brief Resets the readline counter to its initial state.
+ *
+ * This function is used to reset the internal counter used by the readline
+ * functionality. It should be called whenever the counter needs to be
+ * reinitialized.
+ */
+void	mk_readline_reset_counter(void);
 /**
  * @brief Activates the readline failure mode.
  *

@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:57:40 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/01/31 11:37:59 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/01/31 14:20:59 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -281,16 +281,16 @@ int	test_get_token_end(void);
  */
 int	test_get_next_token(void);
 /**
- * @brief Tests the functionality of the extract_token function.
+ * @brief Tests the functionality of the extract_tokens function.
  *
  * This function is designed to test the behavior and correctness of
- * the extract_token function, ensuring that it properly identifies
+ * the extract_tokens function, ensuring that it properly identifies
  * and extracts tokens from a given input.
  *
  * @return int Returns 0 if the test passes, or a non-zero value if
  * the test fails.
  */
 
-int	test_extract_token(void);
+int	test_extract_tokens(void);
 
 #endif

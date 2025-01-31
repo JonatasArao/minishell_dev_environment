@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test_extract_token.c                           :+:      :+:    :+:   */
+/*   test_extract_tokens.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -13,7 +13,7 @@
 #include "minishell_tests.h"
 #include "minunit.h"
 
-MU_TEST(test_extract_token_word)
+MU_TEST(test_extract_tokens_word)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -23,7 +23,7 @@ MU_TEST(test_extract_token_word)
 	// ACT
 	input_string = "word";
 	expected_result = ft_lstnew(strdup("word"));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -34,7 +34,7 @@ MU_TEST(test_extract_token_word)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST(test_extract_token_multiple_words)
+MU_TEST(test_extract_tokens_multiple_words)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -45,7 +45,7 @@ MU_TEST(test_extract_token_multiple_words)
 	input_string = "word1 word2";
 	expected_result = ft_lstnew(strdup("word1"));
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup("word2")));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -58,7 +58,7 @@ MU_TEST(test_extract_token_multiple_words)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST(test_extract_token_with_leading_spaces)
+MU_TEST(test_extract_tokens_with_leading_spaces)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -68,7 +68,7 @@ MU_TEST(test_extract_token_with_leading_spaces)
 	// ACT
 	input_string = "   word";
 	expected_result = ft_lstnew(strdup("word"));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -79,7 +79,7 @@ MU_TEST(test_extract_token_with_leading_spaces)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST(test_extract_token_empty_string)
+MU_TEST(test_extract_tokens_empty_string)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -89,13 +89,13 @@ MU_TEST(test_extract_token_empty_string)
 	// ACT
 	input_string = "";
 	expected_result = NULL;
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_check(expected_result == actual_result);
 }
 
-MU_TEST(test_extract_token_only_spaces)
+MU_TEST(test_extract_tokens_only_spaces)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -105,13 +105,13 @@ MU_TEST(test_extract_token_only_spaces)
 	// ACT
 	input_string = "     ";
 	expected_result = NULL;
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_check(expected_result == actual_result);
 }
 
-MU_TEST(test_extract_token_with_trailing_spaces)
+MU_TEST(test_extract_tokens_with_trailing_spaces)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -121,7 +121,7 @@ MU_TEST(test_extract_token_with_trailing_spaces)
 	// ACT
 	input_string = "word   ";
 	expected_result = ft_lstnew(strdup("word"));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -132,7 +132,7 @@ MU_TEST(test_extract_token_with_trailing_spaces)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST(test_extract_token_with_special_characters)
+MU_TEST(test_extract_tokens_with_special_characters)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -142,7 +142,7 @@ MU_TEST(test_extract_token_with_special_characters)
 	// ACT
 	input_string = "word!@#";
 	expected_result = ft_lstnew(strdup("word!@#"));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -153,7 +153,7 @@ MU_TEST(test_extract_token_with_special_characters)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST(test_extract_token_with_newline)
+MU_TEST(test_extract_tokens_with_newline)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -164,7 +164,7 @@ MU_TEST(test_extract_token_with_newline)
 	input_string = "word\nnext";
 	expected_result = ft_lstnew(strdup("word"));
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup("next")));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -177,7 +177,7 @@ MU_TEST(test_extract_token_with_newline)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST(test_extract_token_with_tabs)
+MU_TEST(test_extract_tokens_with_tabs)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -187,7 +187,7 @@ MU_TEST(test_extract_token_with_tabs)
 	// ACT
 	input_string = "\tword";
 	expected_result = ft_lstnew(strdup("word"));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -198,7 +198,7 @@ MU_TEST(test_extract_token_with_tabs)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST(test_extract_token_with_mixed_whitespace)
+MU_TEST(test_extract_tokens_with_mixed_whitespace)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -208,7 +208,7 @@ MU_TEST(test_extract_token_with_mixed_whitespace)
 	// ACT
 	input_string = " \t\n word";
 	expected_result = ft_lstnew(strdup("word"));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -219,7 +219,7 @@ MU_TEST(test_extract_token_with_mixed_whitespace)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST(test_extract_token_with_single_quotes)
+MU_TEST(test_extract_tokens_with_single_quotes)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -229,7 +229,7 @@ MU_TEST(test_extract_token_with_single_quotes)
 	// ACT
 	input_string = "'single quoted'";
 	expected_result = ft_lstnew(strdup("'single quoted'"));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -240,7 +240,7 @@ MU_TEST(test_extract_token_with_single_quotes)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST(test_extract_token_with_double_quotes)
+MU_TEST(test_extract_tokens_with_double_quotes)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -250,7 +250,7 @@ MU_TEST(test_extract_token_with_double_quotes)
 	// ACT
 	input_string = "\"double quoted\"";
 	expected_result = ft_lstnew(strdup("\"double quoted\""));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -261,7 +261,7 @@ MU_TEST(test_extract_token_with_double_quotes)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST(test_extract_token_with_redirection)
+MU_TEST(test_extract_tokens_with_redirection)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -273,7 +273,7 @@ MU_TEST(test_extract_token_with_redirection)
 	expected_result = ft_lstnew(strdup("word"));
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup(">")));
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup("file")));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -288,7 +288,7 @@ MU_TEST(test_extract_token_with_redirection)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST(test_extract_token_with_pipe)
+MU_TEST(test_extract_tokens_with_pipe)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -300,7 +300,7 @@ MU_TEST(test_extract_token_with_pipe)
 	expected_result = ft_lstnew(strdup("word"));
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup("|")));
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup("next")));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -315,7 +315,7 @@ MU_TEST(test_extract_token_with_pipe)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST(test_extract_token_with_double_redirection)
+MU_TEST(test_extract_tokens_with_double_redirection)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -327,7 +327,7 @@ MU_TEST(test_extract_token_with_double_redirection)
 	expected_result = ft_lstnew(strdup("word"));
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup(">>")));
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup("file")));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -342,7 +342,7 @@ MU_TEST(test_extract_token_with_double_redirection)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST(test_extract_token_with_input_redirection)
+MU_TEST(test_extract_tokens_with_input_redirection)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -354,7 +354,7 @@ MU_TEST(test_extract_token_with_input_redirection)
 	expected_result = ft_lstnew(strdup("word"));
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup("<")));
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup("file")));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -369,7 +369,7 @@ MU_TEST(test_extract_token_with_input_redirection)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST(test_extract_token_with_pipe_and_redirection)
+MU_TEST(test_extract_tokens_with_pipe_and_redirection)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -383,7 +383,7 @@ MU_TEST(test_extract_token_with_pipe_and_redirection)
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup("next")));
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup(">")));
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup("file")));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -402,7 +402,7 @@ MU_TEST(test_extract_token_with_pipe_and_redirection)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST(test_extract_token_with_redirection_no_spaces)
+MU_TEST(test_extract_tokens_with_redirection_no_spaces)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -414,7 +414,7 @@ MU_TEST(test_extract_token_with_redirection_no_spaces)
 	expected_result = ft_lstnew(strdup("word"));
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup(">")));
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup("file")));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -429,7 +429,7 @@ MU_TEST(test_extract_token_with_redirection_no_spaces)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST(test_extract_token_with_pipe_no_spaces)
+MU_TEST(test_extract_tokens_with_pipe_no_spaces)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -441,7 +441,7 @@ MU_TEST(test_extract_token_with_pipe_no_spaces)
 	expected_result = ft_lstnew(strdup("word"));
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup("|")));
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup("next")));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -456,7 +456,7 @@ MU_TEST(test_extract_token_with_pipe_no_spaces)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST(test_extract_token_with_double_redirection_no_spaces)
+MU_TEST(test_extract_tokens_with_double_redirection_no_spaces)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -468,7 +468,7 @@ MU_TEST(test_extract_token_with_double_redirection_no_spaces)
 	expected_result = ft_lstnew(strdup("word"));
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup(">>")));
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup("file")));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -483,7 +483,7 @@ MU_TEST(test_extract_token_with_double_redirection_no_spaces)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST(test_extract_token_with_input_redirection_no_spaces)
+MU_TEST(test_extract_tokens_with_input_redirection_no_spaces)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -495,7 +495,7 @@ MU_TEST(test_extract_token_with_input_redirection_no_spaces)
 	expected_result = ft_lstnew(strdup("word"));
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup("<")));
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup("file")));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -510,7 +510,7 @@ MU_TEST(test_extract_token_with_input_redirection_no_spaces)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST(test_extract_token_with_pipe_and_redirection_no_spaces)
+MU_TEST(test_extract_tokens_with_pipe_and_redirection_no_spaces)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -524,7 +524,7 @@ MU_TEST(test_extract_token_with_pipe_and_redirection_no_spaces)
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup("next")));
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup(">")));
 	ft_lstadd_back(&expected_result, ft_lstnew(strdup("file")));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -543,7 +543,7 @@ MU_TEST(test_extract_token_with_pipe_and_redirection_no_spaces)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST(test_extract_token_with_pipe_inside_single_quotes)
+MU_TEST(test_extract_tokens_with_pipe_inside_single_quotes)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -553,7 +553,7 @@ MU_TEST(test_extract_token_with_pipe_inside_single_quotes)
 	// ACT
 	input_string = "'word|next'";
 	expected_result = ft_lstnew(strdup("'word|next'"));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -564,7 +564,7 @@ MU_TEST(test_extract_token_with_pipe_inside_single_quotes)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST(test_extract_token_with_pipe_inside_double_quotes)
+MU_TEST(test_extract_tokens_with_pipe_inside_double_quotes)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -574,7 +574,7 @@ MU_TEST(test_extract_token_with_pipe_inside_double_quotes)
 	// ACT
 	input_string = "\"word|next\"";
 	expected_result = ft_lstnew(strdup("\"word|next\""));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -585,7 +585,7 @@ MU_TEST(test_extract_token_with_pipe_inside_double_quotes)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST(test_extract_token_with_redirection_inside_single_quotes)
+MU_TEST(test_extract_tokens_with_redirection_inside_single_quotes)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -595,7 +595,7 @@ MU_TEST(test_extract_token_with_redirection_inside_single_quotes)
 	// ACT
 	input_string = "'word>file'";
 	expected_result = ft_lstnew(strdup("'word>file'"));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -606,7 +606,7 @@ MU_TEST(test_extract_token_with_redirection_inside_single_quotes)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST(test_extract_token_with_redirection_inside_double_quotes)
+MU_TEST(test_extract_tokens_with_redirection_inside_double_quotes)
 {
 	// ARRANGE
 	t_list	*expected_result;
@@ -616,7 +616,7 @@ MU_TEST(test_extract_token_with_redirection_inside_double_quotes)
 	// ACT
 	input_string = "\"word>file\"";
 	expected_result = ft_lstnew(strdup("\"word>file\""));
-	actual_result = extract_token(input_string);
+	actual_result = extract_tokens(input_string);
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_result->content,
@@ -627,39 +627,39 @@ MU_TEST(test_extract_token_with_redirection_inside_double_quotes)
 	ft_lstclear(&actual_result, free);
 }
 
-MU_TEST_SUITE(extract_token_test_suite)
+MU_TEST_SUITE(extract_tokens_test_suite)
 {
-	MU_RUN_TEST(test_extract_token_word);
-	MU_RUN_TEST(test_extract_token_multiple_words);
-	MU_RUN_TEST(test_extract_token_with_leading_spaces);
-	MU_RUN_TEST(test_extract_token_empty_string);
-	MU_RUN_TEST(test_extract_token_only_spaces);
-	MU_RUN_TEST(test_extract_token_with_trailing_spaces);
-	MU_RUN_TEST(test_extract_token_with_special_characters);
-	MU_RUN_TEST(test_extract_token_with_newline);
-	MU_RUN_TEST(test_extract_token_with_tabs);
-	MU_RUN_TEST(test_extract_token_with_mixed_whitespace);
-	MU_RUN_TEST(test_extract_token_with_single_quotes);
-	MU_RUN_TEST(test_extract_token_with_double_quotes);
-	MU_RUN_TEST(test_extract_token_with_redirection);
-	MU_RUN_TEST(test_extract_token_with_pipe);
-	MU_RUN_TEST(test_extract_token_with_double_redirection);
-	MU_RUN_TEST(test_extract_token_with_input_redirection);
-	MU_RUN_TEST(test_extract_token_with_pipe_and_redirection);
-	MU_RUN_TEST(test_extract_token_with_redirection_no_spaces);
-	MU_RUN_TEST(test_extract_token_with_pipe_no_spaces);
-	MU_RUN_TEST(test_extract_token_with_double_redirection_no_spaces);
-	MU_RUN_TEST(test_extract_token_with_input_redirection_no_spaces);
-	MU_RUN_TEST(test_extract_token_with_pipe_and_redirection_no_spaces);
-	MU_RUN_TEST(test_extract_token_with_pipe_inside_single_quotes);
-	MU_RUN_TEST(test_extract_token_with_pipe_inside_double_quotes);
-	MU_RUN_TEST(test_extract_token_with_redirection_inside_single_quotes);
-	MU_RUN_TEST(test_extract_token_with_redirection_inside_double_quotes);
+	MU_RUN_TEST(test_extract_tokens_word);
+	MU_RUN_TEST(test_extract_tokens_multiple_words);
+	MU_RUN_TEST(test_extract_tokens_with_leading_spaces);
+	MU_RUN_TEST(test_extract_tokens_empty_string);
+	MU_RUN_TEST(test_extract_tokens_only_spaces);
+	MU_RUN_TEST(test_extract_tokens_with_trailing_spaces);
+	MU_RUN_TEST(test_extract_tokens_with_special_characters);
+	MU_RUN_TEST(test_extract_tokens_with_newline);
+	MU_RUN_TEST(test_extract_tokens_with_tabs);
+	MU_RUN_TEST(test_extract_tokens_with_mixed_whitespace);
+	MU_RUN_TEST(test_extract_tokens_with_single_quotes);
+	MU_RUN_TEST(test_extract_tokens_with_double_quotes);
+	MU_RUN_TEST(test_extract_tokens_with_redirection);
+	MU_RUN_TEST(test_extract_tokens_with_pipe);
+	MU_RUN_TEST(test_extract_tokens_with_double_redirection);
+	MU_RUN_TEST(test_extract_tokens_with_input_redirection);
+	MU_RUN_TEST(test_extract_tokens_with_pipe_and_redirection);
+	MU_RUN_TEST(test_extract_tokens_with_redirection_no_spaces);
+	MU_RUN_TEST(test_extract_tokens_with_pipe_no_spaces);
+	MU_RUN_TEST(test_extract_tokens_with_double_redirection_no_spaces);
+	MU_RUN_TEST(test_extract_tokens_with_input_redirection_no_spaces);
+	MU_RUN_TEST(test_extract_tokens_with_pipe_and_redirection_no_spaces);
+	MU_RUN_TEST(test_extract_tokens_with_pipe_inside_single_quotes);
+	MU_RUN_TEST(test_extract_tokens_with_pipe_inside_double_quotes);
+	MU_RUN_TEST(test_extract_tokens_with_redirection_inside_single_quotes);
+	MU_RUN_TEST(test_extract_tokens_with_redirection_inside_double_quotes);
 }
 
-int	test_extract_token(void)
+int	test_extract_tokens(void)
 {
-	MU_RUN_SUITE(extract_token_test_suite);
+	MU_RUN_SUITE(extract_tokens_test_suite);
 	MU_REPORT();
 	return MU_EXIT_CODE;
 }

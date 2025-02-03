@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc-jarao-de.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 15:36:19 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/01/31 16:43:47 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/03 15:08:42 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,11 @@ char	*capture_heredoc(const char *prompt, const char *delim)
 	while (1)
 	{
 		line = readline(prompt);
-		if (line == NULL)
-			break ;
+		if (!line)
+		{
+			free(doc);
+			return (NULL);
+		}
 		if (ft_strncmp(line, delim, ft_strlen(line)) == 0)
 		{
 			free(line);
@@ -56,7 +59,7 @@ char	*capture_heredoc(const char *prompt, const char *delim)
 		doc = append_heredoc_line(doc, line);
 		free(line);
 		if (!doc)
-			break ;
+			return (NULL);
 	}
 	return (doc);
 }
@@ -79,6 +82,7 @@ int	main(void)
 		add_history(input);
 		document = capture_heredoc("> ", input);
 		printf("%s", document);
+		free(document);
 		free(input);
 	}
 	rl_clear_history();

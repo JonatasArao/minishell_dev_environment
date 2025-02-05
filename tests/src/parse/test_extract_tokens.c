@@ -627,6 +627,278 @@ MU_TEST(test_extract_tokens_with_redirection_inside_double_quotes)
 	ft_lstclear(&actual_result, free);
 }
 
+MU_TEST(test_extract_tokens_unclosed_single_quotes)
+{
+	// ARRANGE
+	t_list *expected_result;
+	t_list *actual_result;
+	char *input_string;
+
+	// ACT
+	input_string = "'unclosed single quotes";
+	expected_result = NULL;
+	actual_result = extract_tokens(input_string);
+
+	// ASSERT
+	mu_check(expected_result == actual_result);
+}
+
+MU_TEST(test_extract_tokens_unclosed_double_quotes)
+{
+	// ARRANGE
+	t_list *expected_result;
+	t_list *actual_result;
+	char *input_string;
+
+	// ACT
+	input_string = "\"unclosed double quotes";
+	expected_result = NULL;
+	actual_result = extract_tokens(input_string);
+
+	// ASSERT
+	mu_check(expected_result == actual_result);
+}
+
+MU_TEST(test_extract_tokens_unclosed_quotes_with_spaces)
+{
+	// ARRANGE
+	t_list *expected_result;
+	t_list *actual_result;
+	char *input_string;
+
+	// ACT
+	input_string = "'unclosed quotes with spaces";
+	expected_result = NULL;
+	actual_result = extract_tokens(input_string);
+
+	// ASSERT
+	mu_check(expected_result == actual_result);
+}
+
+MU_TEST(test_extract_tokens_unclosed_quotes_with_special_characters)
+{
+	// ARRANGE
+	t_list *expected_result;
+	t_list *actual_result;
+	char *input_string;
+
+	// ACT
+	input_string = "'unclosed quotes with special characters!@#";
+	expected_result = NULL;
+	actual_result = extract_tokens(input_string);
+
+	// ASSERT
+	mu_check(expected_result == actual_result);
+}
+
+MU_TEST(test_extract_tokens_unclosed_quotes_with_newline)
+{
+	// ARRANGE
+	t_list *expected_result;
+	t_list *actual_result;
+	char *input_string;
+
+	// ACT
+	input_string = "'unclosed quotes with newline\nnext";
+	expected_result = NULL;
+	actual_result = extract_tokens(input_string);
+
+	// ASSERT
+	mu_check(expected_result == actual_result);
+}
+
+MU_TEST(test_extract_tokens_unclosed_quotes_with_tabs)
+{
+	// ARRANGE
+	t_list *expected_result;
+	t_list *actual_result;
+	char *input_string;
+
+	// ACT
+	input_string = "'unclosed quotes with tabs\tword";
+	expected_result = NULL;
+	actual_result = extract_tokens(input_string);
+
+	// ASSERT
+	mu_check(expected_result == actual_result);
+}
+
+MU_TEST(test_extract_tokens_unclosed_quotes_with_mixed_whitespace)
+{
+	// ARRANGE
+	t_list *expected_result;
+	t_list *actual_result;
+	char *input_string;
+
+	// ACT
+	input_string = "'unclosed quotes with mixed whitespace \t\n word";
+	expected_result = NULL;
+	actual_result = extract_tokens(input_string);
+
+	// ASSERT
+	mu_check(expected_result == actual_result);
+}
+
+MU_TEST(test_extract_tokens_unclosed_quotes_with_redirection)
+{
+	// ARRANGE
+	t_list *expected_result;
+	t_list *actual_result;
+	char *input_string;
+
+	// ACT
+	input_string = "'unclosed quotes with redirection > file";
+	expected_result = NULL;
+	actual_result = extract_tokens(input_string);
+
+	// ASSERT
+	mu_check(expected_result == actual_result);
+}
+
+MU_TEST(test_extract_tokens_unclosed_quotes_with_pipe)
+{
+	// ARRANGE
+	t_list *expected_result;
+	t_list *actual_result;
+	char *input_string;
+
+	// ACT
+	input_string = "'unclosed quotes with pipe | next";
+	expected_result = NULL;
+	actual_result = extract_tokens(input_string);
+
+	// ASSERT
+	mu_check(expected_result == actual_result);
+}
+
+MU_TEST(test_extract_tokens_unclosed_quotes_with_double_redirection)
+{
+	// ARRANGE
+	t_list *expected_result;
+	t_list *actual_result;
+	char *input_string;
+
+	// ACT
+	input_string = "'unclosed quotes with double redirection >> file";
+	expected_result = NULL;
+	actual_result = extract_tokens(input_string);
+
+	// ASSERT
+	mu_check(expected_result == actual_result);
+}
+
+MU_TEST(test_extract_tokens_unclosed_quotes_with_input_redirection)
+{
+	// ARRANGE
+	t_list *expected_result;
+	t_list *actual_result;
+	char *input_string;
+
+	// ACT
+	input_string = "'unclosed quotes with input redirection < file";
+	expected_result = NULL;
+	actual_result = extract_tokens(input_string);
+
+	// ASSERT
+	mu_check(expected_result == actual_result);
+}
+
+MU_TEST(test_extract_tokens_unclosed_quotes_with_pipe_and_redirection)
+{
+	// ARRANGE
+	t_list *expected_result;
+	t_list *actual_result;
+	char *input_string;
+
+	// ACT
+	input_string = "'unclosed quotes with pipe and redirection | next > file";
+	expected_result = NULL;
+	actual_result = extract_tokens(input_string);
+
+	// ASSERT
+	mu_check(expected_result == actual_result);
+}
+
+MU_TEST(test_extract_tokens_unclosed_quotes_with_redirection_no_spaces)
+{
+	// ARRANGE
+	t_list *expected_result;
+	t_list *actual_result;
+	char *input_string;
+
+	// ACT
+	input_string = "'unclosed quotes with redirection no spaces>file";
+	expected_result = NULL;
+	actual_result = extract_tokens(input_string);
+
+	// ASSERT
+	mu_check(expected_result == actual_result);
+}
+
+MU_TEST(test_extract_tokens_unclosed_quotes_with_pipe_no_spaces)
+{
+	// ARRANGE
+	t_list *expected_result;
+	t_list *actual_result;
+	char *input_string;
+
+	// ACT
+	input_string = "'unclosed quotes with pipe no spaces|next";
+	expected_result = NULL;
+	actual_result = extract_tokens(input_string);
+
+	// ASSERT
+	mu_check(expected_result == actual_result);
+}
+
+MU_TEST(test_extract_tokens_unclosed_quotes_with_double_redirection_no_spaces)
+{
+	// ARRANGE
+	t_list *expected_result;
+	t_list *actual_result;
+	char *input_string;
+
+	// ACT
+	input_string = "'unclosed quotes with double redirection no spaces>>file";
+	expected_result = NULL;
+	actual_result = extract_tokens(input_string);
+
+	// ASSERT
+	mu_check(expected_result == actual_result);
+}
+
+MU_TEST(test_extract_tokens_unclosed_quotes_with_input_redirection_no_spaces)
+{
+	// ARRANGE
+	t_list *expected_result;
+	t_list *actual_result;
+	char *input_string;
+
+	// ACT
+	input_string = "'unclosed quotes with input redirection no spaces<file";
+	expected_result = NULL;
+	actual_result = extract_tokens(input_string);
+
+	// ASSERT
+	mu_check(expected_result == actual_result);
+}
+
+MU_TEST(test_extract_tokens_unclosed_quotes_with_pipe_and_redirection_no_spaces)
+{
+	// ARRANGE
+	t_list *expected_result;
+	t_list *actual_result;
+	char *input_string;
+
+	// ACT
+	input_string = "'unclosed quotes with pipe and redirection no spaces|next>file";
+	expected_result = NULL;
+	actual_result = extract_tokens(input_string);
+
+	// ASSERT
+	mu_check(expected_result == actual_result);
+}
+
 MU_TEST_SUITE(extract_tokens_test_suite)
 {
 	MU_RUN_TEST(test_extract_tokens_word);
@@ -655,6 +927,23 @@ MU_TEST_SUITE(extract_tokens_test_suite)
 	MU_RUN_TEST(test_extract_tokens_with_pipe_inside_double_quotes);
 	MU_RUN_TEST(test_extract_tokens_with_redirection_inside_single_quotes);
 	MU_RUN_TEST(test_extract_tokens_with_redirection_inside_double_quotes);
+	MU_RUN_TEST(test_extract_tokens_unclosed_single_quotes);
+	MU_RUN_TEST(test_extract_tokens_unclosed_double_quotes);
+	MU_RUN_TEST(test_extract_tokens_unclosed_quotes_with_spaces);
+	MU_RUN_TEST(test_extract_tokens_unclosed_quotes_with_special_characters);
+	MU_RUN_TEST(test_extract_tokens_unclosed_quotes_with_newline);
+	MU_RUN_TEST(test_extract_tokens_unclosed_quotes_with_tabs);
+	MU_RUN_TEST(test_extract_tokens_unclosed_quotes_with_mixed_whitespace);
+	MU_RUN_TEST(test_extract_tokens_unclosed_quotes_with_redirection);
+	MU_RUN_TEST(test_extract_tokens_unclosed_quotes_with_pipe);
+	MU_RUN_TEST(test_extract_tokens_unclosed_quotes_with_double_redirection);
+	MU_RUN_TEST(test_extract_tokens_unclosed_quotes_with_input_redirection);
+	MU_RUN_TEST(test_extract_tokens_unclosed_quotes_with_pipe_and_redirection);
+	MU_RUN_TEST(test_extract_tokens_unclosed_quotes_with_redirection_no_spaces);
+	MU_RUN_TEST(test_extract_tokens_unclosed_quotes_with_pipe_no_spaces);
+	MU_RUN_TEST(test_extract_tokens_unclosed_quotes_with_double_redirection_no_spaces);
+	MU_RUN_TEST(test_extract_tokens_unclosed_quotes_with_input_redirection_no_spaces);
+	MU_RUN_TEST(test_extract_tokens_unclosed_quotes_with_pipe_and_redirection_no_spaces);
 }
 
 int	test_extract_tokens(void)

@@ -47,6 +47,7 @@ SRC_DIR = src
 SRC_FILES = main.c \
 			parse/test_get_token_end.c \
 			parse/test_get_next_token.c \
+			parse/test_is_valid_quotes.c \
 			parse/test_extract_tokens.c \
 			parse/test_is_redirection.c
 SRC = $(addprefix $(SRC_DIR)/, $(SRC_FILES))

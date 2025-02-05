@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:57:40 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/05 15:22:13 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/05 17:15:15 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -302,5 +302,16 @@ int	test_extract_tokens(void);
  * the test fails.
  */
 int	test_is_redirection(void);
+/**
+ * @brief Tests the functionality of the is_valid_quotes function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the is_valid_quotes function, ensuring that it properly identifies
+ * if a given token has valid quotes.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int test_is_valid_quotes(void);
 
 #endif

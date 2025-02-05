@@ -18,7 +18,8 @@ MSH_HEADER = $(MSH_HEADER_DIR)/minishell.h
 MSH_INCLUDES = -I$(MSH_HEADER_DIR) -I$(LIBFT_DIR)
 MSH_SRC_DIR = $(MSH_DIR)/src
 MSH_SRC_FILES = main.c \
-				parse/extract_tokens.c
+				parse/extract_tokens.c \
+				parse/parse_command.c
 MSH_SRC = $(addprefix $(MSH_SRC_DIR)/, $(MSH_SRC_FILES))
 MSH_OBJS_DIR = minishell_objs
 MSH_OBJS = $(addprefix $(MSH_OBJS_DIR)/, $(subst /,-, $(MSH_SRC_FILES:.c=.o)))
@@ -46,7 +47,8 @@ SRC_DIR = src
 SRC_FILES = main.c \
 			parse/test_get_token_end.c \
 			parse/test_get_next_token.c \
-			parse/test_extract_tokens.c
+			parse/test_extract_tokens.c \
+			parse/test_is_redirection.c
 SRC = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJS_DIR = objs
 OBJS = $(addprefix $(OBJS_DIR)/, $(subst /,-, $(SRC_FILES:.c=.o)))

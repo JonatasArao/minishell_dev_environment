@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:57:40 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/01/31 14:20:59 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/05 15:22:13 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -290,7 +290,17 @@ int	test_get_next_token(void);
  * @return int Returns 0 if the test passes, or a non-zero value if
  * the test fails.
  */
-
 int	test_extract_tokens(void);
+/**
+ * @brief Tests the functionality of the is_redirection function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the is_redirection function, ensuring that it properly identifies
+ * if a given token is a redirection symbol.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int	test_is_redirection(void);
 
 #endif

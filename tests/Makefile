@@ -19,7 +19,8 @@ MSH_INCLUDES = -I$(MSH_HEADER_DIR) -I$(LIBFT_DIR)
 MSH_SRC_DIR = $(MSH_DIR)/src
 MSH_SRC_FILES = main.c \
 				parse/extract_tokens.c \
-				parse/parse_command.c
+				parse/parse_command.c \
+				parse/token_validation.c
 MSH_SRC = $(addprefix $(MSH_SRC_DIR)/, $(MSH_SRC_FILES))
 MSH_OBJS_DIR = minishell_objs
 MSH_OBJS = $(addprefix $(MSH_OBJS_DIR)/, $(subst /,-, $(MSH_SRC_FILES:.c=.o)))
@@ -49,7 +50,9 @@ SRC_FILES = main.c \
 			parse/test_get_next_token.c \
 			parse/test_is_valid_quotes.c \
 			parse/test_extract_tokens.c \
-			parse/test_is_redirection.c
+			parse/test_is_redirection.c \
+			parse/test_is_pipe.c \
+			parse/test_is_token_list_valid.c
 SRC = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJS_DIR = objs
 OBJS = $(addprefix $(OBJS_DIR)/, $(subst /,-, $(SRC_FILES:.c=.o)))

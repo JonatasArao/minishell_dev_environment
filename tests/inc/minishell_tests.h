@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:57:40 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/05 18:07:15 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/06 17:07:15 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -313,5 +313,27 @@ int	test_is_redirection(void);
  * the test fails.
  */
 int test_is_valid_quotes(void);
+/**
+ * @brief Tests the functionality of the is_pipe function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the is_pipe function, ensuring that it properly identifies
+ * if a given token is a pipe symbol.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int test_is_pipe(void);
+/**
+ * @brief Tests the functionality of the is_token_list_valid function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the is_token_list_valid function, ensuring that it properly identifies
+ * if a given token list is valid.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int test_is_token_list_valid(void);
 
 #endif

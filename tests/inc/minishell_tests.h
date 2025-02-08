@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_tests.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:57:40 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/06 17:07:15 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/08 21:34:06 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -335,5 +335,26 @@ int test_is_pipe(void);
  * the test fails.
  */
 int test_is_token_list_valid(void);
-
+/**
+ * @brief Tests the functionality of the free_redirection function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the free_redirection function, ensuring that it properly frees
+ * the memory allocated for a redirection structure.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int test_free_redirection(void);
+/**
+ * @brief Tests the functionality of the free_command function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the free_command function, ensuring that it properly frees
+ * the memory allocated for a command structure.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int test_free_command(void);
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:26:10 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/06 17:06:27 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/08 21:57:55 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,9 @@ int	main(void)
 	test_is_pipe();
 	printf(COLORIZE("Testing function: is_token_list_valid\n", STYLE_BOLD, COLOR_CYAN));
 	test_is_token_list_valid();
+	printf(COLORIZE("Testing function: free_redirection\n", STYLE_BOLD, COLOR_CYAN));
+	test_free_redirection();
+	printf(COLORIZE("Testing function: free_command\n", STYLE_BOLD, COLOR_CYAN));
+	test_free_command();
 	return (0);
 }

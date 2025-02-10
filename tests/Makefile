@@ -19,8 +19,11 @@ MSH_INCLUDES = -I$(MSH_HEADER_DIR) -I$(LIBFT_DIR)
 MSH_SRC_DIR = $(MSH_DIR)/src
 MSH_SRC_FILES = main.c \
 				parse/extract_tokens.c \
-				parse/parse_command.c \
-				parse/token_validation.c
+				parse/extract_commands.c \
+				parse/command_cleanup.c \
+				parse/token_validation.c \
+				parse/command_list.c \
+				parse/token_checks.c
 MSH_SRC = $(addprefix $(MSH_SRC_DIR)/, $(MSH_SRC_FILES))
 MSH_OBJS_DIR = minishell_objs
 MSH_OBJS = $(addprefix $(MSH_OBJS_DIR)/, $(subst /,-, $(MSH_SRC_FILES:.c=.o)))

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test_is_token_list_valid.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 17:02:08 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/06 17:34:28 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/10 21:43:16 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -627,6 +627,163 @@ MU_TEST(test_is_token_list_valid_with_invalid_pipe_and_double_input_redirection)
 	ft_lstclear(&tokens, do_nothing);
 }
 
+MU_TEST(test_is_token_list_valid_with_starting_pipe)
+{
+	// ARRANGE
+	t_list	*tokens;
+	int		expected_result;
+	int		actual_result;
+
+	// ACT
+	tokens = ft_lstnew("|");
+	ft_lstadd_back(&tokens, ft_lstnew("echo"));
+	ft_lstadd_back(&tokens, ft_lstnew("Hello"));
+	expected_result = 0;
+	actual_result = is_token_list_valid(tokens);
+
+	// ASSERT
+	mu_assert_int_eq(expected_result, actual_result);
+
+	// CLEANUP
+	ft_lstclear(&tokens, do_nothing);
+}
+
+MU_TEST(test_is_token_list_valid_with_starting_redirection)
+{
+	// ARRANGE
+	t_list	*tokens;
+	int		expected_result;
+	int		actual_result;
+
+	// ACT
+	tokens = ft_lstnew(">");
+	ft_lstadd_back(&tokens, ft_lstnew("file.txt"));
+	ft_lstadd_back(&tokens, ft_lstnew("echo"));
+	ft_lstadd_back(&tokens, ft_lstnew("Hello"));
+	expected_result = 1;
+	actual_result = is_token_list_valid(tokens);
+
+	// ASSERT
+	mu_assert_int_eq(expected_result, actual_result);
+
+	// CLEANUP
+	ft_lstclear(&tokens, do_nothing);
+}
+
+MU_TEST(test_is_token_list_valid_with_starting_double_redirection)
+{
+	// ARRANGE
+	t_list	*tokens;
+	int		expected_result;
+	int		actual_result;
+
+	// ACT
+	tokens = ft_lstnew(">>");
+	ft_lstadd_back(&tokens, ft_lstnew("file.txt"));
+	ft_lstadd_back(&tokens, ft_lstnew("echo"));
+	ft_lstadd_back(&tokens, ft_lstnew("Hello"));
+	expected_result = 1;
+	actual_result = is_token_list_valid(tokens);
+
+	// ASSERT
+	mu_assert_int_eq(expected_result, actual_result);
+
+	// CLEANUP
+	ft_lstclear(&tokens, do_nothing);
+}
+
+MU_TEST(test_is_token_list_valid_with_pipe_followed_by_redirection)
+{
+	// ARRANGE
+	t_list	*tokens;
+	int		expected_result;
+	int		actual_result;
+
+	// ACT
+	tokens = ft_lstnew("ls");
+	ft_lstadd_back(&tokens, ft_lstnew("|"));
+	ft_lstadd_back(&tokens, ft_lstnew(">"));
+	ft_lstadd_back(&tokens, ft_lstnew("file"));
+	ft_lstadd_back(&tokens, ft_lstnew("cat"));
+	expected_result = 1;
+	actual_result = is_token_list_valid(tokens);
+
+	// ASSERT
+	mu_assert_int_eq(expected_result, actual_result);
+
+	// CLEANUP
+	ft_lstclear(&tokens, do_nothing);
+}
+
+MU_TEST(test_is_token_list_valid_with_pipe_followed_by_double_redirection)
+{
+	// ARRANGE
+	t_list	*tokens;
+	int		expected_result;
+	int		actual_result;
+
+	// ACT
+	tokens = ft_lstnew("ls");
+	ft_lstadd_back(&tokens, ft_lstnew("|"));
+	ft_lstadd_back(&tokens, ft_lstnew(">>"));
+	ft_lstadd_back(&tokens, ft_lstnew("file"));
+	ft_lstadd_back(&tokens, ft_lstnew("cat"));
+	expected_result = 1;
+	actual_result = is_token_list_valid(tokens);
+
+	// ASSERT
+	mu_assert_int_eq(expected_result, actual_result);
+
+	// CLEANUP
+	ft_lstclear(&tokens, do_nothing);
+}
+
+MU_TEST(test_is_token_list_valid_with_pipe_followed_by_invalid_redirection)
+{
+	// ARRANGE
+	t_list	*tokens;
+	int		expected_result;
+	int		actual_result;
+
+	// ACT
+	tokens = ft_lstnew("ls");
+	ft_lstadd_back(&tokens, ft_lstnew("|"));
+	ft_lstadd_back(&tokens, ft_lstnew(">"));
+	ft_lstadd_back(&tokens, ft_lstnew(">"));
+	ft_lstadd_back(&tokens, ft_lstnew("file"));
+	expected_result = 0;
+	actual_result = is_token_list_valid(tokens);
+
+	// ASSERT
+	mu_assert_int_eq(expected_result, actual_result);
+
+	// CLEANUP
+	ft_lstclear(&tokens, do_nothing);
+}
+
+MU_TEST(test_is_token_list_valid_with_pipe_followed_by_invalid_double_redirection)
+{
+	// ARRANGE
+	t_list	*tokens;
+	int		expected_result;
+	int		actual_result;
+
+	// ACT
+	tokens = ft_lstnew("ls");
+	ft_lstadd_back(&tokens, ft_lstnew("|"));
+	ft_lstadd_back(&tokens, ft_lstnew(">>"));
+	ft_lstadd_back(&tokens, ft_lstnew(">>"));
+	ft_lstadd_back(&tokens, ft_lstnew("file"));
+	expected_result = 0;
+	actual_result = is_token_list_valid(tokens);
+
+	// ASSERT
+	mu_assert_int_eq(expected_result, actual_result);
+
+	// CLEANUP
+	ft_lstclear(&tokens, do_nothing);
+}
+
 MU_TEST_SUITE(is_token_list_valid_test_suite)
 {
 	MU_RUN_TEST(test_is_token_list_valid_with_redirection);
@@ -656,6 +813,13 @@ MU_TEST_SUITE(is_token_list_valid_test_suite)
 	MU_RUN_TEST(test_is_token_list_valid_with_pipe_and_double_input_redirection);
 	MU_RUN_TEST(test_is_token_list_valid_with_invalid_pipe_and_input_redirection);
 	MU_RUN_TEST(test_is_token_list_valid_with_invalid_pipe_and_double_input_redirection);
+	MU_RUN_TEST(test_is_token_list_valid_with_starting_pipe);
+	MU_RUN_TEST(test_is_token_list_valid_with_starting_redirection);
+	MU_RUN_TEST(test_is_token_list_valid_with_starting_double_redirection);
+	MU_RUN_TEST(test_is_token_list_valid_with_pipe_followed_by_redirection);
+	MU_RUN_TEST(test_is_token_list_valid_with_pipe_followed_by_double_redirection);
+	MU_RUN_TEST(test_is_token_list_valid_with_pipe_followed_by_invalid_redirection);
+	MU_RUN_TEST(test_is_token_list_valid_with_pipe_followed_by_invalid_double_redirection);
 }
 
 int test_is_token_list_valid(void)

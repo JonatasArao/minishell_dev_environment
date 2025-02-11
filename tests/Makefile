@@ -61,7 +61,10 @@ SRC_FILES = main.c \
 			parse/command_cleanup/test_free_redirection.c \
 			parse/command_cleanup/test_free_command.c \
 			parse/command_list/test_lstadd_str.c \
-			parse/command_list/test_lstadd_redir.c
+			parse/command_list/test_lstadd_redir.c \
+			parse/extract_commands/test_alloc_command.c \
+			parse/extract_commands/test_parse_tokens.c \
+			parse/extract_commands/test_extract_commands.c
 SRC = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJS_DIR = objs
 OBJS = $(addprefix $(OBJS_DIR)/, $(subst /,-, $(SRC_FILES:.c=.o)))
@@ -133,6 +136,9 @@ $(OBJS_DIR)/parse-command_cleanup-%.o: $(SRC_DIR)/parse/command_cleanup/%.c $(HE
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(OBJS_DIR)/parse-command_list-%.o: $(SRC_DIR)/parse/command_list/%.c $(HEADER) | $(OBJS_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJS_DIR)/parse-extract_commands-%.o: $(SRC_DIR)/parse/extract_commands/%.c $(HEADER) | $(OBJS_DIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 # Targets that do not correspond to files

@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:57:40 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/11 09:27:48 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/11 10:49:53 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -454,4 +454,35 @@ int test_lstadd_str(void);
  * @return int Returns 0 if the test passes, otherwise returns a non-zero value.
  */
 int test_lstadd_redir(void);
+/**
+ * @brief Tests the allocation of a command.
+ *
+ * This function is designed to test the memory allocation process for a command
+ * in the minishell project. It ensures that the command is properly allocated
+ * and ready for use.
+ *
+ * @return int Returns 0 if the test passes, otherwise returns a non-zero value.
+ */
+int test_alloc_command(void);
+/**
+ * @brief Tests the parsing of tokens in the minishell project.
+ *
+ * This function is designed to test the functionality of the token parsing
+ * mechanism within the minishell project. It ensures that tokens are parsed
+ * correctly and that the parsing logic adheres to the expected behavior.
+ *
+ * @return int Returns 0 if the test passes, otherwise returns a non-zero value.
+ */
+int test_parse_tokens(void);
+/**
+ * @brief Tests the extraction of commands.
+ *
+ * This function is designed to test the functionality of extracting commands
+ * from a given input. It ensures that the command extraction logic works
+ * correctly and handles various edge cases.
+ *
+ * @return int Returns 0 if the test passes, otherwise returns a non-zero value.
+ */
+int test_extract_commands(void);
+
 #endif

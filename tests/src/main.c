@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:26:10 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/11 09:29:56 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/11 11:11:18 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,13 @@ int	main(void)
 	test_lstadd_str();
 	printf(COLORIZE("Testing function: lstadd_redir\n", STYLE_BOLD, COLOR_CYAN));
 	test_lstadd_redir();
+
+	printf(COLORIZE("File: parse/extract_commands.c\n", STYLE_BOLD, COLOR_MAGENTA));
+	printf(COLORIZE("Testing function: alloc_command\n", STYLE_BOLD, COLOR_CYAN));
+	test_alloc_command();
+	printf(COLORIZE("Testing function: parse_tokens\n", STYLE_BOLD, COLOR_CYAN));
+	test_parse_tokens();
+	printf(COLORIZE("Testing function: extract_commands\n", STYLE_BOLD, COLOR_CYAN));
+	test_extract_commands();
 	return (0);
 }

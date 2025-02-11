@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test_free_command.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 21:56:46 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/08 22:40:06 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/11 07:53:30 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ MU_TEST(test_free_command_single)
 	input_redir = malloc(sizeof(t_redirection));
 	input_redir->target = strdup("infile.txt");
 	input_redir->type = strdup("<");
-	cmd->input_redirection = ft_lstnew(input_redir);
+	cmd->input_redir = ft_lstnew(input_redir);
 	output_redir = malloc(sizeof(t_redirection));
 	output_redir->target = strdup("outfile.txt");
 	output_redir->type = strdup(">");
-	cmd->output_redirection = ft_lstnew(output_redir);
+	cmd->output_redir = ft_lstnew(output_redir);
 	mk_free_reset_counter();
 	free_command(cmd);
 	expected_result = 11;
@@ -71,33 +71,33 @@ MU_TEST(test_free_command_linked_list)
 	input_redir1 = malloc(sizeof(t_redirection));
 	input_redir1->target = strdup("infile1.txt");
 	input_redir1->type = strdup("<");
-	cmd1->input_redirection = ft_lstnew(input_redir1);
+	cmd1->input_redir = ft_lstnew(input_redir1);
 	output_redir1 = malloc(sizeof(t_redirection));
 	output_redir1->target = strdup("outfile1.txt");
 	output_redir1->type = strdup(">");
-	cmd1->output_redirection = ft_lstnew(output_redir1);
+	cmd1->output_redir = ft_lstnew(output_redir1);
 
 	cmd2 = malloc(sizeof(t_command));
 	cmd2->arguments = ft_lstnew(ft_strdup("cmd_b"));
 	input_redir2 = malloc(sizeof(t_redirection));
 	input_redir2->target = strdup("infile2.txt");
 	input_redir2->type = strdup("<");
-	cmd2->input_redirection = ft_lstnew(input_redir2);
+	cmd2->input_redir = ft_lstnew(input_redir2);
 	output_redir2 = malloc(sizeof(t_redirection));
 	output_redir2->target = strdup("outfile2.txt");
 	output_redir2->type = strdup(">");
-	cmd2->output_redirection = ft_lstnew(output_redir2);
+	cmd2->output_redir = ft_lstnew(output_redir2);
 
 	cmd3 = malloc(sizeof(t_command));
 	cmd3->arguments = ft_lstnew(ft_strdup("cmd_c"));
 	input_redir3 = malloc(sizeof(t_redirection));
 	input_redir3->target = strdup("infile3.txt");
 	input_redir3->type = strdup("<");
-	cmd3->input_redirection = ft_lstnew(input_redir3);
+	cmd3->input_redir = ft_lstnew(input_redir3);
 	output_redir3 = malloc(sizeof(t_redirection));
 	output_redir3->target = strdup("outfile3.txt");
 	output_redir3->type = strdup(">");
-	cmd3->output_redirection = ft_lstnew(output_redir3);
+	cmd3->output_redir = ft_lstnew(output_redir3);
 
 	list = ft_lstnew(cmd1);
 	ft_lstadd_back(&list, ft_lstnew(cmd2));
@@ -128,11 +128,11 @@ MU_TEST(test_free_command_missing_arguments)
 	input_redir = malloc(sizeof(t_redirection));
 	input_redir->target = strdup("infile.txt");
 	input_redir->type = strdup("<");
-	cmd->input_redirection = ft_lstnew(input_redir);
+	cmd->input_redir = ft_lstnew(input_redir);
 	output_redir = malloc(sizeof(t_redirection));
 	output_redir->target = strdup("outfile.txt");
 	output_redir->type = strdup(">");
-	cmd->output_redirection = ft_lstnew(output_redir);
+	cmd->output_redir = ft_lstnew(output_redir);
 	mk_free_reset_counter();
 	free_command(cmd);
 	expected_result = 9;
@@ -158,11 +158,11 @@ MU_TEST(test_free_command_missing_input_redirection)
 	// ACT
 	cmd = malloc(sizeof(t_command));
 	cmd->arguments = ft_lstnew(ft_strdup("ls"));
-	cmd->input_redirection = NULL;
+	cmd->input_redir = NULL;
 	output_redir = malloc(sizeof(t_redirection));
 	output_redir->target = strdup("outfile.txt");
 	output_redir->type = strdup(">");
-	cmd->output_redirection = ft_lstnew(output_redir);
+	cmd->output_redir = ft_lstnew(output_redir);
 	mk_free_reset_counter();
 	free_command(cmd);
 	expected_result = 7;
@@ -191,8 +191,8 @@ MU_TEST(test_free_command_missing_output_redirection)
 	input_redir = malloc(sizeof(t_redirection));
 	input_redir->target = strdup("infile.txt");
 	input_redir->type = strdup("<");
-	cmd->input_redirection = ft_lstnew(input_redir);
-	cmd->output_redirection = NULL;
+	cmd->input_redir = ft_lstnew(input_redir);
+	cmd->output_redir = NULL;
 	mk_free_reset_counter();
 	free_command(cmd);
 	expected_result = 7;
@@ -217,8 +217,8 @@ MU_TEST(test_free_command_only_malloc)
 	// ACT
 	cmd = malloc(sizeof(t_command));
 	cmd->arguments = NULL;
-	cmd->input_redirection = NULL;
-	cmd->output_redirection = NULL;
+	cmd->input_redir = NULL;
+	cmd->output_redir = NULL;
 	mk_free_reset_counter();
 	free_command(cmd);
 	expected_result = 1;

@@ -13,6 +13,88 @@
 #include "minishell_tests.h"
 #include "minunit.h"
 
+static t_extract_tokens_result capture_extract_tokens_output(const char *s, int fd)
+{
+	t_extract_tokens_result result;
+	int pipefd[2];
+	ssize_t count;
+	char *buffer;
+	size_t size = 1024; // Initial buffer size
+
+	// Create a pipe
+	if (pipe(pipefd) == -1) {
+		perror("pipe");
+		result.return_value = NULL;
+		result.output = NULL;
+		return (result);
+	}
+
+	// Save the original file descriptor of fd
+	int fd_backup = dup(fd);
+
+	// Save the original file descriptors of stdout and stderr
+	int stdout_backup = dup(1);
+	int stderr_backup = dup(2);
+
+	// Redirect fd to the pipe
+	dup2(pipefd[1], fd);
+	close(pipefd[1]);
+
+	// Close the opposite file descriptor to avoid mixed output
+	if (fd == 1)
+	{
+		close(2); // Close stderr if fd is stdout
+	}
+	else if (fd == 2)
+	{
+		close(1); // Close stdout if fd is stderr
+	}
+	else
+	{
+		close(1);
+		close(2);
+	}
+
+	// Call the function whose output we want to capture
+	result.return_value = extract_tokens(s);
+
+	// Restore fd
+	fflush(stdout);
+	dup2(fd_backup, fd);
+	close(fd_backup);
+
+	// Restore stdout and stderr
+	dup2(stdout_backup, 1);
+	dup2(stderr_backup, 2);
+	close(stdout_backup);
+	close(stderr_backup);
+
+	// Dynamically allocate the buffer
+	buffer = (char*)malloc(size);
+	if (buffer == NULL) {
+		perror("malloc");
+		exit(EXIT_FAILURE);
+	}
+
+	// Read the content from the pipe
+	count = read(pipefd[0], buffer, size - 1);
+	if (count == -1) {
+		perror("read");
+		free(buffer);
+		result.return_value = NULL;
+		result.output = NULL;
+		exit(EXIT_FAILURE);
+	}
+	buffer[count] = '\0';
+
+	// Close the read end of the pipe
+	close(pipefd[0]);
+
+	result.output = buffer;
+
+	return (result);
+}
+
 MU_TEST(test_extract_tokens_word)
 {
 	// ARRANGE
@@ -630,273 +712,443 @@ MU_TEST(test_extract_tokens_with_redirection_inside_double_quotes)
 MU_TEST(test_extract_tokens_unclosed_single_quotes)
 {
 	// ARRANGE
+	t_extract_tokens_result result;
 	t_list *expected_result;
 	t_list *actual_result;
+	char *expected_output;
+	char *actual_output;
 	char *input_string;
 
 	// ACT
 	input_string = "'unclosed single quotes";
+	result = capture_extract_tokens_output(input_string, 1);
 	expected_result = NULL;
-	actual_result = extract_tokens(input_string);
+	actual_result = result.return_value;
+	actual_output = "minishell: unexpected EOF for `''\n";
+	expected_output = result.output;
 
 	// ASSERT
 	mu_check(expected_result == actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
+
+	// CLEANUP
+	free(expected_output);
 }
 
 MU_TEST(test_extract_tokens_unclosed_double_quotes)
 {
 	// ARRANGE
+	t_extract_tokens_result result;
 	t_list *expected_result;
 	t_list *actual_result;
+	char *expected_output;
+	char *actual_output;
 	char *input_string;
 
 	// ACT
 	input_string = "\"unclosed double quotes";
+	result = capture_extract_tokens_output(input_string, 1);
 	expected_result = NULL;
-	actual_result = extract_tokens(input_string);
+	actual_result = result.return_value;
+	actual_output = "minishell: unexpected EOF for `\"'\n";
+	expected_output = result.output;
 
 	// ASSERT
 	mu_check(expected_result == actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
+
+	// CLEANUP
+	free(expected_output);
 }
 
 MU_TEST(test_extract_tokens_unclosed_quotes_with_spaces)
 {
 	// ARRANGE
+	t_extract_tokens_result result;
 	t_list *expected_result;
 	t_list *actual_result;
+	char *expected_output;
+	char *actual_output;
 	char *input_string;
 
 	// ACT
 	input_string = "'unclosed quotes with spaces";
+	result = capture_extract_tokens_output(input_string, 1);
 	expected_result = NULL;
-	actual_result = extract_tokens(input_string);
+	actual_result = result.return_value;
+	actual_output = "minishell: unexpected EOF for `''\n";
+	expected_output = result.output;
 
 	// ASSERT
 	mu_check(expected_result == actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
+
+	// CLEANUP
+	free(expected_output);
 }
 
 MU_TEST(test_extract_tokens_unclosed_quotes_with_special_characters)
 {
 	// ARRANGE
+	t_extract_tokens_result result;
 	t_list *expected_result;
 	t_list *actual_result;
+	char *expected_output;
+	char *actual_output;
 	char *input_string;
 
 	// ACT
 	input_string = "'unclosed quotes with special characters!@#";
+	result = capture_extract_tokens_output(input_string, 1);
 	expected_result = NULL;
-	actual_result = extract_tokens(input_string);
+	actual_result = result.return_value;
+	actual_output = "minishell: unexpected EOF for `''\n";
+	expected_output = result.output;
 
 	// ASSERT
 	mu_check(expected_result == actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
+
+	// CLEANUP
+	free(expected_output);
 }
 
 MU_TEST(test_extract_tokens_unclosed_quotes_with_newline)
 {
 	// ARRANGE
+	t_extract_tokens_result result;
 	t_list *expected_result;
 	t_list *actual_result;
+	char *expected_output;
+	char *actual_output;
 	char *input_string;
 
 	// ACT
 	input_string = "'unclosed quotes with newline\nnext";
+	result = capture_extract_tokens_output(input_string, 1);
 	expected_result = NULL;
-	actual_result = extract_tokens(input_string);
+	actual_result = result.return_value;
+	actual_output = "minishell: unexpected EOF for `''\n";
+	expected_output = result.output;
 
 	// ASSERT
 	mu_check(expected_result == actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
+
+	// CLEANUP
+	free(expected_output);
 }
 
 MU_TEST(test_extract_tokens_unclosed_quotes_with_tabs)
 {
 	// ARRANGE
+	t_extract_tokens_result result;
 	t_list *expected_result;
 	t_list *actual_result;
+	char *expected_output;
+	char *actual_output;
 	char *input_string;
 
 	// ACT
 	input_string = "'unclosed quotes with tabs\tword";
+	result = capture_extract_tokens_output(input_string, 1);
 	expected_result = NULL;
-	actual_result = extract_tokens(input_string);
+	actual_result = result.return_value;
+	actual_output = "minishell: unexpected EOF for `''\n";
+	expected_output = result.output;
 
 	// ASSERT
 	mu_check(expected_result == actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
+
+	// CLEANUP
+	free(expected_output);
 }
 
 MU_TEST(test_extract_tokens_unclosed_quotes_with_mixed_whitespace)
 {
 	// ARRANGE
+	t_extract_tokens_result result;
 	t_list *expected_result;
 	t_list *actual_result;
+	char *expected_output;
+	char *actual_output;
 	char *input_string;
 
 	// ACT
 	input_string = "'unclosed quotes with mixed whitespace \t\n word";
+	result = capture_extract_tokens_output(input_string, 1);
 	expected_result = NULL;
-	actual_result = extract_tokens(input_string);
+	actual_result = result.return_value;
+	actual_output = "minishell: unexpected EOF for `''\n";
+	expected_output = result.output;
 
 	// ASSERT
 	mu_check(expected_result == actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
+
+	// CLEANUP
+	free(expected_output);
 }
 
 MU_TEST(test_extract_tokens_unclosed_quotes_with_redirection)
 {
 	// ARRANGE
+	t_extract_tokens_result result;
 	t_list *expected_result;
 	t_list *actual_result;
+	char *expected_output;
+	char *actual_output;
 	char *input_string;
 
 	// ACT
 	input_string = "'unclosed quotes with redirection > file";
+	result = capture_extract_tokens_output(input_string, 1);
 	expected_result = NULL;
-	actual_result = extract_tokens(input_string);
+	actual_result = result.return_value;
+	actual_output = "minishell: unexpected EOF for `''\n";
+	expected_output = result.output;
 
 	// ASSERT
 	mu_check(expected_result == actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
+
+	// CLEANUP
+	free(expected_output);
 }
 
 MU_TEST(test_extract_tokens_unclosed_quotes_with_pipe)
 {
 	// ARRANGE
+	t_extract_tokens_result result;
 	t_list *expected_result;
 	t_list *actual_result;
+	char *expected_output;
+	char *actual_output;
 	char *input_string;
 
 	// ACT
 	input_string = "'unclosed quotes with pipe | next";
+	result = capture_extract_tokens_output(input_string, 1);
 	expected_result = NULL;
-	actual_result = extract_tokens(input_string);
+	actual_result = result.return_value;
+	actual_output = "minishell: unexpected EOF for `''\n";
+	expected_output = result.output;
 
 	// ASSERT
 	mu_check(expected_result == actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
+
+	// CLEANUP
+	free(expected_output);
 }
 
 MU_TEST(test_extract_tokens_unclosed_quotes_with_double_redirection)
 {
 	// ARRANGE
+	t_extract_tokens_result result;
 	t_list *expected_result;
 	t_list *actual_result;
+	char *expected_output;
+	char *actual_output;
 	char *input_string;
 
 	// ACT
 	input_string = "'unclosed quotes with double redirection >> file";
+	result = capture_extract_tokens_output(input_string, 1);
 	expected_result = NULL;
-	actual_result = extract_tokens(input_string);
+	actual_result = result.return_value;
+	actual_output = "minishell: unexpected EOF for `''\n";
+	expected_output = result.output;
 
 	// ASSERT
 	mu_check(expected_result == actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
+
+	// CLEANUP
+	free(expected_output);
 }
 
 MU_TEST(test_extract_tokens_unclosed_quotes_with_input_redirection)
 {
 	// ARRANGE
+	t_extract_tokens_result result;
 	t_list *expected_result;
 	t_list *actual_result;
+	char *expected_output;
+	char *actual_output;
 	char *input_string;
 
 	// ACT
 	input_string = "'unclosed quotes with input redirection < file";
+	result = capture_extract_tokens_output(input_string, 1);
 	expected_result = NULL;
-	actual_result = extract_tokens(input_string);
+	actual_result = result.return_value;
+	actual_output = "minishell: unexpected EOF for `''\n";
+	expected_output = result.output;
 
 	// ASSERT
 	mu_check(expected_result == actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
+
+	// CLEANUP
+	free(expected_output);
 }
 
 MU_TEST(test_extract_tokens_unclosed_quotes_with_pipe_and_redirection)
 {
 	// ARRANGE
+	t_extract_tokens_result result;
 	t_list *expected_result;
 	t_list *actual_result;
+	char *expected_output;
+	char *actual_output;
 	char *input_string;
 
 	// ACT
 	input_string = "'unclosed quotes with pipe and redirection | next > file";
+	result = capture_extract_tokens_output(input_string, 1);
 	expected_result = NULL;
-	actual_result = extract_tokens(input_string);
+	actual_result = result.return_value;
+	actual_output = "minishell: unexpected EOF for `''\n";
+	expected_output = result.output;
 
 	// ASSERT
 	mu_check(expected_result == actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
+
+	// CLEANUP
+	free(expected_output);
 }
 
 MU_TEST(test_extract_tokens_unclosed_quotes_with_redirection_no_spaces)
 {
 	// ARRANGE
+	t_extract_tokens_result result;
 	t_list *expected_result;
 	t_list *actual_result;
+	char *expected_output;
+	char *actual_output;
 	char *input_string;
 
 	// ACT
 	input_string = "'unclosed quotes with redirection no spaces>file";
+	result = capture_extract_tokens_output(input_string, 1);
 	expected_result = NULL;
-	actual_result = extract_tokens(input_string);
+	actual_result = result.return_value;
+	actual_output = "minishell: unexpected EOF for `''\n";
+	expected_output = result.output;
 
 	// ASSERT
 	mu_check(expected_result == actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
+
+	// CLEANUP
+	free(expected_output);
 }
 
 MU_TEST(test_extract_tokens_unclosed_quotes_with_pipe_no_spaces)
 {
 	// ARRANGE
+	t_extract_tokens_result result;
 	t_list *expected_result;
 	t_list *actual_result;
+	char *expected_output;
+	char *actual_output;
 	char *input_string;
 
 	// ACT
 	input_string = "'unclosed quotes with pipe no spaces|next";
+	result = capture_extract_tokens_output(input_string, 1);
 	expected_result = NULL;
-	actual_result = extract_tokens(input_string);
+	actual_result = result.return_value;
+	actual_output = "minishell: unexpected EOF for `''\n";
+	expected_output = result.output;
 
 	// ASSERT
 	mu_check(expected_result == actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
+
+	// CLEANUP
+	free(expected_output);
 }
 
 MU_TEST(test_extract_tokens_unclosed_quotes_with_double_redirection_no_spaces)
 {
 	// ARRANGE
+	t_extract_tokens_result result;
 	t_list *expected_result;
 	t_list *actual_result;
+	char *expected_output;
+	char *actual_output;
 	char *input_string;
 
 	// ACT
 	input_string = "'unclosed quotes with double redirection no spaces>>file";
+	result = capture_extract_tokens_output(input_string, 1);
 	expected_result = NULL;
-	actual_result = extract_tokens(input_string);
+	actual_result = result.return_value;
+	actual_output = "minishell: unexpected EOF for `''\n";
+	expected_output = result.output;
 
 	// ASSERT
 	mu_check(expected_result == actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
+
+	// CLEANUP
+	free(expected_output);
 }
 
 MU_TEST(test_extract_tokens_unclosed_quotes_with_input_redirection_no_spaces)
 {
 	// ARRANGE
+	t_extract_tokens_result result;
 	t_list *expected_result;
 	t_list *actual_result;
+	char *expected_output;
+	char *actual_output;
 	char *input_string;
 
 	// ACT
 	input_string = "'unclosed quotes with input redirection no spaces<file";
+	result = capture_extract_tokens_output(input_string, 1);
 	expected_result = NULL;
-	actual_result = extract_tokens(input_string);
+	actual_result = result.return_value;
+	actual_output = "minishell: unexpected EOF for `''\n";
+	expected_output = result.output;
 
 	// ASSERT
 	mu_check(expected_result == actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
+
+	// CLEANUP
+	free(expected_output);
 }
 
 MU_TEST(test_extract_tokens_unclosed_quotes_with_pipe_and_redirection_no_spaces)
 {
 	// ARRANGE
+	t_extract_tokens_result result;
 	t_list *expected_result;
 	t_list *actual_result;
+	char *expected_output;
+	char *actual_output;
 	char *input_string;
 
 	// ACT
 	input_string = "'unclosed quotes with pipe and redirection no spaces|next>file";
+	result = capture_extract_tokens_output(input_string, 1);
 	expected_result = NULL;
-	actual_result = extract_tokens(input_string);
+	actual_result = result.return_value;
+	actual_output = "minishell: unexpected EOF for `''\n";
+	expected_output = result.output;
 
 	// ASSERT
 	mu_check(expected_result == actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
+
+	// CLEANUP
+	free(expected_output);
 }
 
 MU_TEST_SUITE(extract_tokens_test_suite)

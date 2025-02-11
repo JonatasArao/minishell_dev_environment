@@ -3,15 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_tests.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:57:40 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/08 21:34:06 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/11 08:34:58 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_TESTS_H
 # define MINISHELL_TESTS_H
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <signal.h>
 # include "mock.h"
 # include "minishell.h"
 
@@ -281,6 +285,23 @@ int	test_get_token_end(void);
  */
 int	test_get_next_token(void);
 /**
+ * @struct s_extract_tokens_result
+ * @brief Structure to hold the result of token extraction.
+ *
+ * This structure contains the return value and output of a token extraction operation.
+ *
+ * @var t_extract_tokens_result::return_value
+ * Pointer to a list that holds the extracted tokens.
+ *
+ * @var t_extract_tokens_result::output
+ * Pointer to a character array that holds the output of the token extraction.
+ */
+typedef struct s_extract_tokens_result
+{
+	t_list	*return_value;
+	char	*output;
+}	t_extract_tokens_result;
+/**
  * @brief Tests the functionality of the extract_tokens function.
  *
  * This function is designed to test the behavior and correctness of
@@ -303,6 +324,23 @@ int	test_extract_tokens(void);
  */
 int	test_is_redirection(void);
 /**
+ * @struct s_is_valid_quotes_result
+ * @brief Structure to hold the result of the is_valid_quotes function.
+ *
+ * This structure contains the return value and output of the is_valid_quotes function.
+ *
+ * @var t_is_valid_quotes_result::return_value
+ * Integer that holds the return value of the is_valid_quotes function.
+ *
+ * @var t_is_valid_quotes_result::output
+ * Pointer to a character array that holds the output of the is_valid_quotes function.
+ */
+typedef struct s_is_valid_quotes_result
+{
+	int		return_value;
+	char	*output;
+}	t_is_valid_quotes_result;
+/**
  * @brief Tests the functionality of the is_valid_quotes function.
  *
  * This function is designed to test the behavior and correctness of
@@ -324,6 +362,23 @@ int test_is_valid_quotes(void);
  * the test fails.
  */
 int test_is_pipe(void);
+/**
+ * @struct s_is_token_list_valid_result
+ * @brief Structure to hold the result of the is_token_list_valid function.
+ *
+ * This structure contains the return value and output of the is_token_list_valid function.
+ *
+ * @var t_is_token_list_valid_result::return_value
+ * Integer that holds the return value of the is_token_list_valid function.
+ *
+ * @var t_is_token_list_valid_result::output
+ * Pointer to a character array that holds the output of the is_token_list_valid function.
+ */
+typedef struct s_is_token_list_valid_result
+{
+	int		return_value;
+	char	*output;
+}	t_is_token_list_valid_result;
 /**
  * @brief Tests the functionality of the is_token_list_valid function.
  *

@@ -49,19 +49,19 @@ HEADER = $(HEADER_DIR)/minishell_tests.h
 INCLUDES = $(MSH_INCLUDES) -I$(HEADER_DIR) -I$(MOCK_HEADER_DIR)
 SRC_DIR = src
 SRC_FILES = main.c \
-			parse/test_get_token_end.c \
-			parse/test_get_next_token.c \
-			parse/test_is_valid_quotes.c \
-			parse/test_extract_tokens.c \
-			parse/test_is_input_redirection.c \
-			parse/test_is_output_redirection.c \
-			parse/test_is_redirection.c \
-			parse/test_is_pipe.c \
-			parse/test_is_token_list_valid.c \
-			parse/test_free_redirection.c \
-			parse/test_free_command.c \
-			parse/test_lstadd_str.c \
-			parse/test_lstadd_redir.c
+			parse/extract_tokens/test_get_token_end.c \
+			parse/extract_tokens/test_get_next_token.c \
+			parse/extract_tokens/test_extract_tokens.c \
+			parse/token_checks/test_is_input_redirection.c \
+			parse/token_checks/test_is_output_redirection.c \
+			parse/token_checks/test_is_redirection.c \
+			parse/token_checks/test_is_pipe.c \
+			parse/token_validation/test_is_valid_quotes.c \
+			parse/token_validation/test_is_token_list_valid.c \
+			parse/command_cleanup/test_free_redirection.c \
+			parse/command_cleanup/test_free_command.c \
+			parse/command_list/test_lstadd_str.c \
+			parse/command_list/test_lstadd_redir.c
 SRC = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJS_DIR = objs
 OBJS = $(addprefix $(OBJS_DIR)/, $(subst /,-, $(SRC_FILES:.c=.o)))
@@ -120,7 +120,19 @@ $(OBJS_DIR):
 $(OBJS_DIR)/%.o: $(SRC_DIR)/%.c $(HEADER) | $(OBJS_DIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(OBJS_DIR)/parse-%.o: $(SRC_DIR)/parse/%.c $(HEADER) | $(OBJS_DIR)
+$(OBJS_DIR)/parse-extract_tokens-%.o: $(SRC_DIR)/parse/extract_tokens/%.c $(HEADER) | $(OBJS_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJS_DIR)/parse-token_checks-%.o: $(SRC_DIR)/parse/token_checks/%.c $(HEADER) | $(OBJS_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJS_DIR)/parse-token_validation-%.o: $(SRC_DIR)/parse/token_validation/%.c $(HEADER) | $(OBJS_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJS_DIR)/parse-command_cleanup-%.o: $(SRC_DIR)/parse/command_cleanup/%.c $(HEADER) | $(OBJS_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJS_DIR)/parse-command_list-%.o: $(SRC_DIR)/parse/command_list/%.c $(HEADER) | $(OBJS_DIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 # Targets that do not correspond to files

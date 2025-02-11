@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 17:02:08 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/11 08:50:07 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/11 11:27:43 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,7 @@ MU_TEST(test_is_token_list_valid_with_invalid_syntax)
 	ft_lstadd_back(&tokens, ft_lstnew("|"));
 	ft_lstadd_back(&tokens, ft_lstnew("grep"));
 	ft_lstadd_back(&tokens, ft_lstnew("Hello"));
-	result = capture_is_token_list_valid_output(tokens, 1);
+	result = capture_is_token_list_valid_output(tokens, 2);
 	expected_result = 0;
 	actual_result = result.return_value;
 	actual_output = "minishell: syntax error near token `|'\n";
@@ -170,6 +170,7 @@ MU_TEST(test_is_token_list_valid_with_invalid_syntax)
 
 	// ASSERT
 	mu_assert_int_eq(expected_result, actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
 
 	// CLEANUP
 	ft_lstclear(&tokens, do_nothing);
@@ -190,7 +191,7 @@ MU_TEST(test_is_token_list_valid_with_trailing_pipe)
 	tokens = ft_lstnew("echo");
 	ft_lstadd_back(&tokens, ft_lstnew("Hello"));
 	ft_lstadd_back(&tokens, ft_lstnew("|"));
-	result = capture_is_token_list_valid_output(tokens, 1);
+	result = capture_is_token_list_valid_output(tokens, 2);
 	expected_result = 0;
 	actual_result = result.return_value;
 	actual_output = "minishell: syntax error near token `|'\n";
@@ -198,6 +199,7 @@ MU_TEST(test_is_token_list_valid_with_trailing_pipe)
 
 	// ASSERT
 	mu_assert_int_eq(expected_result, actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
 
 	// CLEANUP
 	ft_lstclear(&tokens, do_nothing);
@@ -270,7 +272,7 @@ MU_TEST(test_is_token_list_valid_with_invalid_redirection)
 	ft_lstadd_back(&tokens, ft_lstnew(">"));
 	ft_lstadd_back(&tokens, ft_lstnew(">"));
 	ft_lstadd_back(&tokens, ft_lstnew("file.txt"));
-	result = capture_is_token_list_valid_output(tokens, 1);
+	result = capture_is_token_list_valid_output(tokens, 2);
 	expected_result = 0;
 	actual_result = result.return_value;
 	actual_output = "minishell: syntax error near token `>'\n";
@@ -278,6 +280,7 @@ MU_TEST(test_is_token_list_valid_with_invalid_redirection)
 
 	// ASSERT
 	mu_assert_int_eq(expected_result, actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
 
 	// CLEANUP
 	ft_lstclear(&tokens, do_nothing);
@@ -363,7 +366,7 @@ MU_TEST(test_is_token_list_valid_with_invalid_pipe_and_redirection)
 	ft_lstadd_back(&tokens, ft_lstnew(">"));
 	ft_lstadd_back(&tokens, ft_lstnew(">"));
 	ft_lstadd_back(&tokens, ft_lstnew("output.txt"));
-	result = capture_is_token_list_valid_output(tokens, 1);
+	result = capture_is_token_list_valid_output(tokens, 2);
 	expected_result = 0;
 	actual_result = result.return_value;
 	actual_output = "minishell: syntax error near token `|'\n";
@@ -371,6 +374,7 @@ MU_TEST(test_is_token_list_valid_with_invalid_pipe_and_redirection)
 
 	// ASSERT
 	mu_assert_int_eq(expected_result, actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
 
 	// CLEANUP
 	ft_lstclear(&tokens, do_nothing);
@@ -409,7 +413,7 @@ MU_TEST(test_is_token_list_valid_with_only_pipe)
 
 	// ACT
 	tokens = ft_lstnew("|");
-	result = capture_is_token_list_valid_output(tokens, 1);
+	result = capture_is_token_list_valid_output(tokens, 2);
 	expected_result = 0;
 	actual_result = result.return_value;
 	actual_output = "minishell: syntax error near token `|'\n";
@@ -417,6 +421,7 @@ MU_TEST(test_is_token_list_valid_with_only_pipe)
 
 	// ASSERT
 	mu_assert_int_eq(expected_result, actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
 
 	// CLEANUP
 	ft_lstclear(&tokens, do_nothing);
@@ -461,7 +466,7 @@ MU_TEST(test_is_token_list_valid_with_invalid_double_redirection)
 	ft_lstadd_back(&tokens, ft_lstnew(">>"));
 	ft_lstadd_back(&tokens, ft_lstnew(">>"));
 	ft_lstadd_back(&tokens, ft_lstnew("file.txt"));
-	result = capture_is_token_list_valid_output(tokens, 1);
+	result = capture_is_token_list_valid_output(tokens, 2);
 	expected_result = 0;
 	actual_result = result.return_value;
 	actual_output = "minishell: syntax error near token `>>'\n";
@@ -469,6 +474,7 @@ MU_TEST(test_is_token_list_valid_with_invalid_double_redirection)
 
 	// ASSERT
 	mu_assert_int_eq(expected_result, actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
 
 	// CLEANUP
 	ft_lstclear(&tokens, do_nothing);
@@ -520,7 +526,7 @@ MU_TEST(test_is_token_list_valid_with_invalid_pipe_and_double_redirection)
 	ft_lstadd_back(&tokens, ft_lstnew(">>"));
 	ft_lstadd_back(&tokens, ft_lstnew(">>"));
 	ft_lstadd_back(&tokens, ft_lstnew("output.txt"));
-	result = capture_is_token_list_valid_output(tokens, 1);
+	result = capture_is_token_list_valid_output(tokens, 2);
 	expected_result = 0;
 	actual_result = result.return_value;
 	actual_output = "minishell: syntax error near token `|'\n";
@@ -528,6 +534,7 @@ MU_TEST(test_is_token_list_valid_with_invalid_pipe_and_double_redirection)
 
 	// ASSERT
 	mu_assert_int_eq(expected_result, actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
 
 	// CLEANUP
 	ft_lstclear(&tokens, do_nothing);
@@ -567,7 +574,7 @@ MU_TEST(test_is_token_list_valid_with_only_invalid_double_redirection)
 	// ACT
 	tokens = ft_lstnew(">>");
 	ft_lstadd_back(&tokens, ft_lstnew(">>"));
-	result = capture_is_token_list_valid_output(tokens, 1);
+	result = capture_is_token_list_valid_output(tokens, 2);
 	expected_result = 0;
 	actual_result = result.return_value;
 	actual_output = "minishell: syntax error near token `>>'\n";
@@ -575,6 +582,7 @@ MU_TEST(test_is_token_list_valid_with_only_invalid_double_redirection)
 
 	// ASSERT
 	mu_assert_int_eq(expected_result, actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
 
 	// CLEANUP
 	ft_lstclear(&tokens, do_nothing);
@@ -638,7 +646,7 @@ MU_TEST(test_is_token_list_valid_with_invalid_input_redirection)
 	ft_lstadd_back(&tokens, ft_lstnew("<"));
 	ft_lstadd_back(&tokens, ft_lstnew("<"));
 	ft_lstadd_back(&tokens, ft_lstnew("file.txt"));
-	result = capture_is_token_list_valid_output(tokens, 1);
+	result = capture_is_token_list_valid_output(tokens, 2);
 	expected_result = 0;
 	actual_result = result.return_value;
 	actual_output = "minishell: syntax error near token `<'\n";
@@ -646,6 +654,7 @@ MU_TEST(test_is_token_list_valid_with_invalid_input_redirection)
 
 	// ASSERT
 	mu_assert_int_eq(expected_result, actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
 
 	// CLEANUP
 	ft_lstclear(&tokens, do_nothing);
@@ -667,7 +676,7 @@ MU_TEST(test_is_token_list_valid_with_invalid_double_input_redirection)
 	ft_lstadd_back(&tokens, ft_lstnew("<<"));
 	ft_lstadd_back(&tokens, ft_lstnew("<<"));
 	ft_lstadd_back(&tokens, ft_lstnew("EOF"));
-	result = capture_is_token_list_valid_output(tokens, 1);
+	result = capture_is_token_list_valid_output(tokens, 2);
 	expected_result = 0;
 	actual_result = result.return_value;
 	actual_output = "minishell: syntax error near token `<<'\n";
@@ -675,6 +684,7 @@ MU_TEST(test_is_token_list_valid_with_invalid_double_input_redirection)
 
 	// ASSERT
 	mu_assert_int_eq(expected_result, actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
 
 	// CLEANUP
 	ft_lstclear(&tokens, do_nothing);
@@ -747,7 +757,7 @@ MU_TEST(test_is_token_list_valid_with_invalid_pipe_and_input_redirection)
 	ft_lstadd_back(&tokens, ft_lstnew("cat"));
 	ft_lstadd_back(&tokens, ft_lstnew("<"));
 	ft_lstadd_back(&tokens, ft_lstnew("file.txt"));
-	result = capture_is_token_list_valid_output(tokens, 1);
+	result = capture_is_token_list_valid_output(tokens, 2);
 	expected_result = 0;
 	actual_result = result.return_value;
 	actual_output = "minishell: syntax error near token `|'\n";
@@ -755,6 +765,7 @@ MU_TEST(test_is_token_list_valid_with_invalid_pipe_and_input_redirection)
 
 	// ASSERT
 	mu_assert_int_eq(expected_result, actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
 
 	// CLEANUP
 	ft_lstclear(&tokens, do_nothing);
@@ -779,7 +790,7 @@ MU_TEST(test_is_token_list_valid_with_invalid_pipe_and_double_input_redirection)
 	ft_lstadd_back(&tokens, ft_lstnew("cat"));
 	ft_lstadd_back(&tokens, ft_lstnew("<<"));
 	ft_lstadd_back(&tokens, ft_lstnew("EOF"));
-	result = capture_is_token_list_valid_output(tokens, 1);
+	result = capture_is_token_list_valid_output(tokens, 2);
 	expected_result = 0;
 	actual_result = result.return_value;
 	actual_output = "minishell: syntax error near token `|'\n";
@@ -787,6 +798,7 @@ MU_TEST(test_is_token_list_valid_with_invalid_pipe_and_double_input_redirection)
 
 	// ASSERT
 	mu_assert_int_eq(expected_result, actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
 
 	// CLEANUP
 	ft_lstclear(&tokens, do_nothing);
@@ -807,7 +819,7 @@ MU_TEST(test_is_token_list_valid_with_starting_pipe)
 	tokens = ft_lstnew("|");
 	ft_lstadd_back(&tokens, ft_lstnew("echo"));
 	ft_lstadd_back(&tokens, ft_lstnew("Hello"));
-	result = capture_is_token_list_valid_output(tokens, 1);
+	result = capture_is_token_list_valid_output(tokens, 2);
 	expected_result = 0;
 	actual_result = result.return_value;
 	actual_output = "minishell: syntax error near token `|'\n";
@@ -815,6 +827,7 @@ MU_TEST(test_is_token_list_valid_with_starting_pipe)
 
 	// ASSERT
 	mu_assert_int_eq(expected_result, actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
 
 	// CLEANUP
 	ft_lstclear(&tokens, do_nothing);
@@ -927,7 +940,7 @@ MU_TEST(test_is_token_list_valid_with_pipe_followed_by_invalid_redirection)
 	ft_lstadd_back(&tokens, ft_lstnew(">"));
 	ft_lstadd_back(& tokens, ft_lstnew(">"));
 	ft_lstadd_back(&tokens, ft_lstnew("file"));
-	result = capture_is_token_list_valid_output(tokens, 1);
+	result = capture_is_token_list_valid_output(tokens, 2);
 	expected_result = 0;
 	actual_result = result.return_value;
 	actual_output = "minishell: syntax error near token `>'\n";
@@ -935,6 +948,7 @@ MU_TEST(test_is_token_list_valid_with_pipe_followed_by_invalid_redirection)
 
 	// ASSERT
 	mu_assert_int_eq(expected_result, actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
 
 	// CLEANUP
 	ft_lstclear(&tokens, do_nothing);
@@ -957,7 +971,7 @@ MU_TEST(test_is_token_list_valid_with_pipe_followed_by_invalid_double_redirectio
 	ft_lstadd_back(&tokens, ft_lstnew(">>"));
 	ft_lstadd_back(&tokens, ft_lstnew(">>"));
 	ft_lstadd_back(&tokens, ft_lstnew("file"));
-	result = capture_is_token_list_valid_output(tokens, 1);
+	result = capture_is_token_list_valid_output(tokens, 2);
 	expected_result = 0;
 	actual_result = result.return_value;
 	actual_output = "minishell: syntax error near token `>>'\n";
@@ -965,6 +979,7 @@ MU_TEST(test_is_token_list_valid_with_pipe_followed_by_invalid_double_redirectio
 
 	// ASSERT
 	mu_assert_int_eq(expected_result, actual_result);
+	mu_assert_string_eq(expected_output, actual_output);
 
 	// CLEANUP
 	ft_lstclear(&tokens, do_nothing);

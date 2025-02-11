@@ -104,7 +104,7 @@ MU_TEST(test_extract_tokens_word)
 
 	// ACT
 	input_string = "word";
-	expected_result = ft_lstnew(strdup("word"));
+	expected_result = ft_lstnew(ft_strdup("word"));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -125,8 +125,8 @@ MU_TEST(test_extract_tokens_multiple_words)
 
 	// ACT
 	input_string = "word1 word2";
-	expected_result = ft_lstnew(strdup("word1"));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup("word2")));
+	expected_result = ft_lstnew(ft_strdup("word1"));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("word2")));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -149,7 +149,7 @@ MU_TEST(test_extract_tokens_with_leading_spaces)
 
 	// ACT
 	input_string = "   word";
-	expected_result = ft_lstnew(strdup("word"));
+	expected_result = ft_lstnew(ft_strdup("word"));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -202,7 +202,7 @@ MU_TEST(test_extract_tokens_with_trailing_spaces)
 
 	// ACT
 	input_string = "word   ";
-	expected_result = ft_lstnew(strdup("word"));
+	expected_result = ft_lstnew(ft_strdup("word"));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -223,7 +223,7 @@ MU_TEST(test_extract_tokens_with_special_characters)
 
 	// ACT
 	input_string = "word!@#";
-	expected_result = ft_lstnew(strdup("word!@#"));
+	expected_result = ft_lstnew(ft_strdup("word!@#"));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -244,8 +244,8 @@ MU_TEST(test_extract_tokens_with_newline)
 
 	// ACT
 	input_string = "word\nnext";
-	expected_result = ft_lstnew(strdup("word"));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup("next")));
+	expected_result = ft_lstnew(ft_strdup("word"));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("next")));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -268,7 +268,7 @@ MU_TEST(test_extract_tokens_with_tabs)
 
 	// ACT
 	input_string = "\tword";
-	expected_result = ft_lstnew(strdup("word"));
+	expected_result = ft_lstnew(ft_strdup("word"));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -289,7 +289,7 @@ MU_TEST(test_extract_tokens_with_mixed_whitespace)
 
 	// ACT
 	input_string = " \t\n word";
-	expected_result = ft_lstnew(strdup("word"));
+	expected_result = ft_lstnew(ft_strdup("word"));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -310,7 +310,7 @@ MU_TEST(test_extract_tokens_with_single_quotes)
 
 	// ACT
 	input_string = "'single quoted'";
-	expected_result = ft_lstnew(strdup("'single quoted'"));
+	expected_result = ft_lstnew(ft_strdup("'single quoted'"));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -331,7 +331,7 @@ MU_TEST(test_extract_tokens_with_double_quotes)
 
 	// ACT
 	input_string = "\"double quoted\"";
-	expected_result = ft_lstnew(strdup("\"double quoted\""));
+	expected_result = ft_lstnew(ft_strdup("\"double quoted\""));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -352,9 +352,9 @@ MU_TEST(test_extract_tokens_with_redirection)
 
 	// ACT
 	input_string = "word > file";
-	expected_result = ft_lstnew(strdup("word"));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup(">")));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup("file")));
+	expected_result = ft_lstnew(ft_strdup("word"));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup(">")));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("file")));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -379,9 +379,9 @@ MU_TEST(test_extract_tokens_with_pipe)
 
 	// ACT
 	input_string = "word | next";
-	expected_result = ft_lstnew(strdup("word"));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup("|")));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup("next")));
+	expected_result = ft_lstnew(ft_strdup("word"));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("|")));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("next")));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -406,9 +406,9 @@ MU_TEST(test_extract_tokens_with_double_redirection)
 
 	// ACT
 	input_string = "word >> file";
-	expected_result = ft_lstnew(strdup("word"));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup(">>")));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup("file")));
+	expected_result = ft_lstnew(ft_strdup("word"));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup(">>")));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("file")));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -433,9 +433,9 @@ MU_TEST(test_extract_tokens_with_input_redirection)
 
 	// ACT
 	input_string = "word < file";
-	expected_result = ft_lstnew(strdup("word"));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup("<")));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup("file")));
+	expected_result = ft_lstnew(ft_strdup("word"));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("<")));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("file")));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -460,11 +460,11 @@ MU_TEST(test_extract_tokens_with_pipe_and_redirection)
 
 	// ACT
 	input_string = "word | next > file";
-	expected_result = ft_lstnew(strdup("word"));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup("|")));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup("next")));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup(">")));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup("file")));
+	expected_result = ft_lstnew(ft_strdup("word"));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("|")));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("next")));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup(">")));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("file")));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -493,9 +493,9 @@ MU_TEST(test_extract_tokens_with_redirection_no_spaces)
 
 	// ACT
 	input_string = "word>file";
-	expected_result = ft_lstnew(strdup("word"));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup(">")));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup("file")));
+	expected_result = ft_lstnew(ft_strdup("word"));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup(">")));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("file")));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -520,9 +520,9 @@ MU_TEST(test_extract_tokens_with_pipe_no_spaces)
 
 	// ACT
 	input_string = "word|next";
-	expected_result = ft_lstnew(strdup("word"));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup("|")));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup("next")));
+	expected_result = ft_lstnew(ft_strdup("word"));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("|")));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("next")));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -547,9 +547,9 @@ MU_TEST(test_extract_tokens_with_double_redirection_no_spaces)
 
 	// ACT
 	input_string = "word>>file";
-	expected_result = ft_lstnew(strdup("word"));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup(">>")));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup("file")));
+	expected_result = ft_lstnew(ft_strdup("word"));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup(">>")));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("file")));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -574,9 +574,9 @@ MU_TEST(test_extract_tokens_with_input_redirection_no_spaces)
 
 	// ACT
 	input_string = "word<file";
-	expected_result = ft_lstnew(strdup("word"));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup("<")));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup("file")));
+	expected_result = ft_lstnew(ft_strdup("word"));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("<")));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("file")));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -601,11 +601,11 @@ MU_TEST(test_extract_tokens_with_pipe_and_redirection_no_spaces)
 
 	// ACT
 	input_string = "word|next>file";
-	expected_result = ft_lstnew(strdup("word"));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup("|")));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup("next")));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup(">")));
-	ft_lstadd_back(&expected_result, ft_lstnew(strdup("file")));
+	expected_result = ft_lstnew(ft_strdup("word"));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("|")));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("next")));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup(">")));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("file")));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -634,7 +634,7 @@ MU_TEST(test_extract_tokens_with_pipe_inside_single_quotes)
 
 	// ACT
 	input_string = "'word|next'";
-	expected_result = ft_lstnew(strdup("'word|next'"));
+	expected_result = ft_lstnew(ft_strdup("'word|next'"));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -655,7 +655,7 @@ MU_TEST(test_extract_tokens_with_pipe_inside_double_quotes)
 
 	// ACT
 	input_string = "\"word|next\"";
-	expected_result = ft_lstnew(strdup("\"word|next\""));
+	expected_result = ft_lstnew(ft_strdup("\"word|next\""));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -676,7 +676,7 @@ MU_TEST(test_extract_tokens_with_redirection_inside_single_quotes)
 
 	// ACT
 	input_string = "'word>file'";
-	expected_result = ft_lstnew(strdup("'word>file'"));
+	expected_result = ft_lstnew(ft_strdup("'word>file'"));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -697,7 +697,7 @@ MU_TEST(test_extract_tokens_with_redirection_inside_double_quotes)
 
 	// ACT
 	input_string = "\"word>file\"";
-	expected_result = ft_lstnew(strdup("\"word>file\""));
+	expected_result = ft_lstnew(ft_strdup("\"word>file\""));
 	actual_result = extract_tokens(input_string);
 
 	// ASSERT
@@ -721,7 +721,7 @@ MU_TEST(test_extract_tokens_unclosed_single_quotes)
 
 	// ACT
 	input_string = "'unclosed single quotes";
-	result = capture_extract_tokens_output(input_string, 1);
+	result = capture_extract_tokens_output(input_string, 2);
 	expected_result = NULL;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `''\n";
@@ -747,7 +747,7 @@ MU_TEST(test_extract_tokens_unclosed_double_quotes)
 
 	// ACT
 	input_string = "\"unclosed double quotes";
-	result = capture_extract_tokens_output(input_string, 1);
+	result = capture_extract_tokens_output(input_string, 2);
 	expected_result = NULL;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `\"'\n";
@@ -773,7 +773,7 @@ MU_TEST(test_extract_tokens_unclosed_quotes_with_spaces)
 
 	// ACT
 	input_string = "'unclosed quotes with spaces";
-	result = capture_extract_tokens_output(input_string, 1);
+	result = capture_extract_tokens_output(input_string, 2);
 	expected_result = NULL;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `''\n";
@@ -799,7 +799,7 @@ MU_TEST(test_extract_tokens_unclosed_quotes_with_special_characters)
 
 	// ACT
 	input_string = "'unclosed quotes with special characters!@#";
-	result = capture_extract_tokens_output(input_string, 1);
+	result = capture_extract_tokens_output(input_string, 2);
 	expected_result = NULL;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `''\n";
@@ -825,7 +825,7 @@ MU_TEST(test_extract_tokens_unclosed_quotes_with_newline)
 
 	// ACT
 	input_string = "'unclosed quotes with newline\nnext";
-	result = capture_extract_tokens_output(input_string, 1);
+	result = capture_extract_tokens_output(input_string, 2);
 	expected_result = NULL;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `''\n";
@@ -851,7 +851,7 @@ MU_TEST(test_extract_tokens_unclosed_quotes_with_tabs)
 
 	// ACT
 	input_string = "'unclosed quotes with tabs\tword";
-	result = capture_extract_tokens_output(input_string, 1);
+	result = capture_extract_tokens_output(input_string, 2);
 	expected_result = NULL;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `''\n";
@@ -877,7 +877,7 @@ MU_TEST(test_extract_tokens_unclosed_quotes_with_mixed_whitespace)
 
 	// ACT
 	input_string = "'unclosed quotes with mixed whitespace \t\n word";
-	result = capture_extract_tokens_output(input_string, 1);
+	result = capture_extract_tokens_output(input_string, 2);
 	expected_result = NULL;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `''\n";
@@ -903,7 +903,7 @@ MU_TEST(test_extract_tokens_unclosed_quotes_with_redirection)
 
 	// ACT
 	input_string = "'unclosed quotes with redirection > file";
-	result = capture_extract_tokens_output(input_string, 1);
+	result = capture_extract_tokens_output(input_string, 2);
 	expected_result = NULL;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `''\n";
@@ -929,7 +929,7 @@ MU_TEST(test_extract_tokens_unclosed_quotes_with_pipe)
 
 	// ACT
 	input_string = "'unclosed quotes with pipe | next";
-	result = capture_extract_tokens_output(input_string, 1);
+	result = capture_extract_tokens_output(input_string, 2);
 	expected_result = NULL;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `''\n";
@@ -955,7 +955,7 @@ MU_TEST(test_extract_tokens_unclosed_quotes_with_double_redirection)
 
 	// ACT
 	input_string = "'unclosed quotes with double redirection >> file";
-	result = capture_extract_tokens_output(input_string, 1);
+	result = capture_extract_tokens_output(input_string, 2);
 	expected_result = NULL;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `''\n";
@@ -981,7 +981,7 @@ MU_TEST(test_extract_tokens_unclosed_quotes_with_input_redirection)
 
 	// ACT
 	input_string = "'unclosed quotes with input redirection < file";
-	result = capture_extract_tokens_output(input_string, 1);
+	result = capture_extract_tokens_output(input_string, 2);
 	expected_result = NULL;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `''\n";
@@ -1007,7 +1007,7 @@ MU_TEST(test_extract_tokens_unclosed_quotes_with_pipe_and_redirection)
 
 	// ACT
 	input_string = "'unclosed quotes with pipe and redirection | next > file";
-	result = capture_extract_tokens_output(input_string, 1);
+	result = capture_extract_tokens_output(input_string, 2);
 	expected_result = NULL;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `''\n";
@@ -1033,7 +1033,7 @@ MU_TEST(test_extract_tokens_unclosed_quotes_with_redirection_no_spaces)
 
 	// ACT
 	input_string = "'unclosed quotes with redirection no spaces>file";
-	result = capture_extract_tokens_output(input_string, 1);
+	result = capture_extract_tokens_output(input_string, 2);
 	expected_result = NULL;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `''\n";
@@ -1059,7 +1059,7 @@ MU_TEST(test_extract_tokens_unclosed_quotes_with_pipe_no_spaces)
 
 	// ACT
 	input_string = "'unclosed quotes with pipe no spaces|next";
-	result = capture_extract_tokens_output(input_string, 1);
+	result = capture_extract_tokens_output(input_string, 2);
 	expected_result = NULL;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `''\n";
@@ -1085,7 +1085,7 @@ MU_TEST(test_extract_tokens_unclosed_quotes_with_double_redirection_no_spaces)
 
 	// ACT
 	input_string = "'unclosed quotes with double redirection no spaces>>file";
-	result = capture_extract_tokens_output(input_string, 1);
+	result = capture_extract_tokens_output(input_string, 2);
 	expected_result = NULL;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `''\n";
@@ -1111,7 +1111,7 @@ MU_TEST(test_extract_tokens_unclosed_quotes_with_input_redirection_no_spaces)
 
 	// ACT
 	input_string = "'unclosed quotes with input redirection no spaces<file";
-	result = capture_extract_tokens_output(input_string, 1);
+	result = capture_extract_tokens_output(input_string, 2);
 	expected_result = NULL;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `''\n";
@@ -1137,7 +1137,7 @@ MU_TEST(test_extract_tokens_unclosed_quotes_with_pipe_and_redirection_no_spaces)
 
 	// ACT
 	input_string = "'unclosed quotes with pipe and redirection no spaces|next>file";
-	result = capture_extract_tokens_output(input_string, 1);
+	result = capture_extract_tokens_output(input_string, 2);
 	expected_result = NULL;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `''\n";

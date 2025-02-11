@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/05 16:53:45 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/11 08:33:47 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/11 11:22:29 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ MU_TEST(test_is_valid_quotes_unclosed_single_quote_input)
 
 	// ACT
 	input = "'echo Hello";
-	result = capture_is_valid_quotes_output(input, 1);
+	result = capture_is_valid_quotes_output(input, 2);
 	expected_result = 0;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `''\n";
@@ -164,7 +164,7 @@ MU_TEST(test_is_valid_quotes_unclosed_double_quote_input)
 
 	// ACT
 	input = "\"echo Hello";
-	result = capture_is_valid_quotes_output(input, 1);
+	result = capture_is_valid_quotes_output(input, 2);
 	expected_result = 0;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `\"'\n";
@@ -206,7 +206,7 @@ MU_TEST(test_is_valid_quotes_mismatched_quotes_input)
 
 	// ACT
 	input = "'echo Hello\"";
-	result = capture_is_valid_quotes_output(input, 1);
+	result = capture_is_valid_quotes_output(input, 2);
 	expected_result = 0;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `''\n";
@@ -344,7 +344,7 @@ MU_TEST(test_is_valid_quotes_closed_and_unclosed_single_quote_input)
 
 	// ACT
 	input = "'echo' 'Hello";
-	result = capture_is_valid_quotes_output(input, 1);
+	result = capture_is_valid_quotes_output(input, 2);
 	expected_result = 0;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `''\n";
@@ -370,7 +370,7 @@ MU_TEST(test_is_valid_quotes_closed_and_unclosed_souble_quote_input)
 
 	// ACT
 	input = "\"echo\" \"Hello";
-	result = capture_is_valid_quotes_output(input, 1);
+	result = capture_is_valid_quotes_output(input, 2);
 	expected_result = 0;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `\"'\n";
@@ -396,7 +396,7 @@ MU_TEST(test_is_valid_quotes_unclosed_double_quote_input_with_single_quote)
 
 	// ACT
 	input = "\"echo Hello'";
-	result = capture_is_valid_quotes_output(input, 1);
+	result = capture_is_valid_quotes_output(input, 2);
 	expected_result = 0;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `\"'\n";
@@ -422,7 +422,7 @@ MU_TEST(test_is_valid_quotes_unclosed_single_quote_input_with_double_quote)
 
 	// ACT
 	input = "'echo Hello\"";
-	result = capture_is_valid_quotes_output(input, 1);
+	result = capture_is_valid_quotes_output(input, 2);
 	expected_result = 0;
 	actual_result = result.return_value;
 	actual_output = "minishell: unexpected EOF for `''\n";

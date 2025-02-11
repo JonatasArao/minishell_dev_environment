@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:26:10 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/11 07:52:21 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/11 09:00:47 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,10 @@ int	main(void)
 	test_extract_tokens();
 
 	printf(COLORIZE("File: parse/token_checks.c\n", STYLE_BOLD, COLOR_MAGENTA));
+	printf(COLORIZE("Testing function: is_input_redirection\n", STYLE_BOLD, COLOR_CYAN));
+	test_is_input_redirection();
+	printf(COLORIZE("Testing function: is_output_redirection\n", STYLE_BOLD, COLOR_CYAN));
+	test_is_output_redirection();
 	printf(COLORIZE("Testing function: is_redirection\n", STYLE_BOLD, COLOR_CYAN));
 	test_is_redirection();
 	printf(COLORIZE("Testing function: is_pipe\n", STYLE_BOLD, COLOR_CYAN));

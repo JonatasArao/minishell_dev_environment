@@ -53,6 +53,8 @@ SRC_FILES = main.c \
 			parse/test_get_next_token.c \
 			parse/test_is_valid_quotes.c \
 			parse/test_extract_tokens.c \
+			parse/test_is_input_redirection.c \
+			parse/test_is_output_redirection.c \
 			parse/test_is_redirection.c \
 			parse/test_is_pipe.c \
 			parse/test_is_token_list_valid.c \

@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:57:40 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/11 08:34:58 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/11 09:00:20 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -313,6 +313,28 @@ typedef struct s_extract_tokens_result
  */
 int	test_extract_tokens(void);
 /**
+ * @brief Tests the functionality of the is_input_redirection function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the is_input_redirection function, ensuring that it properly identifies
+ * if a given token is an input redirection symbol.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int	test_is_input_redirection(void);
+/**
+ * @brief Tests the functionality of the is_output_redirection function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the is_output_redirection function, ensuring that it properly identifies
+ * if a given token is an output redirection symbol.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int	test_is_output_redirection(void);
+/**
  * @brief Tests the functionality of the is_redirection function.
  *
  * This function is designed to test the behavior and correctness of
@@ -323,6 +345,17 @@ int	test_extract_tokens(void);
  * the test fails.
  */
 int	test_is_redirection(void);
+/**
+ * @brief Tests the functionality of the is_pipe function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the is_pipe function, ensuring that it properly identifies
+ * if a given token is a pipe symbol.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int test_is_pipe(void);
 /**
  * @struct s_is_valid_quotes_result
  * @brief Structure to hold the result of the is_valid_quotes function.
@@ -351,17 +384,6 @@ typedef struct s_is_valid_quotes_result
  * the test fails.
  */
 int test_is_valid_quotes(void);
-/**
- * @brief Tests the functionality of the is_pipe function.
- *
- * This function is designed to test the behavior and correctness of
- * the is_pipe function, ensuring that it properly identifies
- * if a given token is a pipe symbol.
- *
- * @return int Returns 0 if the test passes, or a non-zero value if
- * the test fails.
- */
-int test_is_pipe(void);
 /**
  * @struct s_is_token_list_valid_result
  * @brief Structure to hold the result of the is_token_list_valid function.

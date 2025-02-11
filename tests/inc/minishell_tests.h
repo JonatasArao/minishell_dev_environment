@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:57:40 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/11 09:00:20 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/11 09:27:48 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -434,4 +434,24 @@ int test_free_redirection(void);
  * the test fails.
  */
 int test_free_command(void);
+/**
+ * @brief Tests the addition of a string to a list.
+ *
+ * This function is designed to test the functionality of adding a string
+ * to a linked list. It ensures that the string is correctly added and
+ * that the list maintains its integrity.
+ *
+ * @return int Returns 0 if the test passes, otherwise returns a non-zero value.
+ */
+int test_lstadd_str(void);
+/**
+ * @brief Tests the addition of a redirection to a list.
+ *
+ * This function is designed to test the functionality of adding a redirection
+ * to a linked list. It ensures that the redirection is correctly added and
+ * that the list maintains its integrity.
+ *
+ * @return int Returns 0 if the test passes, otherwise returns a non-zero value.
+ */
+int test_lstadd_redir(void);
 #endif

@@ -59,7 +59,9 @@ SRC_FILES = main.c \
 			parse/test_is_pipe.c \
 			parse/test_is_token_list_valid.c \
 			parse/test_free_redirection.c \
-			parse/test_free_command.c
+			parse/test_free_command.c \
+			parse/test_lstadd_str.c \
+			parse/test_lstadd_redir.c
 SRC = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJS_DIR = objs
 OBJS = $(addprefix $(OBJS_DIR)/, $(subst /,-, $(SRC_FILES:.c=.o)))

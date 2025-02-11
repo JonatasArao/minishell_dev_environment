@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:26:10 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/11 09:00:47 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/11 09:29:56 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,11 @@ int	main(void)
 	test_free_redirection();
 	printf(COLORIZE("Testing function: free_command\n", STYLE_BOLD, COLOR_CYAN));
 	test_free_command();
+
+	printf(COLORIZE("File: parse/command_list.c\n", STYLE_BOLD, COLOR_MAGENTA));
+	printf(COLORIZE("Testing function: lstadd_str\n", STYLE_BOLD, COLOR_CYAN));
+	test_lstadd_str();
+	printf(COLORIZE("Testing function: lstadd_redir\n", STYLE_BOLD, COLOR_CYAN));
+	test_lstadd_redir();
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:57:40 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/11 10:49:53 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/12 16:12:48 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -484,5 +484,57 @@ int test_parse_tokens(void);
  * @return int Returns 0 if the test passes, otherwise returns a non-zero value.
  */
 int test_extract_commands(void);
+/**
+ * @brief Tests the freeing of environment variables.
+ *
+ * This function is designed to test the functionality of freeing environment
+ * variables. It ensures that the memory allocated for environment variables
+ * is properly freed.
+ *
+ * @return int Returns 0 if the test passes, otherwise returns a non-zero value.
+ */
+int test_free_env_var(void);
+/**
+ * @brief Tests the addition of an environment variable to a list.
+ *
+ * This function is designed to test the functionality of adding an environment
+ * variable to a linked list. It ensures that the environment variable is correctly
+ * added and that the list maintains its integrity.
+ *
+ * @return int Returns 0 if the test passes, otherwise returns a non-zero value.
+ */
+int test_lstadd_env_var(void);
+/**
+ * @brief Tests the functionality of the get_env_var function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the get_env_var function, ensuring that it properly retrieves
+ * the value of a given environment variable.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int test_get_env_var(void);
+/**
+ * @brief Tests the functionality of the lstset_env_var function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the lstset_env_var function, ensuring that it properly sets
+ * the value of a given environment variable in a linked list.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int test_lstset_env_var(void);
+/**
+ * @brief Tests the extraction of environment variables.
+ *
+ * This function is designed to test the functionality of extracting environment
+ * variables from a given input. It ensures that the environment variable extraction
+ * logic works correctly and handles various edge cases.
+ *
+ * @return int Returns 0 if the test passes, otherwise returns a non-zero value.
+ */
+int test_extract_env_vars(void);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 08:55:13 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/12 12:54:41 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/12 15:24:24 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,12 +178,13 @@ void	expand_vars(t_list *variables)
 int	main(void)
 {
 	t_list	*variables;
+	t_list	*temp;
 	char	*result;
 	char	*str;
 
-	str = "He\"ll\"o\" $USER'Aluno' \", Welcome to '$SCHOOL' in $CITY \".\" $?";
+	str = "He\"ll\"o\" $USER'Aluno'\", Welcome to '$SCHOOL' in $CITY \".\" $?";
 	variables = extract_vars(str);
-	t_list *temp = variables;
+	temp = variables;
 	while (temp)
 	{
 		printf("Variable: {%s}\n", (char *)temp->content);

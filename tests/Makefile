@@ -23,7 +23,8 @@ MSH_SRC_FILES = main.c \
 				parse/command_cleanup.c \
 				parse/token_validation.c \
 				parse/command_list.c \
-				parse/token_checks.c
+				parse/token_checks.c \
+				expand/env_vars_list.c
 MSH_SRC = $(addprefix $(MSH_SRC_DIR)/, $(MSH_SRC_FILES))
 MSH_OBJS_DIR = minishell_objs
 MSH_OBJS = $(addprefix $(MSH_OBJS_DIR)/, $(subst /,-, $(MSH_SRC_FILES:.c=.o)))
@@ -64,7 +65,12 @@ SRC_FILES = main.c \
 			parse/command_list/test_lstadd_redir.c \
 			parse/extract_commands/test_alloc_command.c \
 			parse/extract_commands/test_parse_tokens.c \
-			parse/extract_commands/test_extract_commands.c
+			parse/extract_commands/test_extract_commands.c \
+			expand/env_vars_list/test_free_env_var.c \
+			expand/env_vars_list/test_lstadd_env_var.c \
+			expand/env_vars_list/test_get_env_var.c \
+			expand/env_vars_list/test_lstset_env_var.c \
+			expand/env_vars_list/test_extract_env_vars.c
 SRC = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJS_DIR = objs
 OBJS = $(addprefix $(OBJS_DIR)/, $(subst /,-, $(SRC_FILES:.c=.o)))
@@ -115,6 +121,9 @@ $(MSH_OBJS_DIR)/%.o: $(MSH_SRC_DIR)/%.c $(MSH_HEADER) | $(MSH_OBJS_DIR)
 $(MSH_OBJS_DIR)/parse-%.o: $(MSH_SRC_DIR)/parse/%.c $(MSH_HEADER) | $(MSH_OBJS_DIR)
 	$(CC) $(CFLAGS) $(MSH_INCLUDES) -c $< -o $@
 
+$(MSH_OBJS_DIR)/expand-%.o: $(MSH_SRC_DIR)/expand/%.c $(MSH_HEADER) | $(MSH_OBJS_DIR)
+	$(CC) $(CFLAGS) $(MSH_INCLUDES) -c $< -o $@
+
 # Create the object directory for test objects
 $(OBJS_DIR):
 	mkdir -p $@
@@ -139,6 +148,9 @@ $(OBJS_DIR)/parse-command_list-%.o: $(SRC_DIR)/parse/command_list/%.c $(HEADER) 
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(OBJS_DIR)/parse-extract_commands-%.o: $(SRC_DIR)/parse/extract_commands/%.c $(HEADER) | $(OBJS_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJS_DIR)/expand-env_vars_list-%.o: $(SRC_DIR)/expand/env_vars_list/%.c $(HEADER) | $(OBJS_DIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 # Targets that do not correspond to files

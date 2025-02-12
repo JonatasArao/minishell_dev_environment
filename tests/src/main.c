@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:26:10 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/11 11:11:18 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/12 16:12:29 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,5 +57,17 @@ int	main(void)
 	test_parse_tokens();
 	printf(COLORIZE("Testing function: extract_commands\n", STYLE_BOLD, COLOR_CYAN));
 	test_extract_commands();
+
+	printf(COLORIZE("File: expand/env_vars_list.c\n", STYLE_BOLD, COLOR_MAGENTA));
+	printf(COLORIZE("Testing function: free_env_var\n", STYLE_BOLD, COLOR_CYAN));
+	test_free_env_var();
+	printf(COLORIZE("Testing function: lstadd_env_var\n", STYLE_BOLD, COLOR_CYAN));
+	test_lstadd_env_var();
+	printf(COLORIZE("Testing function: get_env_var\n", STYLE_BOLD, COLOR_CYAN));
+	test_get_env_var();
+	printf(COLORIZE("Testing function: lstset_env_var\n", STYLE_BOLD, COLOR_CYAN));
+	test_lstset_env_var();
+	printf(COLORIZE("Testing function: extract_env_vars\n", STYLE_BOLD, COLOR_CYAN));
+	test_extract_env_vars();
 	return (0);
 }

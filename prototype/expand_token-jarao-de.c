@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 08:55:13 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/12 10:07:59 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/12 12:54:41 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <ctype.h>
 #include <string.h>
 
-char	*get_env_var(const char *key)
+char	*get_var_value(const char *key)
 {
 	size_t		key_len;
 
@@ -27,35 +27,43 @@ char	*get_env_var(const char *key)
 		&& "USER"[key_len] == '\0')
 		return (ft_strdup("Gugomes"));
 	else if (ft_strncmp("SCHOOL", key, key_len) == 0
-		&& "USER"[key_len] == '\0')
+		&& "SCHOOL"[key_len] == '\0')
 		return (ft_strdup("42"));
 	else if (ft_strncmp("CITY", key, key_len) == 0
-		&& "USER"[key_len] == '\0')
+		&& "CITY"[key_len] == '\0')
 		return (ft_strdup("São Paulo"));
+	else if (ft_strncmp("?", key, key_len) == 0
+		&& "?"[key_len] == '\0')
+		return (ft_strdup("0"));
 	return (ft_strdup(""));
 }
 
 size_t	get_variable_end(const char *s, unsigned int start)
 {
-	size_t	end;
-	char	quote_char;
+	static char	quote_char;
+	size_t		end;
 
 	if (s[start] == '\0' || start >= ft_strlen(s))
 		return (start);
 	end = start;
-	quote_char = 0;
-	if (s[end] == '\'')
+	if (!quote_char && ft_strchr("\"'", s[end]))
 		quote_char = s[end];
-	if (ft_strchr("'$", s[end]))
+	if (ft_strchr("\"'$", s[end]))
 		end++;
 	while (s[end] && (!ft_strchr("\"'$", s[end]) || quote_char))
 	{
-		if (s[end] == quote_char || (s[start] == '$' && ft_isspace(s[end])))
+		if (s[end] == quote_char || (s[start] == '$'
+				&& (ft_isspace(s[end]) || ft_strchr("\"'", s[end]))))
 			break ;
+		if (quote_char != '\'' && s[end] == '$')
+			return (end);
 		end++;
 	}
-	if (s[start] == '\'')
+	if (s[end] == quote_char)
+	{
+		quote_char = 0;
 		end++;
+	}
 	return (end);
 }
 
@@ -66,8 +74,6 @@ char	*get_next_variable(char const *s)
 	size_t			end;
 
 	start = 0;
-	while (s[start] && ft_strchr("\"", s[start]))
-		start++;
 	end = get_variable_end(s, start);
 	if (start == end)
 		return (NULL);
@@ -92,8 +98,6 @@ t_list	*extract_vars(const char *s)
 		if (!word)
 			break ;
 		s += ft_strlen(word);
-		while (*s && ft_strchr("\"", *s))
-			s++;
 		current = ft_lstnew((void *) word);
 		if (head)
 			ft_lstadd_back(&head, current);
@@ -132,24 +136,41 @@ char	*concat_vars(t_list *vars)
 	return (result);
 }
 
+int	expand_var(t_list *node)
+{
+	char	*new_value;
+	char	*content;
+	char	*quote;
+	char	*double_quote;
+
+	new_value = NULL;
+	content = (char *)node->content;
+	if (content[0] == '$')
+		new_value = get_var_value(content + 1);
+	else
+	{
+		quote = ft_strrchr(content, '\'');
+		double_quote = ft_strrchr(content, '"');
+		if (quote && (!double_quote || quote > double_quote))
+			new_value = ft_strtrim(content, "'");
+		else if (double_quote && (!quote || double_quote > quote))
+			new_value = ft_strtrim(content, "\"");
+	}
+	if (!new_value)
+		return (0);
+	free(node->content);
+	node->content = new_value;
+	return (1);
+}
+
 void	expand_vars(t_list *variables)
 {
 	t_list	*temp;
-	char	*new_value;
-	char	*content;
 
 	temp = variables;
 	while (temp)
 	{
-		new_value = NULL;
-		content = (char *)temp->content;
-		if (content[0] == '$')
-			new_value = get_env_var(content + 1);
-		if (new_value)
-		{
-			free(temp->content);
-			temp->content = new_value;
-		}
+		expand_var(temp);
 		temp = temp->next;
 	}
 }
@@ -160,7 +181,7 @@ int	main(void)
 	char	*result;
 	char	*str;
 
-	str = "He\"ll\"o\" $USER 'SER' \", Welcome to' $SCHOOL' in $CITY \".\"";
+	str = "He\"ll\"o\" $USER'Aluno' \", Welcome to '$SCHOOL' in $CITY \".\" $?";
 	variables = extract_vars(str);
 	t_list *temp = variables;
 	while (temp)

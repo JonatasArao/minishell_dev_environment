@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 09:45:57 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/11 10:28:34 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/13 16:21:19 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@ MU_TEST(test_alloc_command_init)
 	mu_check(cmd->arguments == NULL);
 	mu_check(cmd->input_redir == NULL);
 	mu_check(cmd->output_redir == NULL);
+	mu_check(cmd->input_fd == -1);
+	mu_check(cmd->output_fd == -1);
+	mu_check(cmd->status == 0);
 	free(cmd);
 }
 

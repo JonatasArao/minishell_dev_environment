@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 13:58:35 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/11 16:21:04 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/13 07:10:58 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ typedef struct s_env_var
 	char	*value;
 }	t_env_var;
 
-void	free_env_var(void *env_var_ptr)
+void	proto_free_env_var(void *env_var_ptr)
 {
 	t_env_var	*env_var;
 
@@ -34,7 +34,7 @@ void	free_env_var(void *env_var_ptr)
 	}
 }
 
-int	lstadd_env_var(t_list **head, const char *key, const char *value)
+int	proto_lstadd_env_var(t_list **head, const char *key, const char *value)
 {
 	t_env_var	*new_env;
 	t_list		*new_node;
@@ -48,20 +48,20 @@ int	lstadd_env_var(t_list **head, const char *key, const char *value)
 	new_env->value = ft_strdup(value);
 	if (!new_env->key || !new_env->value)
 	{
-		free_env_var(new_env);
+		proto_free_env_var(new_env);
 		return (0);
 	}
 	new_node = ft_lstnew(new_env);
 	if (!new_node)
 	{
-		free_env_var(new_env);
+		proto_free_env_var(new_env);
 		return (0);
 	}
 	ft_lstadd_front(head, new_node);
 	return (1);
 }
 
-t_env_var	*get_env_var(t_list *env, const char *key)
+t_env_var	*proto_get_env_var(t_list *env, const char *key)
 {
 	t_env_var	*current;
 	size_t		key_len;
@@ -80,13 +80,13 @@ t_env_var	*get_env_var(t_list *env, const char *key)
 	return (NULL);
 }
 
-int	lstset_env_var(t_list *env, const char *key, const char *value)
+int	proto_lstset_env_var(t_list *env, const char *key, const char *value)
 {
 	t_env_var	*env_var;
 
-	env_var = get_env_var(env, key);
+	env_var = proto_get_env_var(env, key);
 	if (!env_var)
-		return (lstadd_env_var(&env, key, value));
+		return (proto_lstadd_env_var(&env, key, value));
 	free(env_var->value);
 	env_var->value = ft_strdup(value);
 	if (!env_var->value)
@@ -94,7 +94,7 @@ int	lstset_env_var(t_list *env, const char *key, const char *value)
 	return (1);
 }
 
-t_list	*extract_env_vars(char **envp)
+t_list	*proto_extract_env_vars(char **envp)
 {
 	t_list	*env;
 	char	*saveptr;
@@ -108,9 +108,9 @@ t_list	*extract_env_vars(char **envp)
 		value = ft_strtok_r(NULL, "=", &saveptr);
 		if (!value)
 			value = "";
-		if (!lstadd_env_var(&env, key, value))
+		if (!proto_lstadd_env_var(&env, key, value))
 		{
-			ft_lstclear(&env, free_env_var);
+			ft_lstclear(&env, proto_free_env_var);
 			return (NULL);
 		}
 		envp++;
@@ -118,7 +118,7 @@ t_list	*extract_env_vars(char **envp)
 	return (env);
 }
 
-char	*create_env_string(const char *key, const char *value)
+char	*proto_create_env_string(const char *key, const char *value)
 {
 	char	*env_string;
 	size_t	key_len;
@@ -135,7 +135,7 @@ char	*create_env_string(const char *key, const char *value)
 	return (env_string);
 }
 
-char	**get_envp(t_list *env)
+char	**proto_get_envp(t_list *env)
 {
 	t_list		*current;
 	t_env_var	*env_var;
@@ -152,7 +152,7 @@ char	**get_envp(t_list *env)
 	while (current)
 	{
 		env_var = (t_env_var *) current->content;
-		envp[i] = create_env_string(env_var->key, env_var->value);
+		envp[i] = proto_create_env_string(env_var->key, env_var->value);
 		if (!envp[i])
 			return (ft_free_matrix((void **) envp, i));
 		current = current->next;
@@ -170,13 +170,13 @@ int	main(int argc, char **argv, char **envp)
 
 	(void) argc;
 	(void) argv;
-	env = extract_env_vars(envp);
-	lstadd_env_var(&env, "SCHOOL", "42 School");
+	env = proto_extract_env_vars(envp);
+	proto_lstadd_env_var(&env, "SCHOOL", "42 School");
 	printf("The user of %s from %s and their home is %s\n",
-		get_env_var(env, "USER")->value, get_env_var(env, "SCHOOL")->value,
-		get_env_var(env, "HOME")->value);
-	lstset_env_var(env, "PATH", "Brasil");
-	new_envp = get_envp(env);
+		proto_get_env_var(env, "USER")->value, proto_get_env_var(env, "SCHOOL")->value,
+		proto_get_env_var(env, "HOME")->value);
+	proto_lstset_env_var(env, "PATH", "Brasil");
+	new_envp = proto_get_envp(env);
 	i = 0;
 	while (new_envp[i] != NULL)
 	{

@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:57:40 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/13 15:20:43 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/13 17:30:25 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -590,4 +590,15 @@ int test_get_next_var(void);
  * the test fails.
  */
 int test_extract_vars(void);
+/**
+ * @brief Tests the functionality of the get_var_value function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the get_var_value function, ensuring that it properly retrieves
+ * the value of a given variable from the environment.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int test_get_var_value(void);
 #endif

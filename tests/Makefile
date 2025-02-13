@@ -26,7 +26,8 @@ MSH_SRC_FILES = main.c \
 				parse/token_checks.c \
 				expand/env_vars_list.c \
 				expand/envp_generator.c \
-				expand/extract_vars.c
+				expand/extract_vars.c \
+				expand/expand_token.c
 MSH_SRC = $(addprefix $(MSH_SRC_DIR)/, $(MSH_SRC_FILES))
 MSH_OBJS_DIR = minishell_objs
 MSH_OBJS = $(addprefix $(MSH_OBJS_DIR)/, $(subst /,-, $(MSH_SRC_FILES:.c=.o)))
@@ -77,7 +78,8 @@ SRC_FILES = main.c \
 			expand/envp_generator/test_get_envp.c \
 			expand/extract_vars/test_get_var_end.c \
 			expand/extract_vars/test_get_next_var.c \
-			expand/extract_vars/test_extract_vars.c
+			expand/extract_vars/test_extract_vars.c \
+			expand/expand_token/test_get_var_value.c
 SRC = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJS_DIR = objs
 OBJS = $(addprefix $(OBJS_DIR)/, $(subst /,-, $(SRC_FILES:.c=.o)))
@@ -164,6 +166,9 @@ $(OBJS_DIR)/expand-envp_generator-%.o: $(SRC_DIR)/expand/envp_generator/%.c $(HE
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(OBJS_DIR)/expand-extract_vars-%.o: $(SRC_DIR)/expand/extract_vars/%.c $(HEADER) | $(OBJS_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJS_DIR)/expand-expand_token-%.o: $(SRC_DIR)/expand/expand_token/%.c $(HEADER) | $(OBJS_DIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 

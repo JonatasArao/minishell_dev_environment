@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:26:10 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/13 15:20:59 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/13 17:31:08 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,5 +84,9 @@ int	main(void)
 	test_get_next_var();
 	printf(COLORIZE("Testing function: extract_vars\n", STYLE_BOLD, COLOR_CYAN));
 	test_extract_vars();
+	// Testing functions from expand/expand_token.c
+	printf(COLORIZE("File: expand/expand_token.c\n", STYLE_BOLD, COLOR_MAGENTA));
+	printf(COLORIZE("Testing function: get_var_value\n", STYLE_BOLD, COLOR_CYAN));
+	test_get_var_end();
 	return (0);
 }

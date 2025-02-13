@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 08:55:13 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/12 15:24:24 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/13 10:56:39 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,50 +16,32 @@
 #include <ctype.h>
 #include <string.h>
 
-char	*get_var_value(const char *key)
+typedef struct s_env_var
 {
-	size_t		key_len;
+	char	*key;
+	char	*value;
+}	t_env_var;
 
-	if (!key)
-		return (NULL);
-	key_len = ft_strlen(key);
-	if (ft_strncmp("USER", key, key_len) == 0
-		&& "USER"[key_len] == '\0')
-		return (ft_strdup("Gugomes"));
-	else if (ft_strncmp("SCHOOL", key, key_len) == 0
-		&& "SCHOOL"[key_len] == '\0')
-		return (ft_strdup("42"));
-	else if (ft_strncmp("CITY", key, key_len) == 0
-		&& "CITY"[key_len] == '\0')
-		return (ft_strdup("São Paulo"));
-	else if (ft_strncmp("?", key, key_len) == 0
-		&& "?"[key_len] == '\0')
-		return (ft_strdup("0"));
-	return (ft_strdup(""));
-}
-
-size_t	get_variable_end(const char *s, unsigned int start)
+size_t	get_var_end(const char *token)
 {
 	static char	quote_char;
 	size_t		end;
 
-	if (s[start] == '\0' || start >= ft_strlen(s))
-		return (start);
-	end = start;
-	if (!quote_char && ft_strchr("\"'", s[end]))
-		quote_char = s[end];
-	if (ft_strchr("\"'$", s[end]))
-		end++;
-	while (s[end] && (!ft_strchr("\"'$", s[end]) || quote_char))
+	if (token[0] == '\0')
+		return (0);
+	end = 0;
+	if (!quote_char && ft_strchr("\"'", token[end]))
+		quote_char = token[end++];
+	while (token[end] && (!ft_strchr("\"'", token[end]) || quote_char))
 	{
-		if (s[end] == quote_char || (s[start] == '$'
-				&& (ft_isspace(s[end]) || ft_strchr("\"'", s[end]))))
+		if (token[end] == quote_char || (token[0] == '$'
+				&& (ft_isspace(token[end]) || ft_strchr("\"'", token[end]))))
 			break ;
-		if (quote_char != '\'' && s[end] == '$')
+		if (quote_char != '\'' && token[end] == '$' && end != 0)
 			return (end);
 		end++;
 	}
-	if (s[end] == quote_char)
+	if (token[0] != '$' && token[end] == quote_char)
 	{
 		quote_char = 0;
 		end++;
@@ -67,37 +49,37 @@ size_t	get_variable_end(const char *s, unsigned int start)
 	return (end);
 }
 
-char	*get_next_variable(char const *s)
+char	*get_next_var(char const *token)
 {
 	char			*word;
 	unsigned int	start;
 	size_t			end;
 
 	start = 0;
-	end = get_variable_end(s, start);
+	end = get_var_end(token);
 	if (start == end)
 		return (NULL);
-	word = ft_substr(s, start, end - start);
+	word = ft_substr(token, start, end - start);
 	if (!word)
 		return (NULL);
 	return (word);
 }
 
-t_list	*extract_vars(const char *s)
+t_list	*extract_vars(const char *token)
 {
 	t_list	*head;
 	t_list	*current;
 	char	*word;
 
 	head = NULL;
-	while (*s)
+	while (*token)
 	{
-		word = get_next_variable(s);
+		word = get_next_var(token);
 		if (!word && head)
 			ft_lstclear(&head, free);
 		if (!word)
 			break ;
-		s += ft_strlen(word);
+		token += ft_strlen(word);
 		current = ft_lstnew((void *) word);
 		if (head)
 			ft_lstadd_back(&head, current);
@@ -136,7 +118,32 @@ char	*concat_vars(t_list *vars)
 	return (result);
 }
 
-int	expand_var(t_list *node)
+char	*get_var_value(const char *key)
+{
+	size_t		key_len;
+
+	if (!key)
+		return (NULL);
+	key_len = ft_strlen(key);
+	if (ft_strncmp("USER", key, key_len) == 0
+		&& "USER"[key_len] == '\0')
+		return (ft_strdup("Guilherme"));
+	else if (ft_strncmp("SCHOOL", key, key_len) == 0
+		&& "SCHOOL"[key_len] == '\0')
+		return (ft_strdup("42"));
+	else if (ft_strncmp("CITY", key, key_len) == 0
+		&& "CITY"[key_len] == '\0')
+		return (ft_strdup("São Paulo"));
+	else if (ft_strncmp("NICK", key, key_len) == 0
+		&& "NICK"[key_len] == '\0')
+		return (ft_strdup("Gugomes"));
+	else if (ft_strncmp("?", key, key_len) == 0
+		&& "?"[key_len] == '\0')
+		return (ft_strdup("0"));
+	return (ft_strdup(""));
+}
+
+int	expand_var(char	**var)
 {
 	char	*new_value;
 	char	*content;
@@ -144,7 +151,7 @@ int	expand_var(t_list *node)
 	char	*double_quote;
 
 	new_value = NULL;
-	content = (char *)node->content;
+	content = (char *)(*var);
 	if (content[0] == '$')
 		new_value = get_var_value(content + 1);
 	else
@@ -158,45 +165,50 @@ int	expand_var(t_list *node)
 	}
 	if (!new_value)
 		return (0);
-	free(node->content);
-	node->content = new_value;
+	free(*var);
+	*var = new_value;
 	return (1);
 }
 
-void	expand_vars(t_list *variables)
+char	*expand_token(char *s)
 {
-	t_list	*temp;
+	t_list	*var_list;
+	t_list	*current;
+	char	*new_tok;
 
-	temp = variables;
-	while (temp)
+	var_list = extract_vars(s);
+	current = var_list;
+	while (current)
 	{
-		expand_var(temp);
-		temp = temp->next;
+		expand_var((char **)&current->content);
+		current = current->next;
 	}
+	new_tok = concat_vars(var_list);
+	ft_lstclear(&var_list, free);
+	return (new_tok);
 }
 
 int	main(void)
 {
-	t_list	*variables;
+	t_list	*var_list;
 	t_list	*temp;
-	char	*result;
 	char	*str;
+	char	*new_str;
 
-	str = "He\"ll\"o\" $USER'Aluno'\", Welcome to '$SCHOOL' in $CITY \".\" $?";
-	variables = extract_vars(str);
-	temp = variables;
+	str = "He\"ll\"o\" $USER'Vulgo'\"\"$NICK\", Welcome to '$SCHOOL' in $CITY \".\" $?";
+	var_list = extract_vars(str);
+	temp = var_list;
 	while (temp)
 	{
 		printf("Variable: {%s}\n", (char *)temp->content);
 		temp = temp->next;
 	}
-	expand_vars(variables);
-	result = concat_vars(variables);
-	if (result)
+	new_str = expand_token(str);
+	if (new_str)
 	{
-		printf("%s\n", result);
-		free(result);
+		printf("%s\n", new_str);
+		free(new_str);
 	}
-	ft_lstclear(&variables, free);
+	ft_lstclear(&var_list, free);
 	return (0);
 }

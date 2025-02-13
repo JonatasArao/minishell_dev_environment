@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 08:55:13 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/13 10:56:39 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/13 15:07:15 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,26 +120,13 @@ char	*concat_vars(t_list *vars)
 
 char	*get_var_value(const char *key)
 {
-	size_t		key_len;
+	char	*value;
 
-	if (!key)
-		return (NULL);
-	key_len = ft_strlen(key);
-	if (ft_strncmp("USER", key, key_len) == 0
-		&& "USER"[key_len] == '\0')
-		return (ft_strdup("Guilherme"));
-	else if (ft_strncmp("SCHOOL", key, key_len) == 0
-		&& "SCHOOL"[key_len] == '\0')
-		return (ft_strdup("42"));
-	else if (ft_strncmp("CITY", key, key_len) == 0
-		&& "CITY"[key_len] == '\0')
-		return (ft_strdup("São Paulo"));
-	else if (ft_strncmp("NICK", key, key_len) == 0
-		&& "NICK"[key_len] == '\0')
-		return (ft_strdup("Gugomes"));
-	else if (ft_strncmp("?", key, key_len) == 0
-		&& "?"[key_len] == '\0')
+	if (ft_strncmp(key, "?", 2) == 0)
 		return (ft_strdup("0"));
+	value = getenv(key);
+	if (value)
+		return (ft_strdup(value));
 	return (ft_strdup(""));
 }
 
@@ -158,10 +145,12 @@ int	expand_var(char	**var)
 	{
 		quote = ft_strrchr(content, '\'');
 		double_quote = ft_strrchr(content, '"');
-		if (quote && (!double_quote || quote > double_quote))
-			new_value = ft_strtrim(content, "'");
-		else if (double_quote && (!quote || double_quote > quote))
+		if (double_quote && (!quote || double_quote > quote
+				|| (ft_strncmp(content, "'\"", 2) == 0 && content[3] == '\0')
+				|| (ft_strncmp(content, "\"'", 2) == 0 && content[3] == '\0')))
 			new_value = ft_strtrim(content, "\"");
+		else if (quote && (!double_quote || quote > double_quote))
+			new_value = ft_strtrim(content, "'");
 	}
 	if (!new_value)
 		return (0);
@@ -195,7 +184,7 @@ int	main(void)
 	char	*str;
 	char	*new_str;
 
-	str = "He\"ll\"o\" $USER'Vulgo'\"\"$NICK\", Welcome to '$SCHOOL' in $CITY \".\" $?";
+	str = "He\"ll\"o\" $USER'Vulgo'\"\"'$HOME'\", Welcome to '\"$PATH\"' in $LANG \".\" $?";
 	var_list = extract_vars(str);
 	temp = var_list;
 	while (temp)

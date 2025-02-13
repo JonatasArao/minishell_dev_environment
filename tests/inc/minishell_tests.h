@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:57:40 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/12 16:12:48 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/13 15:20:43 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -536,5 +536,58 @@ int test_lstset_env_var(void);
  * @return int Returns 0 if the test passes, otherwise returns a non-zero value.
  */
 int test_extract_env_vars(void);
-
+/**
+ * @brief Tests the creation of an environment string.
+ *
+ * This function is designed to test the functionality of creating an environment
+ * string from a given key-value pair. It ensures that the environment string is
+ * correctly formatted and ready for use.
+ *
+ * @return int Returns 0 if the test passes, otherwise returns a non-zero value.
+ */
+int test_create_env_string(void);
+/**
+ * @brief Tests the functionality of the get_envp function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the get_envp function, ensuring that it properly retrieves
+ * the environment variables as an array of strings.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int test_get_envp(void);
+/**
+ * @brief Tests the functionality of the get_var_end function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the get_var_end function, ensuring that it properly identifies
+ * and returns the end position of a variable in a given input.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int test_get_var_end(void);
+/**
+ * @brief Tests the functionality of the get_next_var function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the get_next_var function, ensuring that it properly identifies
+ * and returns the next variable in a given input.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int test_get_next_var(void);
+/**
+ * @brief Tests the functionality of the extract_vars function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the extract_vars function, ensuring that it properly identifies
+ * and extracts variables from a given input.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int test_extract_vars(void);
 #endif

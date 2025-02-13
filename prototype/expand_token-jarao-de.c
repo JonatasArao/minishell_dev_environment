@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 08:55:13 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/13 15:07:15 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/13 15:59:53 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,6 @@ int	expand_var(char	**var)
 		quote = ft_strrchr(content, '\'');
 		double_quote = ft_strrchr(content, '"');
 		if (double_quote && (!quote || double_quote > quote
-				|| (ft_strncmp(content, "'\"", 2) == 0 && content[3] == '\0')
 				|| (ft_strncmp(content, "\"'", 2) == 0 && content[3] == '\0')))
 			new_value = ft_strtrim(content, "\"");
 		else if (quote && (!double_quote || quote > double_quote))

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test_get_next_var.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 14:08:46 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/13 15:47:32 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/18 22:16:55 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -293,7 +293,7 @@ MU_TEST(test_get_next_var_end_complex_string)
 		" ",
 		"$?"
 	};
-	char *actual_results[16];
+	char *actual_results[17];
 	char *input_string;
 	size_t i;
 
@@ -309,12 +309,12 @@ MU_TEST(test_get_next_var_end_complex_string)
 
 	// ASSERT
 	i = 0;
-	while (i++ < 16)
-		mu_assert_string_eq(expected_results[i], actual_results[i]);
+	while (i < 17)
+		mu_assert_string_eq(expected_results[i], actual_results[i++]);
 
 	// CLEANUP
 	i = 0;
-	while (i < 16)
+	while (i < 17)
 		free(actual_results[i++]);
 }
 

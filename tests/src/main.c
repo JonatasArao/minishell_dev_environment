@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:26:10 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/13 17:31:08 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/18 22:27:44 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,12 @@ int	main(void)
 	// Testing functions from expand/expand_token.c
 	printf(COLORIZE("File: expand/expand_token.c\n", STYLE_BOLD, COLOR_MAGENTA));
 	printf(COLORIZE("Testing function: get_var_value\n", STYLE_BOLD, COLOR_CYAN));
-	test_get_var_end();
+	test_get_var_value();
+	printf(COLORIZE("Testing function: concat_vars\n", STYLE_BOLD, COLOR_CYAN));
+	test_concat_vars();
+	printf(COLORIZE("Testing function: expand_var\n", STYLE_BOLD, COLOR_CYAN));
+	test_expand_var();
+	printf(COLORIZE("Testing function: expand_token\n", STYLE_BOLD, COLOR_CYAN));
+	test_expand_token();
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test_create_env_string.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 07:23:47 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/13 07:33:49 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/18 22:20:04 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,9 @@ MU_TEST(test_create_env_string_valid)
 
 	// ASSERT
 	mu_assert_string_eq(expected_result, actual_result);
+
+	// CLEANUP
+	free(actual_result);
 }
 
 MU_TEST(test_create_env_string_no_key)
@@ -65,6 +68,9 @@ MU_TEST(test_create_env_string_no_value)
 
 	// ASSERT
 	mu_assert_string_eq(expected_result, actual_result);
+
+	// CLEANUP
+	free(actual_result);
 }
 
 MU_TEST(test_create_env_string_multiple)
@@ -92,6 +98,10 @@ MU_TEST(test_create_env_string_multiple)
 	// ASSERT
 	mu_assert_string_eq(expected_result1, actual_result1);
 	mu_assert_string_eq(expected_result2, actual_result2);
+
+	// CLEANUP
+	free(actual_result1);
+	free(actual_result2);
 }
 
 MU_TEST(test_create_env_string_special_characters)
@@ -110,6 +120,9 @@ MU_TEST(test_create_env_string_special_characters)
 
 	// ASSERT
 	mu_assert_string_eq(expected_result, actual_result);
+
+	// CLEANUP
+	free(actual_result);
 }
 
 MU_TEST(test_create_env_string_null_key)
@@ -182,6 +195,9 @@ MU_TEST(test_create_env_string_long_key_value)
 
 	// ASSERT
 	mu_assert_string_eq(expected_result, actual_result);
+
+	// CLEANUP
+	free(actual_result);
 }
 
 MU_TEST_SUITE(create_env_string_test_suite)

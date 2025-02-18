@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_tests.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:57:40 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/13 17:30:25 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/18 19:54:29 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -601,4 +601,38 @@ int test_extract_vars(void);
  * the test fails.
  */
 int test_get_var_value(void);
+/**
+ * @brief Tests the functionality of the concat_vars function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the concat_vars function, ensuring that it properly concatenates
+ * variables and returns the expected result.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int test_concat_vars(void);
+/**
+ * @brief Tests the functionality of the expand_var function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the expand_var function, ensuring that it properly expands
+ * variables in a given input.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int test_expand_var(void);
+/**
+ * @brief Tests the functionality of the expand_token function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the expand_token function, ensuring that it properly expands
+ * tokens in a given input.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int test_expand_token(void);
+
 #endif

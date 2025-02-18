@@ -79,7 +79,10 @@ SRC_FILES = main.c \
 			expand/extract_vars/test_get_var_end.c \
 			expand/extract_vars/test_get_next_var.c \
 			expand/extract_vars/test_extract_vars.c \
-			expand/expand_token/test_get_var_value.c
+			expand/expand_token/test_get_var_value.c \
+			expand/expand_token/test_concat_vars.c \
+			expand/expand_token/test_expand_var.c \
+			expand/expand_token/test_expand_token.c
 SRC = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJS_DIR = objs
 OBJS = $(addprefix $(OBJS_DIR)/, $(subst /,-, $(SRC_FILES:.c=.o)))

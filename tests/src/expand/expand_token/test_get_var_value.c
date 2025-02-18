@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test_get_var_value.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:12:09 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/13 17:23:25 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/18 21:55:30 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,11 +223,15 @@ MU_TEST(test_get_var_value_null_env)
 	int last_status = 0;
 
 	// ACT
-	expected_result = NULL;
+	expected_result = strdup("");
 	actual_result = get_var_value(env_list, last_status, key);
 
 	// ASSERT
-	mu_assert(actual_result == expected_result, "Expected result to be NULL for NULL env list");
+	mu_assert_string_eq(expected_result, actual_result);
+
+	// CLEANUP
+	free(expected_result);
+	free(actual_result);
 }
 
 MU_TEST(test_get_var_value_empty_key)

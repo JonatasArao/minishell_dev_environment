@@ -6,11 +6,11 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 13:13:50 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/17 19:04:18 by marvin           ###   ########.fr       */
+/*   Updated: 2025/02/18 20:10:01 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "/workspace/minishell/inc/minishell.h"
+#include "../minishell/inc/minishell.h"
 #include <sys/wait.h>
 #include <fcntl.h>
 
@@ -18,10 +18,45 @@ void		free_array(char **array);
 char		**ft_lst_to_array(t_list *lst);
 char		*get_command_path(char *cmd, char **env);
 static void	handle_error(char **args, char *message, int exit_code);
-static void	execute_command(t_command *cmd, char **env);
-static void	execute_pipeline(t_list *commands, char **env);
+static void	execute_command(t_command *cmd, t_list *env_vars);
+static void	execute_pipeline(t_list *commands, t_minish *msh);
 int			open_file(const char *filepath, int flags);
+int			is_builtin(t_command *cmd);
+void		execute_builtin(t_command *cmd, t_minish *msh);
+void		builtin_cd(t_command *cmd, t_minish *msh);
 
+void	builtin_cd(t_command *cmd, t_minish *msh)
+{
+	char	*path;
+	char	cwd[1024];
+	char	*oldpwd;
+
+	if (!cmd->arguments->next)
+	{
+		ft_putstr_fd("minishell: cd: missing argument\n", 2);
+		msh->last_status = 1;
+		return ;
+	}
+	path = (char *)cmd->arguments->next->content;
+	oldpwd = getcwd(NULL, 0);
+	if (chdir(path) != 0)
+	{
+		ft_putstr_fd("minishell: cd: ", 2);
+		perror(path);
+		msh->last_status = 1;
+		free(oldpwd);
+		return ;
+	}
+	if (getcwd(cwd, sizeof(cwd)) != NULL)
+	{
+		lstset_env_var(&msh->env_vars, "PWD", cwd);
+		lstset_env_var(&msh->env_vars, "OLDPWD", oldpwd);
+	}
+	else
+		perror("minishell: cd");
+	free(oldpwd);
+	msh->last_status = 0;
+}
 static void	handle_error(char **args, char *message, int exit_code)
 {
 	ft_putstr_fd(message, 2);
@@ -69,10 +104,10 @@ char	**ft_lst_to_array(t_list *lst)
 			free_array(array);
 			return (NULL);
 		}
-        lst = lst->next;
-        i++;
+		lst = lst->next;
+		i++;
 	}
-    array[i] = NULL;
+	array[i] = NULL;
 	return (array);
 }
 
@@ -143,7 +178,7 @@ char	*get_command_path(char *cmd, char **env)
 	if (!paths)
 	{
 		ft_lstclear(&env_list, free_env_var);
-		return (cmd);
+        return (ft_strdup(cmd));
 	}
 	command_path = find_command_in_paths(cmd, paths);
 	if (command_path)
@@ -153,7 +188,36 @@ char	*get_command_path(char *cmd, char **env)
 	}
 	free_array(paths);
 	ft_lstclear(&env_list, free_env_var);
-	return (cmd);
+    return (ft_strdup(cmd));
+}
+
+char	**get_envp(t_list *env)
+{
+	t_list		*current;
+	t_env_var	*env_var;
+	char		**envp;
+	int			len;
+	int			i;
+
+	len = ft_lstsize(env);
+	if (!len)
+		return (NULL);
+	envp = (char **) malloc((len + 1) * sizeof(char *));
+	if (!envp)
+		return (NULL);
+	current = env;
+	i = 0;
+	while (current)
+	{
+		env_var = (t_env_var *) current->content;
+		envp[i] = create_env_string(env_var->key, env_var->value);
+		if (!envp[i])
+			return (ft_free_matrix((void **) envp, i));
+		current = current->next;
+		i++;
+	}
+	envp[i] = NULL;
+	return (envp);
 }
 
 static int	apply_redirections(t_command *cmd)
@@ -165,7 +229,7 @@ static int	apply_redirections(t_command *cmd)
 	redir_node = cmd->output_redir;
 	while (redir_node)
 	{
-        redir = (t_redirection *)redir_node->content;
+		redir = (t_redirection *)redir_node->content;
 		if (ft_strncmp(redir->type, ">", 1) == 0)
 			flags = O_WRONLY | O_CREAT | O_TRUNC;
 		else if (ft_strncmp(redir->type, ">>", 2) == 0)
@@ -184,24 +248,40 @@ static int	apply_redirections(t_command *cmd)
 	}
 	return (1);
 }
-static void	execute_command(t_command *cmd, char **env)
+
+static void	execute_command(t_command *cmd, t_list *env_vars)
 {
 	char	**args;
 	char	*path;
+	char	**env;
 
+	env = get_envp(env_vars);  // Converter lista para array
+	if (!env)
+		handle_error(NULL, "minishell: environment error", 1);
+	
 	args = ft_lst_to_array(cmd->arguments);
 	if (!args || !args[0])
+	{
+		free_array(env);
 		handle_error(args, "minishell: command not found", 127);
-	if (!args[0][0])
-		handle_error(args, "minishell: syntax error", 2);
-    path = get_command_path(args[0], env);
-	if (!path)
-		handle_error(args, "minishell: command not found", 127);
+	}
+	
+	path = get_command_path(args[0], env);
 	execve(path, args, env);
+    if (execve(path, args, env) == -1)
+    {
+        perror("minishell");
+        free_array(env);
+        free(path);
+        handle_error(args, "", 126);
+    }
+	free_array(env);
+	free(path);
 	handle_error(args, "minishell: execve error", 126);
 }
 
-static void	handle_child(t_command *cmd, int pipe_fd[2], int input_fd, int has_next, char **env)
+static void	handle_child(t_command *cmd, int pipe_fd[2], \
+	int input_fd, int has_next, t_list *env_vars)
 {
 	if (!apply_redirections(cmd))
 		exit(1);
@@ -219,9 +299,28 @@ static void	handle_child(t_command *cmd, int pipe_fd[2], int input_fd, int has_n
 	}
 	else
 		close(pipe_fd[0]);
-	execute_command(cmd, env);
+	execute_command(cmd, env_vars);
 }
 
+void	execute_builtin(t_command *cmd, t_minish *msh)
+{
+	char	*cmd_name;
+
+	cmd_name = (char *)cmd->arguments->content;
+	if (ft_strncmp(cmd_name, "cd", 2) == 0)
+		builtin_cd(cmd, msh);
+	// Adicione outras builtins aqui
+}
+
+int	is_builtin(t_command *cmd)
+{
+	char	*name;
+
+	if (!cmd->arguments || !cmd->arguments->content)
+		return (0);
+	name = (char *)cmd->arguments->content;
+	return (ft_strncmp(name, "cd", 2) == 0);
+}
 static void	handle_parent(int *input_fd, int pipe_fd[2], int has_next)
 {
 	if (has_next)
@@ -231,7 +330,30 @@ static void	handle_parent(int *input_fd, int pipe_fd[2], int has_next)
 	*input_fd = pipe_fd[0];
 }
 
-static void	execute_pipeline(t_list *commands, char **env)
+void	*ft_free_matrix(void **matrix, size_t size)
+{
+	if (matrix)
+	{
+		while (size-- > 0)
+			free(matrix[size]);
+		free(matrix);
+	}
+	return (NULL);
+}
+
+// Criar string no formato "KEY=value"
+char	*create_env_string(const char *key, const char *value)
+{
+	char	*temp;
+	char	*result;
+
+	temp = ft_strjoin(key, "=");
+	result = ft_strjoin(temp, value);
+	free(temp);
+	return (result);
+}
+
+static void	execute_pipeline(t_list *commands, t_minish *msh)
 {
 	int		pipe_fd[2];
 	int		input_fd;
@@ -243,25 +365,31 @@ static void	execute_pipeline(t_list *commands, char **env)
 		t_command	*cmd = (t_command *)commands->content;
 		int			has_next = (commands->next != NULL);
 
-        if (has_next && pipe(pipe_fd) == -1)
-        {
-            perror("pipe");
-            exit(1);
-        }
-        pid = fork();
-        if (pid == 0)
-        {
-            handle_child(cmd, pipe_fd, input_fd, has_next, env);
-        }
-        else
-        {
-            handle_parent(&input_fd, pipe_fd, has_next);
-            commands = commands->next;
-        }
-    }
-    while (wait(NULL) > 0)
-        ;
+		if (is_builtin(cmd) && !has_next)
+		{
+			execute_builtin(cmd, msh);
+			commands = commands->next;
+			continue;
+		}
+		
+		if (has_next && pipe(pipe_fd) == -1)
+		{
+			perror("pipe");
+			exit(1);
+		}
+		pid = fork();
+		if (pid == 0)
+			handle_child(cmd, pipe_fd, input_fd, has_next, msh->env_vars);
+		else
+		{
+			handle_parent(&input_fd, pipe_fd, has_next);
+			commands = commands->next;
+		}
+	}
+	while (wait(NULL) > 0)
+		;
 }
+
 
 int	open_file(const char *filepath, int flags)
 {
@@ -284,21 +412,22 @@ int	main(int argc, char **argv, char **env)
 
 	(void)argc;
 	(void)argv;
+    msh.env_vars = extract_env_vars(env);
 	while (1)
 	{
 		msh.input = readline("minishell> ");
 		if (!msh.input)
 			break ;
-    	msh.tokens = extract_tokens(msh.input);
+		msh.tokens = extract_tokens(msh.input);
 		if (!is_token_list_valid(msh.tokens))
 		{
 			ft_lstclear(&msh.tokens, free);
 			free(msh.input);
 			continue ;
 		}
-        msh.commands = extract_commands(msh.tokens);
+		msh.commands = extract_commands(msh.tokens);
 		ft_lstclear(&msh.tokens, free);
-		execute_pipeline(msh.commands, env);
+		execute_pipeline(msh.commands, &msh);
 		ft_lstclear(&msh.commands, free_command);
 		add_history(msh.input);
 		free(msh.input);

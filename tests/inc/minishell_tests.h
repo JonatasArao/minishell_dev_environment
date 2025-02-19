@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:57:40 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/19 14:57:36 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/19 17:57:29 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -656,5 +656,66 @@ int test_expand_var(void);
  * the test fails.
  */
 int test_expand_token(void);
+/**
+ * @struct s_is_ambiguous_redirect_result
+ * @brief Structure to hold the result of the is_ambiguous_redirect function.
+ *
+ * This structure contains the return value and output of the is_ambiguous_redirect function.
+ *
+ * @var t_is_ambiguous_redirect_result::return_value
+ * Integer that holds the return value of the is_ambiguous_redirect function.
+ *
+ * @var t_is_ambiguous_redirect_result::output
+ * Pointer to a character array that holds the output of the is_ambiguous_redirect function.
+ */
+typedef struct s_is_ambiguous_redirect_result
+{
+	int		return_value;
+	char	*output;
+}	t_is_ambiguous_redirect_result;
+/**
+ * @brief Tests the functionality of the is_ambiguous_redirect function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the is_ambiguous_redirect function, ensuring that it properly identifies
+ * if a given redirection is ambiguous.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int test_is_ambiguous_redirect(void);
+/**
+ * @brief Tests the functionality of the expand_redir function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the expand_redir function, ensuring that it properly expands
+ * redirections in a given input.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int test_expand_redir(void);
+/**
+ * @brief Tests the functionality of the expand_arguments function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the expand_arguments function, ensuring that it properly expands
+ * arguments in a given input.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int test_expand_arguments(void);
+/**
+ * @brief Tests the functionality of the expand_commands function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the expand_commands function, ensuring that it properly expands
+ * commands in a given input.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int test_expand_commands(void);
 
 #endif

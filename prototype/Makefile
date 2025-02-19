@@ -19,7 +19,8 @@ MSH_SRC_FILES = main.c \
 				expand/env_vars_list.c \
 				expand/envp_generator.c \
 				expand/extract_vars.c \
-				expand/expand_token.c
+				expand/expand_token.c \
+				expand/expand_commands.c
 MSH_SRC = $(addprefix $(MSH_SRC_DIR)/, $(MSH_SRC_FILES))
 MSH_OBJS_DIR = minishell_objs
 MSH_OBJS = $(addprefix $(MSH_OBJS_DIR)/, $(subst /,-, $(MSH_SRC_FILES:.c=.o)))

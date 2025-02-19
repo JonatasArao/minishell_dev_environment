@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:26:10 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/19 14:58:45 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/19 17:28:36 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,5 +98,9 @@ int	main(void)
 	test_expand_var();
 	printf(COLORIZE("Testing function: expand_token\n", STYLE_BOLD, COLOR_CYAN));
 	test_expand_token();
+	// Testing functions from expand/expand_commands.c
+	printf(COLORIZE("File: expand/expand_commands.c\n", STYLE_BOLD, COLOR_MAGENTA));
+	printf(COLORIZE("Testing function: is_ambiguous_redirect\n", STYLE_BOLD, COLOR_CYAN));
+	test_is_ambiguous_redirect();
 	return (0);
 }

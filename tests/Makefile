@@ -85,7 +85,8 @@ SRC_FILES = main.c \
 			expand/expand_token/test_concat_vars.c \
 			expand/expand_token/test_expand_quotes.c \
 			expand/expand_token/test_expand_var.c \
-			expand/expand_token/test_expand_token.c
+			expand/expand_token/test_expand_token.c \
+			expand/expand_commands/test_is_ambiguous_redirect.c
 SRC = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJS_DIR = objs
 OBJS = $(addprefix $(OBJS_DIR)/, $(subst /,-, $(SRC_FILES:.c=.o)))
@@ -175,6 +176,9 @@ $(OBJS_DIR)/expand-extract_vars-%.o: $(SRC_DIR)/expand/extract_vars/%.c $(HEADER
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(OBJS_DIR)/expand-expand_token-%.o: $(SRC_DIR)/expand/expand_token/%.c $(HEADER) | $(OBJS_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJS_DIR)/expand-expand_commands-%.o: $(SRC_DIR)/expand/expand_commands/%.c $(HEADER) | $(OBJS_DIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 

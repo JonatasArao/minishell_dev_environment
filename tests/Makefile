@@ -27,7 +27,8 @@ MSH_SRC_FILES = main.c \
 				expand/env_vars_list.c \
 				expand/envp_generator.c \
 				expand/extract_vars.c \
-				expand/expand_token.c
+				expand/expand_token.c \
+				expand/expand_commands.c
 MSH_SRC = $(addprefix $(MSH_SRC_DIR)/, $(MSH_SRC_FILES))
 MSH_OBJS_DIR = minishell_objs
 MSH_OBJS = $(addprefix $(MSH_OBJS_DIR)/, $(subst /,-, $(MSH_SRC_FILES:.c=.o)))
@@ -56,6 +57,7 @@ SRC_FILES = main.c \
 			parse/extract_tokens/test_get_token_end.c \
 			parse/extract_tokens/test_get_next_token.c \
 			parse/extract_tokens/test_extract_tokens.c \
+			parse/token_checks/test_is_heredoc.c \
 			parse/token_checks/test_is_input_redirection.c \
 			parse/token_checks/test_is_output_redirection.c \
 			parse/token_checks/test_is_redirection.c \

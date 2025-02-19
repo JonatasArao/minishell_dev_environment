@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:57:40 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/18 19:54:29 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/18 23:43:58 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -312,6 +312,17 @@ typedef struct s_extract_tokens_result
  * the test fails.
  */
 int	test_extract_tokens(void);
+/**
+ * @brief Tests the functionality of the is_heredoc function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the is_heredoc function, ensuring that it properly identifies
+ * if a given token is a heredoc symbol.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int test_is_heredoc(void);
 /**
  * @brief Tests the functionality of the is_input_redirection function.
  *

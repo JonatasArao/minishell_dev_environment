@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_tests.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:57:40 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/18 23:43:58 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/19 14:57:36 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -623,6 +623,17 @@ int test_get_var_value(void);
  * the test fails.
  */
 int test_concat_vars(void);
+/**
+ * @brief Tests the functionality of the expand_quotes function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the expand_quotes function, ensuring that it properly expands
+ * quoted strings in a given input.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int test_expand_quotes(void);
 /**
  * @brief Tests the functionality of the expand_var function.
  *

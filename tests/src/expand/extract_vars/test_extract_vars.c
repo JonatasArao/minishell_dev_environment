@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 15:20:17 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/13 15:41:21 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/19 14:28:35 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,267 @@ MU_TEST(test_extract_vars_with_single_quote)
 	input_string = "$var' iable'";
 	expected_result = ft_lstnew(ft_strdup("$var"));
 	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("' iable'")));
+	actual_result = extract_vars(input_string);
+
+	// ASSERT
+	t_list *expected_ptr = expected_result;
+	t_list *actual_ptr = actual_result;
+	while (expected_ptr && actual_ptr)
+	{
+		mu_assert_string_eq((char *) expected_ptr->content,
+			(char *) actual_ptr->content);
+		expected_ptr = expected_ptr->next;
+		actual_ptr = actual_ptr->next;
+	}
+
+	// CLEANUP
+	ft_lstclear(&expected_result, free);
+	ft_lstclear(&actual_result, free);
+}
+
+MU_TEST(test_extract_vars_with_semicolon)
+{
+	// ARRANGE
+	t_list	*expected_result;
+	t_list	*actual_result;
+	char	*input_string;
+
+	// ACT
+	input_string = "$var;";
+	expected_result = ft_lstnew(ft_strdup("$var"));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup(";")));
+	actual_result = extract_vars(input_string);
+
+	// ASSERT
+	t_list *expected_ptr = expected_result;
+	t_list *actual_ptr = actual_result;
+	while (expected_ptr && actual_ptr)
+	{
+		mu_assert_string_eq((char *) expected_ptr->content,
+			(char *) actual_ptr->content);
+		expected_ptr = expected_ptr->next;
+		actual_ptr = actual_ptr->next;
+	}
+
+	// CLEANUP
+	ft_lstclear(&expected_result, free);
+	ft_lstclear(&actual_result, free);
+}
+
+MU_TEST(test_extract_vars_with_parentheses)
+{
+	// ARRANGE
+	t_list	*expected_result;
+	t_list	*actual_result;
+	char	*input_string;
+
+	// ACT
+	input_string = "$var()";
+	expected_result = ft_lstnew(ft_strdup("$var"));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("()")));
+	actual_result = extract_vars(input_string);
+
+	// ASSERT
+	t_list *expected_ptr = expected_result;
+	t_list *actual_ptr = actual_result;
+	while (expected_ptr && actual_ptr)
+	{
+		mu_assert_string_eq((char *) expected_ptr->content,
+			(char *) actual_ptr->content);
+		expected_ptr = expected_ptr->next;
+		actual_ptr = actual_ptr->next;
+	}
+
+	// CLEANUP
+	ft_lstclear(&expected_result, free);
+	ft_lstclear(&actual_result, free);
+}
+
+MU_TEST(test_extract_vars_with_square_brackets)
+{
+	// ARRANGE
+	t_list	*expected_result;
+	t_list	*actual_result;
+	char	*input_string;
+
+	// ACT
+	input_string = "$var[]";
+	expected_result = ft_lstnew(ft_strdup("$var"));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("[]")));
+	actual_result = extract_vars(input_string);
+
+	// ASSERT
+	t_list *expected_ptr = expected_result;
+	t_list *actual_ptr = actual_result;
+	while (expected_ptr && actual_ptr)
+	{
+		mu_assert_string_eq((char *) expected_ptr->content,
+			(char *) actual_ptr->content);
+		expected_ptr = expected_ptr->next;
+		actual_ptr = actual_ptr->next;
+	}
+
+	// CLEANUP
+	ft_lstclear(&expected_result, free);
+	ft_lstclear(&actual_result, free);
+}
+
+MU_TEST(test_extract_vars_with_curly_braces)
+{
+	// ARRANGE
+	t_list	*expected_result;
+	t_list	*actual_result;
+	char	*input_string;
+
+	// ACT
+	input_string = "$var{}";
+	expected_result = ft_lstnew(ft_strdup("$var"));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("{}")));
+	actual_result = extract_vars(input_string);
+
+	// ASSERT
+	t_list *expected_ptr = expected_result;
+	t_list *actual_ptr = actual_result;
+	while (expected_ptr && actual_ptr)
+	{
+		mu_assert_string_eq((char *) expected_ptr->content,
+			(char *) actual_ptr->content);
+		expected_ptr = expected_ptr->next;
+		actual_ptr = actual_ptr->next;
+	}
+
+	// CLEANUP
+	ft_lstclear(&expected_result, free);
+	ft_lstclear(&actual_result, free);
+}
+
+MU_TEST(test_extract_vars_with_plus)
+{
+	// ARRANGE
+	t_list	*expected_result;
+	t_list	*actual_result;
+	char	*input_string;
+
+	// ACT
+	input_string = "$var+";
+	expected_result = ft_lstnew(ft_strdup("$var"));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("+")));
+	actual_result = extract_vars(input_string);
+
+	// ASSERT
+	t_list *expected_ptr = expected_result;
+	t_list *actual_ptr = actual_result;
+	while (expected_ptr && actual_ptr)
+	{
+		mu_assert_string_eq((char *) expected_ptr->content,
+			(char *) actual_ptr->content);
+		expected_ptr = expected_ptr->next;
+		actual_ptr = actual_ptr->next;
+	}
+
+	// CLEANUP
+	ft_lstclear(&expected_result, free);
+	ft_lstclear(&actual_result, free);
+}
+
+MU_TEST(test_extract_vars_with_minus)
+{
+	// ARRANGE
+	t_list	*expected_result;
+	t_list	*actual_result;
+	char	*input_string;
+
+	// ACT
+	input_string = "$var-";
+	expected_result = ft_lstnew(ft_strdup("$var"));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("-")));
+	actual_result = extract_vars(input_string);
+
+	// ASSERT
+	t_list *expected_ptr = expected_result;
+	t_list *actual_ptr = actual_result;
+	while (expected_ptr && actual_ptr)
+	{
+		mu_assert_string_eq((char *) expected_ptr->content,
+			(char *) actual_ptr->content);
+		expected_ptr = expected_ptr->next;
+		actual_ptr = actual_ptr->next;
+	}
+
+	// CLEANUP
+	ft_lstclear(&expected_result, free);
+	ft_lstclear(&actual_result, free);
+}
+
+MU_TEST(test_extract_vars_with_asterisk)
+{
+	// ARRANGE
+	t_list	*expected_result;
+	t_list	*actual_result;
+	char	*input_string;
+
+	// ACT
+	input_string = "$var*";
+	expected_result = ft_lstnew(ft_strdup("$var"));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("*")));
+	actual_result = extract_vars(input_string);
+
+	// ASSERT
+	t_list *expected_ptr = expected_result;
+	t_list *actual_ptr = actual_result;
+	while (expected_ptr && actual_ptr)
+	{
+		mu_assert_string_eq((char *) expected_ptr->content,
+			(char *) actual_ptr->content);
+		expected_ptr = expected_ptr->next;
+		actual_ptr = actual_ptr->next;
+	}
+
+	// CLEANUP
+	ft_lstclear(&expected_result, free);
+	ft_lstclear(&actual_result, free);
+}
+
+MU_TEST(test_extract_vars_with_slash)
+{
+	// ARRANGE
+	t_list	*expected_result;
+	t_list	*actual_result;
+	char	*input_string;
+
+	// ACT
+	input_string = "$var/";
+	expected_result = ft_lstnew(ft_strdup("$var"));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("/")));
+	actual_result = extract_vars(input_string);
+
+	// ASSERT
+	t_list *expected_ptr = expected_result;
+	t_list *actual_ptr = actual_result;
+	while (expected_ptr && actual_ptr)
+	{
+		mu_assert_string_eq((char *) expected_ptr->content,
+			(char *) actual_ptr->content);
+		expected_ptr = expected_ptr->next;
+		actual_ptr = actual_ptr->next;
+	}
+
+	// CLEANUP
+	ft_lstclear(&expected_result, free);
+	ft_lstclear(&actual_result, free);
+}
+
+MU_TEST(test_extract_vars_with_equal)
+{
+	// ARRANGE
+	t_list	*expected_result;
+	t_list	*actual_result;
+	char	*input_string;
+
+	// ACT
+	input_string = "$var=";
+	expected_result = ft_lstnew(ft_strdup("$var"));
+	ft_lstadd_back(&expected_result, ft_lstnew(ft_strdup("=")));
 	actual_result = extract_vars(input_string);
 
 	// ASSERT
@@ -366,6 +627,15 @@ MU_TEST_SUITE(extract_vars_test_suite)
 	MU_RUN_TEST(test_extract_vars_with_dollar_and_space);
 	MU_RUN_TEST(test_extract_vars_with_dollar_and_quote);
 	MU_RUN_TEST(test_extract_vars_with_single_quote);
+	MU_RUN_TEST(test_extract_vars_with_semicolon);
+	MU_RUN_TEST(test_extract_vars_with_parentheses);
+	MU_RUN_TEST(test_extract_vars_with_square_brackets);
+	MU_RUN_TEST(test_extract_vars_with_curly_braces);
+	MU_RUN_TEST(test_extract_vars_with_plus);
+	MU_RUN_TEST(test_extract_vars_with_minus);
+	MU_RUN_TEST(test_extract_vars_with_asterisk);
+	MU_RUN_TEST(test_extract_vars_with_slash);
+	MU_RUN_TEST(test_extract_vars_with_equal);
 	MU_RUN_TEST(test_extract_vars_within_single_quote);
 	MU_RUN_TEST(test_extract_vars_within_double_quote);
 	MU_RUN_TEST(test_extract_vars_single_quote_within_double_quote);

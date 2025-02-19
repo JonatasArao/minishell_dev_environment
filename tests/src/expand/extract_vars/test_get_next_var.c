@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test_get_next_var.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 14:08:46 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/18 22:16:55 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/19 14:26:43 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,6 +156,267 @@ MU_TEST(test_get_next_var_end_with_single_quote)
 
 	// ACT
 	input_string = "$var' iable'";
+	i = 0;
+	while (*input_string)
+	{
+		actual_results[i] = get_next_var(input_string);
+		input_string += strlen(actual_results[i]);
+		i++;
+	}
+
+	// ASSERT
+	i = 0;
+	while (i < 2)
+		mu_assert_string_eq(expected_results[i], actual_results[i++]);
+
+	// CLEANUP
+	i = 0;
+	while (i < 2)
+		free(actual_results[i++]);
+}
+
+MU_TEST(test_get_var_end_with_semicolon)
+{
+	// ARRANGE
+	char *expected_results[] = { "$var", ";" };
+	char *actual_results[2];
+	char *input_string;
+	size_t i;
+
+	// ACT
+	input_string = "$var;";
+	i = 0;
+	while (*input_string)
+	{
+		actual_results[i] = get_next_var(input_string);
+		input_string += strlen(actual_results[i]);
+		i++;
+	}
+
+	// ASSERT
+	i = 0;
+	while (i < 2)
+		mu_assert_string_eq(expected_results[i], actual_results[i++]);
+
+	// CLEANUP
+	i = 0;
+	while (i < 2)
+		free(actual_results[i++]);
+}
+
+MU_TEST(test_get_var_end_with_parentheses)
+{
+	// ARRANGE
+	char *expected_results[] = { "$var", "()" };
+	char *actual_results[2];
+	char *input_string;
+	size_t i;
+
+	// ACT
+	input_string = "$var()";
+	i = 0;
+	while (*input_string)
+	{
+		actual_results[i] = get_next_var(input_string);
+		input_string += strlen(actual_results[i]);
+		i++;
+	}
+
+	// ASSERT
+	i = 0;
+	while (i < 2)
+		mu_assert_string_eq(expected_results[i], actual_results[i++]);
+
+	// CLEANUP
+	i = 0;
+	while (i < 2)
+		free(actual_results[i++]);
+}
+
+MU_TEST(test_get_var_end_with_square_brackets)
+{
+	// ARRANGE
+	char *expected_results[] = { "$var", "[]" };
+	char *actual_results[2];
+	char *input_string;
+	size_t i;
+
+	// ACT
+	input_string = "$var[]";
+	i = 0;
+	while (*input_string)
+	{
+		actual_results[i] = get_next_var(input_string);
+		input_string += strlen(actual_results[i]);
+		i++;
+	}
+
+	// ASSERT
+	i = 0;
+	while (i < 2)
+		mu_assert_string_eq(expected_results[i], actual_results[i++]);
+
+	// CLEANUP
+	i = 0;
+	while (i < 2)
+		free(actual_results[i++]);
+}
+
+MU_TEST(test_get_var_end_with_curly_braces)
+{
+	// ARRANGE
+	char *expected_results[] = { "$var", "{}" };
+	char *actual_results[2];
+	char *input_string;
+	size_t i;
+
+	// ACT
+	input_string = "$var{}";
+	i = 0;
+	while (*input_string)
+	{
+		actual_results[i] = get_next_var(input_string);
+		input_string += strlen(actual_results[i]);
+		i++;
+	}
+
+	// ASSERT
+	i = 0;
+	while (i < 2)
+		mu_assert_string_eq(expected_results[i], actual_results[i++]);
+
+	// CLEANUP
+	i = 0;
+	while (i < 2)
+		free(actual_results[i++]);
+}
+
+MU_TEST(test_get_var_end_with_plus)
+{
+	// ARRANGE
+	char *expected_results[] = { "$var", "+" };
+	char *actual_results[2];
+	char *input_string;
+	size_t i;
+
+	// ACT
+	input_string = "$var+";
+	i = 0;
+	while (*input_string)
+	{
+		actual_results[i] = get_next_var(input_string);
+		input_string += strlen(actual_results[i]);
+		i++;
+	}
+
+	// ASSERT
+	i = 0;
+	while (i < 2)
+		mu_assert_string_eq(expected_results[i], actual_results[i++]);
+
+	// CLEANUP
+	i = 0;
+	while (i < 2)
+		free(actual_results[i++]);
+}
+
+MU_TEST(test_get_var_end_with_minus)
+{
+	// ARRANGE
+	char *expected_results[] = { "$var", "-" };
+	char *actual_results[2];
+	char *input_string;
+	size_t i;
+
+	// ACT
+	input_string = "$var-";
+	i = 0;
+	while (*input_string)
+	{
+		actual_results[i] = get_next_var(input_string);
+		input_string += strlen(actual_results[i]);
+		i++;
+	}
+
+	// ASSERT
+	i = 0;
+	while (i < 2)
+		mu_assert_string_eq(expected_results[i], actual_results[i++]);
+
+	// CLEANUP
+	i = 0;
+	while (i < 2)
+		free(actual_results[i++]);
+}
+
+MU_TEST(test_get_var_end_with_asterisk)
+{
+	// ARRANGE
+	char *expected_results[] = { "$var", "*" };
+	char *actual_results[2];
+	char *input_string;
+	size_t i;
+
+	// ACT
+	input_string = "$var*";
+	i = 0;
+	while (*input_string)
+	{
+		actual_results[i] = get_next_var(input_string);
+		input_string += strlen(actual_results[i]);
+		i++;
+	}
+
+	// ASSERT
+	i = 0;
+	while (i < 2)
+		mu_assert_string_eq(expected_results[i], actual_results[i++]);
+
+	// CLEANUP
+	i = 0;
+	while (i < 2)
+		free(actual_results[i++]);
+}
+
+MU_TEST(test_get_var_end_with_slash)
+{
+	// ARRANGE
+	char *expected_results[] = { "$var", "/" };
+	char *actual_results[2];
+	char *input_string;
+	size_t i;
+
+	// ACT
+	input_string = "$var/";
+	i = 0;
+	while (*input_string)
+	{
+		actual_results[i] = get_next_var(input_string);
+		input_string += strlen(actual_results[i]);
+		i++;
+	}
+
+	// ASSERT
+	i = 0;
+	while (i < 2)
+		mu_assert_string_eq(expected_results[i], actual_results[i++]);
+
+	// CLEANUP
+	i = 0;
+	while (i < 2)
+		free(actual_results[i++]);
+}
+
+MU_TEST(test_get_var_end_with_equal)
+{
+	// ARRANGE
+	char *expected_results[] = { "$var", "=" };
+	char *actual_results[2];
+	char *input_string;
+	size_t i;
+
+	// ACT
+	input_string = "$var=";
 	i = 0;
 	while (*input_string)
 	{
@@ -345,6 +606,15 @@ MU_TEST_SUITE(get_next_var_test_suite)
 	MU_RUN_TEST(test_get_next_var_end_with_dollar_and_space);
 	MU_RUN_TEST(test_get_next_var_end_with_dollar_and_quote);
 	MU_RUN_TEST(test_get_next_var_end_with_single_quote);
+	MU_RUN_TEST(test_get_var_end_with_semicolon);
+	MU_RUN_TEST(test_get_var_end_with_parentheses);
+	MU_RUN_TEST(test_get_var_end_with_square_brackets);
+	MU_RUN_TEST(test_get_var_end_with_curly_braces);
+	MU_RUN_TEST(test_get_var_end_with_plus);
+	MU_RUN_TEST(test_get_var_end_with_minus);
+	MU_RUN_TEST(test_get_var_end_with_asterisk);
+	MU_RUN_TEST(test_get_var_end_with_slash);
+	MU_RUN_TEST(test_get_var_end_with_equal);
 	MU_RUN_TEST(test_get_next_var_end_within_single_quote);
 	MU_RUN_TEST(test_get_next_var_end_within_double_quote);
 	MU_RUN_TEST(test_get_next_var_single_quote_within_double_quote);

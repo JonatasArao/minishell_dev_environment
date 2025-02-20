@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_v3-gugomes.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: gugomes- <gugomes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 21:32:34 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/18 22:20:05 by marvin           ###   ########.fr       */
+/*   Updated: 2025/02/20 10:52:32 by gugomes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,7 @@ static void		handle_child(t_minish *msh, int pipe_fd[2], \
 static void		handle_parent(int *input_fd, int pipe_fd[2], int has_next);
 static void		process_command(t_minish *msh, int pipe_fd[2], int *input_fd);
 static int		apply_redirections(t_command *cmd);
-static char		*get_command_path(char *cmd, char **env);
-static t_list	*convert_env_to_list(char **env);
+static char		*get_command_path(char *cmd, t_list *env);
 static char		*check_direct_path(char *cmd);
 static char		**get_paths_from_env(t_list *env_list);
 static char		*find_command_in_paths(char *cmd, char **paths);
@@ -34,12 +33,9 @@ static void		execute_builtin(t_command *cmd, t_minish *msh);
 static void		handle_error(char *message, int exit_code);
 static char		**ft_lst_to_array(t_list *lst);
 static void		builtin_cd(t_command *cmd, t_minish *msh);
-static t_list	*convert_env_to_list(char **env);
 static char		*check_direct_path(char *cmd);
 static char		**get_paths_from_env(t_list *env_list);
 static char		*find_command_in_paths(char *cmd, char **paths);
-char			**get_envp(t_list *env);
-char			*create_env_string(const char *key, const char *value);
 
 // ===================== IMPLEMENTAÇÃO DO PIPELINE ======================
 static void	execute_pipeline(t_minish *msh)
@@ -149,81 +145,39 @@ static int	apply_redirections(t_command *cmd)
 }
 
 // ===================== RESOLUÇÃO DE COMANDOS ======================
-static void	execute_command(t_command *cmd, t_list *env_vars)
+static void	execute_command(t_command *cmd, t_list *env)
 {
-	char	**env;
+	char	**envp;
 	char	**args;
 	char	*path;
 
-	env = get_envp(env_vars);
+	envp = get_envp(env);
 	args = ft_lst_to_array(cmd->arguments);
 	path = get_command_path(args[0], env);
-	if (execve(path, args, env) == -1)
-		(perror("minishell"), free_array(env), free(path), free_array(args), exit(126));
+	if (execve(path, args, envp) == -1)
+		(perror("minishell"), free_array(envp), free(path), free_array(args), exit(126));
 }
 
-static char	*get_command_path(char *cmd, char **env)
+static char	*get_command_path(char *cmd, t_list *env)
 {
-	t_list	*env_list;
 	char	*direct_path;
 	char	**paths;
 	char	*command_path;
 
-	env_list = convert_env_to_list(env);
 	direct_path = check_direct_path(cmd);
 	if (direct_path)
-		return (ft_lstclear(&env_list, free_env_var), direct_path);
-	paths = get_paths_from_env(env_list);
+		return (direct_path);
+	paths = get_paths_from_env(env);
 	if (!paths)
-		return (ft_lstclear(&env_list, free_env_var), ft_strdup(cmd));
+		return (ft_strdup(cmd));
 	command_path = find_command_in_paths(cmd, paths);
 	if (command_path)
-		return (ft_lstclear(&env_list, free_env_var), command_path);
+		return (command_path);
 	free_array(paths);
-	ft_lstclear(&env_list, free_env_var);
 	return (ft_strdup(cmd));
 }
 
 // ===================== FUNÇÕES AUXILIARES ======================
-
-char	*create_env_string(const char *key, const char *value)
-{
-	char	*temp;
-	char	*result;
-
-	temp = ft_strjoin(key, "=");
-	result = ft_strjoin(temp, value);
-	free(temp);
-	return (result);
-}
-char	**get_envp(t_list *env)
-{
-	t_list		*current;
-	t_env_var	*env_var;
-	char		**envp;
-	int			len;
-	int			i;
-
-	len = ft_lstsize(env);
-	if (!len)
-		return (NULL);
-	envp = (char **) malloc((len + 1) * sizeof(char *));
-	if (!envp)
-		return (NULL);
-	current = env;
-	i = 0;
-	while (current)
-	{
-		env_var = (t_env_var *) current->content;
-		envp[i] = create_env_string(env_var->key, env_var->value);
-		if (!envp[i])
-			return (ft_free_matrix((void **) envp, i));
-		current = current->next;
-		i++;
-	}
-	envp[i] = NULL;
-	return (envp);
-}
 
 static char	*find_command_in_paths(char *cmd, char **paths)
 {
@@ -254,8 +208,8 @@ static char	**get_paths_from_env(t_list *env_list)
 
 	path_var = get_env_var(env_list, "PATH");
 	if (!path_var || !path_var->value)
-		return NULL;
-	return ft_split(path_var->value, ':');
+		return (NULL);
+	return (ft_split(path_var->value, ':'));
 }
 
 static char	*check_direct_path(char *cmd)
@@ -267,11 +221,6 @@ static char	*check_direct_path(char *cmd)
 		return (NULL);
 	}
 	return (NULL);
-}
-
-static t_list	*convert_env_to_list(char **env)
-{
-	return (extract_env_vars(env));
 }
 
 static void	free_array(char **array)
@@ -372,29 +321,67 @@ void	builtin_cd(t_command *cmd, t_minish *msh)
 }
 
 // ===================== MAIN ======================
-int	main(int argc, char **argv, char **env)
+void	free_minishell_loop(t_minish *msh)
+{
+	if (msh->tokens)
+		ft_lstclear(&msh->tokens, free);
+	if (msh->commands)
+		ft_lstclear(&msh->commands, free_command);
+	if (msh->input)
+		ft_delpointer((void **) &msh->input);
+}
+
+void	destroy_minishell(t_minish *msh)
+{
+	rl_clear_history();
+	free_minishell_loop(msh);
+	if (msh->env_vars)
+		ft_lstclear(&msh->env_vars, free_env_var);
+}
+
+int	process_input(t_minish *msh)
+{
+	msh->tokens = extract_tokens(msh->input);
+	if (!msh->tokens || !is_token_list_valid(msh->tokens))
+	{
+		if (msh->tokens)
+			ft_lstclear(&msh->tokens, free);
+		return (0);
+	}
+	msh->commands = extract_commands(msh->tokens);
+	if (msh->commands)
+		msh->commands = expand_commands(msh->env_vars,
+				msh->last_status, msh->commands);
+	if (!msh->commands)
+	{
+		ft_lstclear(&msh->tokens, free);
+		return (0);
+	}
+	return (1);
+}
+
+int	main(int argc, char **argv, char **envp)
 {
 	t_minish	msh;
 
-	(void)argc;
-	(void)argv;
-	msh.env_vars = extract_env_vars(env);
+	(void) argc;
+	(void) argv;
+	msh.last_status = 0;
+	msh.env_vars = extract_env_vars(envp);
+	if (!msh.env_vars)
+		return (1);
 	while (1)
 	{
-		msh.input = readline("minishell> ");
-		if (!msh.input)
+		msh.input = readline("\033[0;31mGUGOMES EXECUTOR V3 $ \033[0m");
+		if (msh.input == NULL
+			|| (ft_strncmp(msh.input, "exit", 4) == 0 && msh.input[4] == '\0'))
 			break ;
-		msh.tokens = extract_tokens(msh.input);
-		if (!is_token_list_valid(msh.tokens))
-		{
-			ft_lstclear(&msh.tokens, free);
-			free(msh.input);
-			continue ;
-		}
-		msh.commands = extract_commands(msh.tokens);
-		execute_pipeline(&msh);
-		ft_lstclear(&msh.commands, free_command);
-		free(msh.input);
+		if (process_input(&msh))
+			execute_pipeline(&msh);
+		if (!ft_strall(msh.input, ft_isspace))
+			add_history(msh.input);
+		free_minishell_loop(&msh);
 	}
+	destroy_minishell(&msh);
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test_parse_tokens.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 09:59:08 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/11 11:44:08 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/20 23:07:12 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ MU_TEST(test_parse_tokens_argument)
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_cmd->arguments->content,
-		(char *) expected_cmd->arguments->content);
+		(char *) actual_cmd->arguments->content);
 	mu_assert(actual_result == expected_result, "Wrong token node");
 
 	// CLEANUP
@@ -67,11 +67,11 @@ MU_TEST(test_parse_tokens_multiple_arguments)
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_cmd->arguments->content,
-		(char *) expected_cmd->arguments->content);
+		(char *) actual_cmd->arguments->content);
 	mu_assert_string_eq((char *) expected_cmd->arguments->next->content,
-		(char *) expected_cmd->arguments->next->content);
+		(char *) actual_cmd->arguments->next->content);
 	mu_assert_string_eq((char *) expected_cmd->arguments->next->next->content,
-		(char *) expected_cmd->arguments->next->next->content);
+		(char *) actual_cmd->arguments->next->next->content);
 	mu_assert(actual_result == expected_result, "Wrong token node");
 
 	// CLEANUP
@@ -120,16 +120,16 @@ MU_TEST(test_parse_tokens_input_redirection_less_than)
 	ft_lstadd_back(&token_list, ft_lstnew(ft_strdup("<")));
 	ft_lstadd_back(&token_list, ft_lstnew(ft_strdup("input.txt")));
 	expected_cmd = alloc_command();
-	lstadd_redir(&expected_cmd->input_redir, "<", "input.txt");
+	lstadd_redir(&expected_cmd->redirections, "<", "input.txt");
 	actual_cmd = alloc_command();
 	expected_result = NULL;
 	actual_result = parse_tokens(token_list, actual_cmd);
 
 	// ASSERT
-	mu_assert_string_eq(((t_redirection *)expected_cmd->input_redir->content)->type,
-		((t_redirection *)actual_cmd->input_redir->content)->type);
-	mu_assert_string_eq(((t_redirection *)expected_cmd->input_redir->content)->target,
-		((t_redirection *)actual_cmd->input_redir->content)->target);
+	mu_assert_string_eq(((t_redirection *)expected_cmd->redirections->content)->type,
+		((t_redirection *)actual_cmd->redirections->content)->type);
+	mu_assert_string_eq(((t_redirection *)expected_cmd->redirections->content)->target,
+		((t_redirection *)actual_cmd->redirections->content)->target);
 	mu_assert(actual_result == expected_result, "Wrong token node");
 
 	// CLEANUP
@@ -152,16 +152,16 @@ MU_TEST(test_parse_tokens_input_redirection_double_less_than)
 	ft_lstadd_back(&token_list, ft_lstnew(ft_strdup("<<")));
 	ft_lstadd_back(&token_list, ft_lstnew(ft_strdup("input.txt")));
 	expected_cmd = alloc_command();
-	lstadd_redir(&expected_cmd->input_redir, "<<", "input.txt");
+	lstadd_redir(&expected_cmd->redirections, "<<", "input.txt");
 	actual_cmd = alloc_command();
 	expected_result = NULL;
 	actual_result = parse_tokens(token_list, actual_cmd);
 
 	// ASSERT
-	mu_assert_string_eq(((t_redirection *)expected_cmd->input_redir->content)->type,
-		((t_redirection *)actual_cmd->input_redir->content)->type);
-	mu_assert_string_eq(((t_redirection *)expected_cmd->input_redir->content)->target,
-		((t_redirection *)actual_cmd->input_redir->content)->target);
+	mu_assert_string_eq(((t_redirection *)expected_cmd->redirections->content)->type,
+		((t_redirection *)actual_cmd->redirections->content)->type);
+	mu_assert_string_eq(((t_redirection *)expected_cmd->redirections->content)->target,
+		((t_redirection *)actual_cmd->redirections->content)->target);
 	mu_assert(actual_result == expected_result, "Wrong token node");
 
 	// CLEANUP
@@ -184,16 +184,16 @@ MU_TEST(test_parse_tokens_output_redirection_greater_than)
 	ft_lstadd_back(&token_list, ft_lstnew(ft_strdup(">")));
 	ft_lstadd_back(&token_list, ft_lstnew(ft_strdup("output.txt")));
 	expected_cmd = alloc_command();
-	lstadd_redir(&expected_cmd->output_redir, ">", "output.txt");
+	lstadd_redir(&expected_cmd->redirections, ">", "output.txt");
 	actual_cmd = alloc_command();
 	expected_result = NULL;
 	actual_result = parse_tokens(token_list, actual_cmd);
 
 	// ASSERT
-	mu_assert_string_eq(((t_redirection *)expected_cmd->output_redir->content)->type,
-		((t_redirection *)actual_cmd->output_redir->content)->type);
-	mu_assert_string_eq(((t_redirection *)expected_cmd->output_redir->content)->target,
-		((t_redirection *)actual_cmd->output_redir->content)->target);
+	mu_assert_string_eq(((t_redirection *)expected_cmd->redirections->content)->type,
+		((t_redirection *)actual_cmd->redirections->content)->type);
+	mu_assert_string_eq(((t_redirection *)expected_cmd->redirections->content)->target,
+		((t_redirection *)actual_cmd->redirections->content)->target);
 	mu_assert(actual_result == expected_result, "Wrong token node");
 
 	// CLEANUP
@@ -216,16 +216,16 @@ MU_TEST(test_parse_tokens_output_redirection_double_greater_than)
 	ft_lstadd_back(&token_list, ft_lstnew(ft_strdup(">>")));
 	ft_lstadd_back(&token_list, ft_lstnew(ft_strdup("append.txt")));
 	expected_cmd = alloc_command();
-	lstadd_redir(&expected_cmd->output_redir, ">>", "append.txt");
+	lstadd_redir(&expected_cmd->redirections, ">>", "append.txt");
 	actual_cmd = alloc_command();
 	expected_result = NULL;
 	actual_result = parse_tokens(token_list, actual_cmd);
 
 	// ASSERT
-	mu_assert_string_eq(((t_redirection *)expected_cmd->output_redir->content)->type,
-		((t_redirection *)actual_cmd->output_redir->content)->type);
-	mu_assert_string_eq(((t_redirection *)expected_cmd->output_redir->content)->target,
-		((t_redirection *)actual_cmd->output_redir->content)->target);
+	mu_assert_string_eq(((t_redirection *)expected_cmd->redirections->content)->type,
+		((t_redirection *)actual_cmd->redirections->content)->type);
+	mu_assert_string_eq(((t_redirection *)expected_cmd->redirections->content)->target,
+		((t_redirection *)actual_cmd->redirections->content)->target);
 	mu_assert(actual_result == expected_result, "Wrong token node");
 
 	// CLEANUP
@@ -260,7 +260,7 @@ MU_TEST(test_parse_tokens_pipe)
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_cmd->arguments->content,
-		(char *) expected_cmd->arguments->content);
+		(char *) actual_cmd->arguments->content);
 	mu_assert(actual_result == expected_result, "Wrong token node");
 
 	// CLEANUP
@@ -288,7 +288,7 @@ MU_TEST(test_parse_tokens_pipe_and_redirection)
 	ft_lstadd_back(&token_list, ft_lstnew(ft_strdup("pattern")));
 	expected_cmd = alloc_command();
 	lstadd_str(&expected_cmd->arguments, "cat");
-	lstadd_redir(&expected_cmd->input_redir, "<", "input.txt");
+	lstadd_redir(&expected_cmd->redirections, "<", "input.txt");
 	lstadd_str(&expected_cmd->arguments, "|");
 	lstadd_str(&expected_cmd->arguments, "grep");
 	lstadd_str(&expected_cmd->arguments, "pattern");
@@ -298,11 +298,11 @@ MU_TEST(test_parse_tokens_pipe_and_redirection)
 
 	// ASSERT
 	mu_assert_string_eq((char *) expected_cmd->arguments->content,
-		(char *) expected_cmd->arguments->content);
-	mu_assert_string_eq(((t_redirection *)expected_cmd->input_redir->content)->type,
-		((t_redirection *)actual_cmd->input_redir->content)->type);
-	mu_assert_string_eq(((t_redirection *)expected_cmd->input_redir->content)->target,
-		((t_redirection *)actual_cmd->input_redir->content)->target);
+		(char *) actual_cmd->arguments->content);
+	mu_assert_string_eq(((t_redirection *)expected_cmd->redirections->content)->type,
+		((t_redirection *)actual_cmd->redirections->content)->type);
+	mu_assert_string_eq(((t_redirection *)expected_cmd->redirections->content)->target,
+		((t_redirection *)actual_cmd->redirections->content)->target);
 	mu_assert(actual_result == expected_result, "Wrong token node");
 
 	// CLEANUP

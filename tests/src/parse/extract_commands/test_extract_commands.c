@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test_extract_commands.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 10:49:23 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/11 11:54:07 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/20 23:09:31 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,17 +90,17 @@ MU_TEST(test_parse_tokens_input_redirection_less_than)
 	ft_lstadd_back(&token_list, ft_lstnew(ft_strdup("<")));
 	ft_lstadd_back(&token_list, ft_lstnew(ft_strdup("file.txt")));
 	first_command = alloc_command();
-	lstadd_redir(&first_command->input_redir, "<", "file.txt");
+	lstadd_redir(&first_command->redirections, "<", "file.txt");
 	expected_result = NULL;
 	ft_lstadd_back(&expected_result, ft_lstnew(first_command));
 	actual_result = extract_commands(token_list);
 
 	// ASSERT
 	mu_check(ft_lstsize(actual_result) == ft_lstsize(expected_result));
-	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->input_redir->content)->type,
-							((t_redirection *)((t_command *)actual_result->content)->input_redir->content)->type);
-	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->input_redir->content)->target,
-							((t_redirection *)((t_command *)actual_result->content)->input_redir->content)->target);
+	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->redirections->content)->type,
+							((t_redirection *)((t_command *)actual_result->content)->redirections->content)->type);
+	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->redirections->content)->target,
+							((t_redirection *)((t_command *)actual_result->content)->redirections->content)->target);
 
 	// CLEANUP
 	ft_lstclear(&token_list, free);
@@ -121,17 +121,17 @@ MU_TEST(test_parse_tokens_input_redirection_double_less_than)
 	ft_lstadd_back(&token_list, ft_lstnew(ft_strdup("<<")));
 	ft_lstadd_back(&token_list, ft_lstnew(ft_strdup("file.txt")));
 	first_command = alloc_command();
-	lstadd_redir(&first_command->input_redir, "<<", "file.txt");
+	lstadd_redir(&first_command->redirections, "<<", "file.txt");
 	expected_result = NULL;
 	ft_lstadd_back(&expected_result, ft_lstnew(first_command));
 	actual_result = extract_commands(token_list);
 
 	// ASSERT
 	mu_check(ft_lstsize(actual_result) == ft_lstsize(expected_result));
-	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->input_redir->content)->type,
-							((t_redirection *)((t_command *)actual_result->content)->input_redir->content)->type);
-	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->input_redir->content)->target,
-							((t_redirection *)((t_command *)actual_result->content)->input_redir->content)->target);
+	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->redirections->content)->type,
+							((t_redirection *)((t_command *)actual_result->content)->redirections->content)->type);
+	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->redirections->content)->target,
+							((t_redirection *)((t_command *)actual_result->content)->redirections->content)->target);
 
 	// CLEANUP
 	ft_lstclear(&token_list, free);
@@ -152,17 +152,17 @@ MU_TEST(test_parse_tokens_output_redirection_greater_than)
 	ft_lstadd_back(&token_list, ft_lstnew(ft_strdup(">")));
 	ft_lstadd_back(&token_list, ft_lstnew(ft_strdup("file.txt")));
 	first_command = alloc_command();
-	lstadd_redir(&first_command->output_redir, ">", "file.txt");
+	lstadd_redir(&first_command->redirections, ">", "file.txt");
 	expected_result = NULL;
 	ft_lstadd_back(&expected_result, ft_lstnew(first_command));
 	actual_result = extract_commands(token_list);
 
 	// ASSERT
 	mu_check(ft_lstsize(actual_result) == ft_lstsize(expected_result));
-	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->output_redir->content)->type,
-							((t_redirection *)((t_command *)actual_result->content)->output_redir->content)->type);
-	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->output_redir->content)->target,
-							((t_redirection *)((t_command *)actual_result->content)->output_redir->content)->target);
+	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->redirections->content)->type,
+							((t_redirection *)((t_command *)actual_result->content)->redirections->content)->type);
+	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->redirections->content)->target,
+							((t_redirection *)((t_command *)actual_result->content)->redirections->content)->target);
 
 	// CLEANUP
 	ft_lstclear(&token_list, free);
@@ -183,17 +183,17 @@ MU_TEST(test_parse_tokens_output_redirection_double_greater_than)
 	ft_lstadd_back(&token_list, ft_lstnew(ft_strdup(">>")));
 	ft_lstadd_back(&token_list, ft_lstnew(ft_strdup("file.txt")));
 	first_command = alloc_command();
-	lstadd_redir(&first_command->output_redir, ">>", "file.txt");
+	lstadd_redir(&first_command->redirections, ">>", "file.txt");
 	expected_result = NULL;
 	ft_lstadd_back(&expected_result, ft_lstnew(first_command));
 	actual_result = extract_commands(token_list);
 
 	// ASSERT
 	mu_check(ft_lstsize(actual_result) == ft_lstsize(expected_result));
-	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->output_redir->content)->type,
-							((t_redirection *)((t_command *)actual_result->content)->output_redir->content)->type);
-	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->output_redir->content)->target,
-							((t_redirection *)((t_command *)actual_result->content)->output_redir->content)->target);
+	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->redirections->content)->type,
+							((t_redirection *)((t_command *)actual_result->content)->redirections->content)->type);
+	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->redirections->content)->target,
+							((t_redirection *)((t_command *)actual_result->content)->redirections->content)->target);
 
 	// CLEANUP
 	ft_lstclear(&token_list, free);
@@ -265,7 +265,7 @@ MU_TEST(test_extract_commands_with_pipe_and_redirection)
 	second_command = alloc_command();
 	lstadd_str(&second_command->arguments, "grep");
 	lstadd_str(&second_command->arguments, "minishell");
-	lstadd_redir(&second_command->output_redir, ">", "output.txt");
+	lstadd_redir(&second_command->redirections, ">", "output.txt");
 	expected_result = NULL;
 	ft_lstadd_back(&expected_result, ft_lstnew(first_command));
 	ft_lstadd_back(&expected_result, ft_lstnew(second_command));
@@ -281,10 +281,10 @@ MU_TEST(test_extract_commands_with_pipe_and_redirection)
 							((t_command *)expected_result->next->content)->arguments->content);
 	mu_assert_string_eq(((t_command *)actual_result->next->content)->arguments->next->content,
 							((t_command *)expected_result->next->content)->arguments->next->content);
-	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->next->content)->output_redir->content)->type,
-							((t_redirection *)((t_command *)actual_result->next->content)->output_redir->content)->type);
-	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->next->content)->output_redir->content)->target,
-							((t_redirection *)((t_command *)actual_result->next->content)->output_redir->content)->target);
+	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->next->content)->redirections->content)->type,
+							((t_redirection *)((t_command *)actual_result->next->content)->redirections->content)->type);
+	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->next->content)->redirections->content)->target,
+							((t_redirection *)((t_command *)actual_result->next->content)->redirections->content)->target);
 
 	// CLEANUP
 	ft_lstclear(&token_list, free);
@@ -361,9 +361,9 @@ MU_TEST(test_extract_commands_with_pipe_and_input_redirection)
 	ft_lstadd_back(&token_list, ft_lstnew(ft_strdup(">")));
 	ft_lstadd_back(&token_list, ft_lstnew(ft_strdup("output.txt")));
 	first_command = alloc_command();
-	lstadd_redir(&first_command->input_redir, "<", "input.txt");
+	lstadd_redir(&first_command->redirections, "<", "input.txt");
 	second_command = alloc_command();
-	lstadd_redir(&second_command->output_redir, ">", "output.txt");
+	lstadd_redir(&second_command->redirections, ">", "output.txt");
 	expected_result = NULL;
 	ft_lstadd_back(&expected_result, ft_lstnew(first_command));
 	ft_lstadd_back(&expected_result, ft_lstnew(second_command));
@@ -371,14 +371,14 @@ MU_TEST(test_extract_commands_with_pipe_and_input_redirection)
 
 	// ASSERT
 	mu_check(ft_lstsize(actual_result) == ft_lstsize(expected_result));
-	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->input_redir->content)->type,
-							((t_redirection *)((t_command *)actual_result->content)->input_redir->content)->type);
-	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->input_redir->content)->target,
-							((t_redirection *)((t_command *)actual_result->content)->input_redir->content)->target);
-	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->next->content)->output_redir->content)->type,
-							((t_redirection *)((t_command *)actual_result->next->content)->output_redir->content)->type);
-	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->next->content)->output_redir->content)->target,
-							((t_redirection *)((t_command *)actual_result->next->content)->output_redir->content)->target);
+	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->redirections->content)->type,
+							((t_redirection *)((t_command *)actual_result->content)->redirections->content)->type);
+	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->redirections->content)->target,
+							((t_redirection *)((t_command *)actual_result->content)->redirections->content)->target);
+	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->next->content)->redirections->content)->type,
+							((t_redirection *)((t_command *)actual_result->next->content)->redirections->content)->type);
+	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->next->content)->redirections->content)->target,
+							((t_redirection *)((t_command *)actual_result->next->content)->redirections->content)->target);
 
 	// CLEANUP
 	ft_lstclear(&token_list, free);
@@ -403,9 +403,9 @@ MU_TEST(test_extract_commands_with_double_input_redirection_and_pipe)
 	ft_lstadd_back(&token_list, ft_lstnew(ft_strdup(">>")));
 	ft_lstadd_back(&token_list, ft_lstnew(ft_strdup("output.txt")));
 	first_command = alloc_command();
-	lstadd_redir(&first_command->input_redir, "<<", "input.txt");
+	lstadd_redir(&first_command->redirections, "<<", "input.txt");
 	second_command = alloc_command();
-	lstadd_redir(&second_command->output_redir, ">>", "output.txt");
+	lstadd_redir(&second_command->redirections, ">>", "output.txt");
 	expected_result = NULL;
 	ft_lstadd_back(&expected_result, ft_lstnew(first_command));
 	ft_lstadd_back(&expected_result, ft_lstnew(second_command));
@@ -413,14 +413,14 @@ MU_TEST(test_extract_commands_with_double_input_redirection_and_pipe)
 
 	// ASSERT
 	mu_check(ft_lstsize(actual_result) == ft_lstsize(expected_result));
-	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->input_redir->content)->type,
-							((t_redirection *)((t_command *)actual_result->content)->input_redir->content)->type);
-	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->input_redir->content)->target,
-							((t_redirection *)((t_command *)actual_result->content)->input_redir->content)->target);
-	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->next->content)->output_redir->content)->type,
-							((t_redirection *)((t_command *)actual_result->next->content)->output_redir->content)->type);
-	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->next->content)->output_redir->content)->target,
-							((t_redirection *)((t_command *)actual_result->next->content)->output_redir->content)->target);
+	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->redirections->content)->type,
+							((t_redirection *)((t_command *)actual_result->content)->redirections->content)->type);
+	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->content)->redirections->content)->target,
+							((t_redirection *)((t_command *)actual_result->content)->redirections->content)->target);
+	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->next->content)->redirections->content)->type,
+							((t_redirection *)((t_command *)actual_result->next->content)->redirections->content)->type);
+	mu_assert_string_eq(((t_redirection *)((t_command *)expected_result->next->content)->redirections->content)->target,
+							((t_redirection *)((t_command *)actual_result->next->content)->redirections->content)->target);
 
 	// CLEANUP
 	ft_lstclear(&token_list, free);

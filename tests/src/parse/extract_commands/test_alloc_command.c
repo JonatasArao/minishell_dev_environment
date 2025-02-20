@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test_alloc_command.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 09:45:57 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/13 16:21:19 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/20 23:04:24 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,7 @@ MU_TEST(test_alloc_command_init)
 		mu_fail("Allocation size is shorter than expected for the command structure");
 	mu_check(cmd != NULL);
 	mu_check(cmd->arguments == NULL);
-	mu_check(cmd->input_redir == NULL);
-	mu_check(cmd->output_redir == NULL);
+	mu_check(cmd->redirections == NULL);
 	mu_check(cmd->input_fd == -1);
 	mu_check(cmd->output_fd == -1);
 	mu_check(cmd->status == 0);

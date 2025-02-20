@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test_expand_commands.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 12:25:06 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/20 13:08:41 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/20 23:12:54 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,15 +106,15 @@ MU_TEST(test_expand_commands_simple)
 
 	// ACT
 	tokens = extract_tokens("simple > simple >> simple < simple << simple");
-	cmds = extract_commands(tokens);;
+	cmds = extract_commands(tokens);
 	actual_result = expand_commands(env, last_status, cmds);
 
 	// ASSERT
 	mu_assert_string_eq("simple", (char *)((t_command *)actual_result->content)->arguments->content);
-	mu_assert_string_eq("simple", ((t_redirection *)((t_command *)actual_result->content)->input_redir->content)->target);
-	mu_assert_string_eq("simple", ((t_redirection *)((t_command *)actual_result->content)->input_redir->next->content)->target);
-	mu_assert_string_eq("simple", ((t_redirection *)((t_command *)actual_result->content)->output_redir->content)->target);
-	mu_assert_string_eq("simple", ((t_redirection *)((t_command *)actual_result->content)->output_redir->next->content)->target);
+	mu_assert_string_eq("simple", ((t_redirection *)((t_command *)actual_result->content)->redirections->content)->target);
+	mu_assert_string_eq("simple", ((t_redirection *)((t_command *)actual_result->content)->redirections->next->content)->target);
+	mu_assert_string_eq("simple", ((t_redirection *)((t_command *)actual_result->content)->redirections->next->next->content)->target);
+	mu_assert_string_eq("simple", ((t_redirection *)((t_command *)actual_result->content)->redirections->next->next->next->content)->target);
 
 	// CLEANUP
 	ft_lstclear(&cmds, free_command);
@@ -137,10 +137,10 @@ MU_TEST(test_expand_commands_single_quote)
 
 	// ASSERT
 	mu_assert_string_eq("single", (char *)((t_command *)actual_result->content)->arguments->content);
-	mu_assert_string_eq("single", ((t_redirection *)((t_command *)actual_result->content)->input_redir->content)->target);
-	mu_assert_string_eq("'single'", ((t_redirection *)((t_command *)actual_result->content)->input_redir->next->content)->target);
-	mu_assert_string_eq("single", ((t_redirection *)((t_command *)actual_result->content)->output_redir->content)->target);
-	mu_assert_string_eq("single", ((t_redirection *)((t_command *)actual_result->content)->output_redir->next->content)->target);
+	mu_assert_string_eq("single", ((t_redirection *)((t_command *)actual_result->content)->redirections->content)->target);
+	mu_assert_string_eq("single", ((t_redirection *)((t_command *)actual_result->content)->redirections->next->content)->target);
+	mu_assert_string_eq("single", ((t_redirection *)((t_command *)actual_result->content)->redirections->next->next->content)->target);
+	mu_assert_string_eq("'single'", ((t_redirection *)((t_command *)actual_result->content)->redirections->next->next->next->content)->target);
 
 	// CLEANUP
 	ft_lstclear(&cmds, free_command);
@@ -163,10 +163,10 @@ MU_TEST(test_expand_commands_double_quote)
 
 	// ASSERT
 	mu_assert_string_eq("double", (char *)((t_command *)actual_result->content)->arguments->content);
-	mu_assert_string_eq("double", ((t_redirection *)((t_command *)actual_result->content)->input_redir->content)->target);
-	mu_assert_string_eq("\"double\"", ((t_redirection *)((t_command *)actual_result->content)->input_redir->next->content)->target);
-	mu_assert_string_eq("double", ((t_redirection *)((t_command *)actual_result->content)->output_redir->content)->target);
-	mu_assert_string_eq("double", ((t_redirection *)((t_command *)actual_result->content)->output_redir->next->content)->target);
+	mu_assert_string_eq("double", ((t_redirection *)((t_command *)actual_result->content)->redirections->content)->target);
+	mu_assert_string_eq("double", ((t_redirection *)((t_command *)actual_result->content)->redirections->next->content)->target);
+	mu_assert_string_eq("double", ((t_redirection *)((t_command *)actual_result->content)->redirections->next->next->content)->target);
+	mu_assert_string_eq("\"double\"", ((t_redirection *)((t_command *)actual_result->content)->redirections->next->next->next->content)->target);
 
 	// CLEANUP
 	ft_lstclear(&cmds, free_command);
@@ -190,15 +190,15 @@ MU_TEST(test_expand_commands_valid_variable)
 
 	// ASSERT
 	mu_assert_string_eq("value", (char *)((t_command *)actual_result->content)->arguments->content);
-	mu_assert_string_eq("value", ((t_redirection *)((t_command *)actual_result->content)->input_redir->content)->target);
-	mu_assert_string_eq("$VAR", ((t_redirection *)((t_command *)actual_result->content)->input_redir->next->content)->target);
-	mu_assert_string_eq("value", ((t_redirection *)((t_command *)actual_result->content)->output_redir->content)->target);
-	mu_assert_string_eq("value", ((t_redirection *)((t_command *)actual_result->content)->output_redir->next->content)->target);
+	mu_assert_string_eq("value", ((t_redirection *)((t_command *)actual_result->content)->redirections->content)->target);
+	mu_assert_string_eq("value", ((t_redirection *)((t_command *)actual_result->content)->redirections->next->content)->target);
+	mu_assert_string_eq("value", ((t_redirection *)((t_command *)actual_result->content)->redirections->next->next->content)->target);
+	mu_assert_string_eq("$VAR", ((t_redirection *)((t_command *)actual_result->content)->redirections->next->next->next->content)->target);
 
 	// CLEANUP
 	ft_lstclear(&cmds, free_command);
 	ft_lstclear(&tokens, free);
-	ft_lstclear(&env, free);
+	ft_lstclear(&env, free_env_var);
 }
 
 MU_TEST(test_expand_commands_multiple_commands)
@@ -218,10 +218,10 @@ MU_TEST(test_expand_commands_multiple_commands)
 	// ASSERT
 	mu_assert_string_eq("cmd1", (char *)((t_command *)actual_result->content)->arguments->content);
 	mu_assert_string_eq("arg1", (char *)((t_command *)actual_result->content)->arguments->next->content);
-	mu_assert_string_eq("out1", ((t_redirection *)((t_command *)actual_result->content)->output_redir->content)->target);
+	mu_assert_string_eq("out1", ((t_redirection *)((t_command *)actual_result->content)->redirections->content)->target);
 	mu_assert_string_eq("cmd2", (char *)((t_command *)actual_result->next->content)->arguments->content);
 	mu_assert_string_eq("arg2", (char *)((t_command *)actual_result->next->content)->arguments->next->content);
-	mu_assert_string_eq("in2", ((t_redirection *)((t_command *)actual_result->next->content)->input_redir->content)->target);
+	mu_assert_string_eq("in2", ((t_redirection *)((t_command *)actual_result->next->content)->redirections->content)->target);
 
 	// CLEANUP
 	ft_lstclear(&cmds, free_command);
@@ -247,15 +247,15 @@ MU_TEST(test_expand_commands_multiple_commands_with_variables_and_quotes)
 	// ASSERT
 	mu_assert_string_eq("cmd1", (char *)((t_command *)actual_result->content)->arguments->content);
 	mu_assert_string_eq("value1", (char *)((t_command *)actual_result->content)->arguments->next->content);
-	mu_assert_string_eq("out1", ((t_redirection *)((t_command *)actual_result->content)->output_redir->content)->target);
+	mu_assert_string_eq("out1", ((t_redirection *)((t_command *)actual_result->content)->redirections->content)->target);
 	mu_assert_string_eq("cmd2", (char *)((t_command *)actual_result->next->content)->arguments->content);
 	mu_assert_string_eq("value2", (char *)((t_command *)actual_result->next->content)->arguments->next->content);
-	mu_assert_string_eq("in2", ((t_redirection *)((t_command *)actual_result->next->content)->input_redir->content)->target);
+	mu_assert_string_eq("in2", ((t_redirection *)((t_command *)actual_result->next->content)->redirections->content)->target);
 
 	// CLEANUP
 	ft_lstclear(&cmds, free_command);
 	ft_lstclear(&tokens, free);
-	ft_lstclear(&env, free);
+	ft_lstclear(&env, free_env_var);
 }
 
 MU_TEST(test_expand_commands_non_existing_variable_on_arguments)
@@ -295,12 +295,12 @@ MU_TEST(test_expand_commands_non_existing_variable_on_redirections)
 	char *actual_output;
 
 	// ACT
-	tokens = extract_tokens("$VAR < $VAR << $VAR > $VAR >> $VAR");
+	tokens = extract_tokens("$VAR1 < $VAR2 << $VAR3 > $VAR4 >> $VAR5");
 	cmds = extract_commands(tokens);
 	result = capture_expand_commands_output(env, last_status, cmds, 2);
 	expected_result = NULL;
 	actual_result = result.return_value;
-	expected_output = "minishell: $VAR: ambiguous redirect\n";
+	expected_output = "minishell: $VAR2: ambiguous redirect\n";
 	actual_output = result.output;
 
 	// ASSERT

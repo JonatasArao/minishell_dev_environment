@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:26:10 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/19 17:28:36 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/20 12:25:45 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,5 +102,11 @@ int	main(void)
 	printf(COLORIZE("File: expand/expand_commands.c\n", STYLE_BOLD, COLOR_MAGENTA));
 	printf(COLORIZE("Testing function: is_ambiguous_redirect\n", STYLE_BOLD, COLOR_CYAN));
 	test_is_ambiguous_redirect();
+	printf(COLORIZE("Testing function: expand_redir\n", STYLE_BOLD, COLOR_CYAN));
+	test_expand_redir();
+	printf(COLORIZE("Testing function: expand_arguments\n", STYLE_BOLD, COLOR_CYAN));
+	test_expand_arguments();
+	printf(COLORIZE("Testing function: expand_commands\n", STYLE_BOLD, COLOR_CYAN));
+	test_expand_commands();
 	return (0);
 }

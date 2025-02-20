@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:57:40 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/19 17:57:29 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/20 12:58:41 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -685,6 +685,23 @@ typedef struct s_is_ambiguous_redirect_result
  */
 int test_is_ambiguous_redirect(void);
 /**
+ * @struct s_is_ambiguous_redirect_result
+ * @brief Structure to hold the result of the is_ambiguous_redirect function.
+ *
+ * This structure contains the return value and output of the is_ambiguous_redirect function.
+ *
+ * @var t_is_ambiguous_redirect_result::return_value
+ * Integer that holds the return value of the is_ambiguous_redirect function.
+ *
+ * @var t_is_ambiguous_redirect_result::output
+ * Pointer to a character array that holds the output of the is_ambiguous_redirect function.
+ */
+typedef struct s_expand_redir_result
+{
+	int		return_value;
+	char	*output;
+}	t_expand_redir_result;
+/**
  * @brief Tests the functionality of the expand_redir function.
  *
  * This function is designed to test the behavior and correctness of
@@ -706,6 +723,23 @@ int test_expand_redir(void);
  * the test fails.
  */
 int test_expand_arguments(void);
+/**
+ * @struct s_is_ambiguous_redirect_result
+ * @brief Structure to hold the result of the is_ambiguous_redirect function.
+ *
+ * This structure contains the return value and output of the is_ambiguous_redirect function.
+ *
+ * @var t_is_ambiguous_redirect_result::return_value
+ * Integer that holds the return value of the is_ambiguous_redirect function.
+ *
+ * @var t_is_ambiguous_redirect_result::output
+ * Pointer to a character array that holds the output of the is_ambiguous_redirect function.
+ */
+typedef struct s_expand_commands_result
+{
+	t_list	*return_value;
+	char	*output;
+}	t_expand_commands_result;
 /**
  * @brief Tests the functionality of the expand_commands function.
  *

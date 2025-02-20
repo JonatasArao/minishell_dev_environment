@@ -86,7 +86,10 @@ SRC_FILES = main.c \
 			expand/expand_token/test_expand_quotes.c \
 			expand/expand_token/test_expand_var.c \
 			expand/expand_token/test_expand_token.c \
-			expand/expand_commands/test_is_ambiguous_redirect.c
+			expand/expand_commands/test_is_ambiguous_redirect.c \
+			expand/expand_commands/test_expand_redir.c \
+			expand/expand_commands/test_expand_arguments.c \
+			expand/expand_commands/test_expand_commands.c
 SRC = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJS_DIR = objs
 OBJS = $(addprefix $(OBJS_DIR)/, $(subst /,-, $(SRC_FILES:.c=.o)))

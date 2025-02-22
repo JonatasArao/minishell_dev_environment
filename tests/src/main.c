@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:26:10 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/20 12:25:45 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/22 02:19:02 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,14 +70,16 @@ int	main(void)
 	test_get_env_var();
 	printf(COLORIZE("Testing function: lstset_env_var\n", STYLE_BOLD, COLOR_CYAN));
 	test_lstset_env_var();
-	printf(COLORIZE("Testing function: extract_env_vars\n", STYLE_BOLD, COLOR_CYAN));
-	test_extract_env_vars();
-	// Testing functions from expand/envp_generator.c
-	printf(COLORIZE("File: expand/envp_generator.c\n", STYLE_BOLD, COLOR_MAGENTA));
+	printf(COLORIZE("Testing function: lstrm_env_var\n", STYLE_BOLD, COLOR_CYAN));
+	test_lstrm_env_var();
+	// Testing functions from expand/envp_manager.c
+	printf(COLORIZE("File: expand/envp_manager.c\n", STYLE_BOLD, COLOR_MAGENTA));
 	printf(COLORIZE("Testing function: create_env_string\n", STYLE_BOLD, COLOR_CYAN));
 	test_create_env_string();
 	printf(COLORIZE("Testing function: get_envp\n", STYLE_BOLD, COLOR_CYAN));
 	test_get_envp();
+	printf(COLORIZE("Testing function: extract_env_vars\n", STYLE_BOLD, COLOR_CYAN));
+	test_extract_env_vars();
 	// Testing functions from expand/extract_vars.c
 	printf(COLORIZE("File: expand/extract_vars.c\n", STYLE_BOLD, COLOR_MAGENTA));
 	printf(COLORIZE("Testing function: get_var_end\n", STYLE_BOLD, COLOR_CYAN));

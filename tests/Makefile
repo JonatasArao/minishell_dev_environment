@@ -25,7 +25,7 @@ MSH_SRC_FILES = main.c \
 				parse/command_list.c \
 				parse/token_checks.c \
 				expand/env_vars_list.c \
-				expand/envp_generator.c \
+				expand/envp_manager.c \
 				expand/extract_vars.c \
 				expand/expand_token.c \
 				expand/expand_commands.c
@@ -75,9 +75,10 @@ SRC_FILES = main.c \
 			expand/env_vars_list/test_lstadd_env_var.c \
 			expand/env_vars_list/test_get_env_var.c \
 			expand/env_vars_list/test_lstset_env_var.c \
-			expand/env_vars_list/test_extract_env_vars.c \
-			expand/envp_generator/test_create_env_string.c \
-			expand/envp_generator/test_get_envp.c \
+			expand/env_vars_list/test_lstrm_env_var.c \
+			expand/envp_manager/test_create_env_string.c \
+			expand/envp_manager/test_get_envp.c \
+			expand/envp_manager/test_extract_env_vars.c \
 			expand/extract_vars/test_get_var_end.c \
 			expand/extract_vars/test_get_next_var.c \
 			expand/extract_vars/test_extract_vars.c \
@@ -172,7 +173,7 @@ $(OBJS_DIR)/parse-extract_commands-%.o: $(SRC_DIR)/parse/extract_commands/%.c $(
 $(OBJS_DIR)/expand-env_vars_list-%.o: $(SRC_DIR)/expand/env_vars_list/%.c $(HEADER) | $(OBJS_DIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(OBJS_DIR)/expand-envp_generator-%.o: $(SRC_DIR)/expand/envp_generator/%.c $(HEADER) | $(OBJS_DIR)
+$(OBJS_DIR)/expand-envp_manager-%.o: $(SRC_DIR)/expand/envp_manager/%.c $(HEADER) | $(OBJS_DIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(OBJS_DIR)/expand-extract_vars-%.o: $(SRC_DIR)/expand/extract_vars/%.c $(HEADER) | $(OBJS_DIR)

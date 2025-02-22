@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_tests.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:57:40 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/20 12:58:41 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/22 02:08:58 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -547,6 +547,16 @@ int test_lstset_env_var(void);
  * @return int Returns 0 if the test passes, otherwise returns a non-zero value.
  */
 int test_extract_env_vars(void);
+/**
+ * @brief Tests the removal of an environment variable from a list.
+ *
+ * This function is designed to test the functionality of removing an environment
+ * variable from a linked list. It ensures that the environment variable is correctly
+ * removed and that the list maintains its integrity.
+ *
+ * @return int Returns 0 if the test passes, otherwise returns a non-zero value.
+ */
+int test_lstrm_env_var(void);
 /**
  * @brief Tests the creation of an environment string.
  *

@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 12:25:06 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/20 23:12:54 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/22 02:31:45 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -309,6 +309,7 @@ MU_TEST(test_expand_commands_non_existing_variable_on_redirections)
 
 	// CLEANUP
 	ft_lstclear(&tokens, free);
+	free(actual_output);
 }
 
 MU_TEST_SUITE(expand_commands_test_suite)

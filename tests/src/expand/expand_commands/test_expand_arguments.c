@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test_expand_arguments.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 12:04:11 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/20 12:42:24 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/22 02:21:11 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ MU_TEST(test_expand_arguments_valid_variable)
 
 	// CLEANUP
 	ft_lstclear(&args, free);
-	ft_lstclear(&env, free);
+	ft_lstclear(&env, free_env_var);
 }
 
 MU_TEST(test_expand_arguments_non_existing_variable)
@@ -154,7 +154,7 @@ MU_TEST(test_expand_arguments_multiple_args)
 
 	// CLEANUP
 	ft_lstclear(&args, free);
-	ft_lstclear(&env, free);
+	ft_lstclear(&env, free_env_var);
 }
 
 MU_TEST_SUITE(expand_arguments_test_suite)

@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 22:28:00 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/18 23:03:47 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/22 02:29:58 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ MU_TEST(test_expand_token_with_dollar_and_space)
 
 	// CLEANUP
 	free(actual_result);
+	ft_lstclear(&env_list, free_env_var);
 }
 
 MU_TEST(test_expand_token_with_dollar_and_quote)
@@ -268,6 +269,7 @@ MU_TEST(test_expand_token_complex_string)
 
 	// CLEANUP
 	free(actual_result);
+	ft_lstclear(&env_list, free_env_var);
 }
 
 MU_TEST(test_expand_token_empty)

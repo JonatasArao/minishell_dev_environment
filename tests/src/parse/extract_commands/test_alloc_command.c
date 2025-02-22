@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 09:45:57 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/20 23:04:24 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/22 02:34:11 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,21 @@ MU_TEST(test_alloc_command_init)
 	mk_malloc_deactivate_memset_mode();
 
 	// ASSERT
-	if (memcmp((unsigned char *)cmd + sizeof(t_command), "\xFF\xFF", 2) == 0)
-		mu_fail("Allocation size is larger than expected for the command structure");
-	else if (memcmp((unsigned char *)cmd + sizeof(t_command), "\xFF", 1) != 0)
-		mu_fail("Allocation size is shorter than expected for the command structure");
 	mu_check(cmd != NULL);
 	mu_check(cmd->arguments == NULL);
 	mu_check(cmd->redirections == NULL);
 	mu_check(cmd->input_fd == -1);
 	mu_check(cmd->output_fd == -1);
 	mu_check(cmd->status == 0);
+
+    // CLEANUP
 	free(cmd);
+
+	// ASSERT - VERIFY ALLOCATION SIZE
+	if (memcmp((unsigned char *)cmd + sizeof(t_command), "\xFF\xFF", 2) == 0)
+		mu_fail("Allocation size is larger than expected for the command structure");
+	else if (memcmp((unsigned char *)cmd + sizeof(t_command), "\xFF", 1) != 0)
+		mu_fail("Allocation size is shorter than expected for the command structure");
 }
 
 MU_TEST_SUITE(alloc_command_test_suite)

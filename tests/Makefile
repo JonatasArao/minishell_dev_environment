@@ -28,7 +28,8 @@ MSH_SRC_FILES = main.c \
 				expand/envp_manager.c \
 				expand/extract_vars.c \
 				expand/expand_token.c \
-				expand/expand_commands.c
+				expand/expand_commands.c \
+				builtin/echo.c
 MSH_SRC = $(addprefix $(MSH_SRC_DIR)/, $(MSH_SRC_FILES))
 MSH_OBJS_DIR = minishell_objs
 MSH_OBJS = $(addprefix $(MSH_OBJS_DIR)/, $(subst /,-, $(MSH_SRC_FILES:.c=.o)))
@@ -90,7 +91,8 @@ SRC_FILES = main.c \
 			expand/expand_commands/test_is_ambiguous_redirect.c \
 			expand/expand_commands/test_expand_redir.c \
 			expand/expand_commands/test_expand_arguments.c \
-			expand/expand_commands/test_expand_commands.c
+			expand/expand_commands/test_expand_commands.c \
+			builtin/echo/test_msh_echo.c
 SRC = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJS_DIR = objs
 OBJS = $(addprefix $(OBJS_DIR)/, $(subst /,-, $(SRC_FILES:.c=.o)))
@@ -144,6 +146,9 @@ $(MSH_OBJS_DIR)/parse-%.o: $(MSH_SRC_DIR)/parse/%.c $(MSH_HEADER) | $(MSH_OBJS_D
 $(MSH_OBJS_DIR)/expand-%.o: $(MSH_SRC_DIR)/expand/%.c $(MSH_HEADER) | $(MSH_OBJS_DIR)
 	$(CC) $(CFLAGS) $(MSH_INCLUDES) -c $< -o $@
 
+$(MSH_OBJS_DIR)/builtin-%.o: $(MSH_SRC_DIR)/builtin/%.c $(MSH_HEADER) | $(MSH_OBJS_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
 # Create the object directory for test objects
 $(OBJS_DIR):
 	mkdir -p $@
@@ -183,6 +188,9 @@ $(OBJS_DIR)/expand-expand_token-%.o: $(SRC_DIR)/expand/expand_token/%.c $(HEADER
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(OBJS_DIR)/expand-expand_commands-%.o: $(SRC_DIR)/expand/expand_commands/%.c $(HEADER) | $(OBJS_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJS_DIR)/builtin-echo-%.o: $(SRC_DIR)/builtin/echo/%.c $(HEADER) | $(OBJS_DIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 

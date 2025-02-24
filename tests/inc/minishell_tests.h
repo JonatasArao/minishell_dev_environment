@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:57:40 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/22 02:08:58 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/24 19:02:03 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -761,5 +761,33 @@ typedef struct s_expand_commands_result
  * the test fails.
  */
 int test_expand_commands(void);
+/**
+ * @struct s_msh_echo_result
+ * @brief Structure to hold the result of the msh_echo function.
+ *
+ * This structure contains the return value and output of the msh_echo function.
+ *
+ * @var t_msh_echo_result::return_value
+ * Integer that holds the return value of the msh_echo function.
+ *
+ * @var t_msh_echo_result::output
+ * Pointer to a character array that holds the output of the msh_echo function.
+ */
+typedef struct s_msh_echo_result
+{
+	int		return_value;
+	char	*output;
+}	t_msh_echo_result;
+/**
+ * @brief Tests the functionality of the msh_echo function.
+ *
+ * This function is designed to test the behavior and correctness of
+ * the msh_echo function, ensuring that it properly echoes the given
+ * input with the correct formatting and options.
+ *
+ * @return int Returns 0 if the test passes, or a non-zero value if
+ * the test fails.
+ */
+int test_msh_echo(void);
 
 #endif

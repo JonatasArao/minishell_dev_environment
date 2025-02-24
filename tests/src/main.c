@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 13:26:10 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/22 02:19:02 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/24 20:06:48 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,5 +110,9 @@ int	main(void)
 	test_expand_arguments();
 	printf(COLORIZE("Testing function: expand_commands\n", STYLE_BOLD, COLOR_CYAN));
 	test_expand_commands();
+	// Testing functions from builtins/msh_echo.c
+	printf(COLORIZE("File: builtins/echo.c\n", STYLE_BOLD, COLOR_MAGENTA));
+	printf(COLORIZE("Testing function: msh_echo\n", STYLE_BOLD, COLOR_CYAN));
+	test_msh_echo();
 	return (0);
 }

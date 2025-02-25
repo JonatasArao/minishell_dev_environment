@@ -21,15 +21,22 @@ MSH_SRC_FILES = main.c \
 				parse/extract_tokens.c \
 				parse/extract_commands.c \
 				parse/command_cleanup.c \
-				parse/token_validation.c \
 				parse/command_list.c \
+				parse/token_validation.c \
 				parse/token_checks.c \
 				expand/env_vars_list.c \
 				expand/envp_manager.c \
 				expand/extract_vars.c \
 				expand/expand_token.c \
 				expand/expand_commands.c \
-				builtin/echo.c
+				builtin/echo.c \
+				builtin/pwd.c \
+				builtin/cd.c \
+				builtin/env.c \
+				builtin/export.c \
+				builtin/unset.c \
+				builtin/exit.c \
+				execute/launch_builtin.c
 MSH_SRC = $(addprefix $(MSH_SRC_DIR)/, $(MSH_SRC_FILES))
 MSH_OBJS_DIR = minishell_objs
 MSH_OBJS = $(addprefix $(MSH_OBJS_DIR)/, $(subst /,-, $(MSH_SRC_FILES:.c=.o)))
@@ -147,6 +154,9 @@ $(MSH_OBJS_DIR)/expand-%.o: $(MSH_SRC_DIR)/expand/%.c $(MSH_HEADER) | $(MSH_OBJS
 	$(CC) $(CFLAGS) $(MSH_INCLUDES) -c $< -o $@
 
 $(MSH_OBJS_DIR)/builtin-%.o: $(MSH_SRC_DIR)/builtin/%.c $(MSH_HEADER) | $(MSH_OBJS_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(MSH_OBJS_DIR)/execute-%.o: $(MSH_SRC_DIR)/execute/%.c $(MSH_HEADER) | $(MSH_OBJS_DIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 # Create the object directory for test objects

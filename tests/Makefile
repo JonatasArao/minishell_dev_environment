@@ -28,6 +28,7 @@ MSH_SRC_FILES = main.c \
 				expand/envp_manager.c \
 				expand/extract_vars.c \
 				expand/expand_token.c \
+				expand/concat_vars.c \
 				expand/expand_commands.c \
 				builtin/echo.c \
 				builtin/pwd.c \
@@ -195,6 +196,9 @@ $(OBJS_DIR)/expand-extract_vars-%.o: $(SRC_DIR)/expand/extract_vars/%.c $(HEADER
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(OBJS_DIR)/expand-expand_token-%.o: $(SRC_DIR)/expand/expand_token/%.c $(HEADER) | $(OBJS_DIR)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJS_DIR)/expand-concat_vars-%.o: $(SRC_DIR)/expand/concat_vars/%.c $(HEADER) | $(OBJS_DIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(OBJS_DIR)/expand-expand_commands-%.o: $(SRC_DIR)/expand/expand_commands/%.c $(HEADER) | $(OBJS_DIR)

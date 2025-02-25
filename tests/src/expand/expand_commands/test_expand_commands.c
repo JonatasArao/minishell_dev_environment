@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test_expand_commands.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 12:25:06 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/22 02:31:45 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/25 14:38:46 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -268,13 +268,13 @@ MU_TEST(test_expand_commands_non_existing_variable_on_arguments)
 	t_list	*actual_result;
 
 	// ACT
-	tokens = extract_tokens("cmd $VAR");
+	tokens = extract_tokens("cmd $VAR value");
 	cmds = extract_commands(tokens);
 	actual_result = expand_commands(env, last_status, cmds);
 
 	// ASSERT
 	mu_assert_string_eq("cmd", (char *)((t_command *)actual_result->content)->arguments->content);
-	mu_assert_string_eq("", (char *)((t_command *)actual_result->content)->arguments->next->content);
+	mu_assert_string_eq("value", (char *)((t_command *)actual_result->content)->arguments->next->content);
 
 	// CLEANUP
 	ft_lstclear(&cmds, free_command);

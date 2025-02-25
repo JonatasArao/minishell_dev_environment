@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test_concat_vars.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 19:51:52 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/18 21:28:21 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/25 14:55:26 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ MU_TEST(test_concat_vars_multiple_vars)
 	free(actual_result);
 	ft_lstclear(&var_list, free);
 }
-
 MU_TEST(test_concat_vars_empty_list)
 {
 	// ARRANGE
@@ -67,11 +66,11 @@ MU_TEST(test_concat_vars_empty_list)
 	char *actual_result;
 
 	// ACT
-	expected_result = "";
+	expected_result = NULL;
 	actual_result = concat_vars(var_list);
 
 	// ASSERT
-	mu_assert_string_eq(expected_result, actual_result);
+	mu_assert(expected_result == actual_result, "Expected NULL but got a different result");
 
 	// CLEANUP
 	free(actual_result);

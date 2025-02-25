@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test_get_var_value.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:12:09 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/18 21:55:30 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/25 14:55:12 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,15 +85,13 @@ MU_TEST(test_get_var_value_non_existing_key)
 	env_var->value = strdup("student");
 	ft_lstadd_back(&env_list, ft_lstnew(env_var));
 
-	expected_result = strdup("");
+	expected_result = NULL;
 	actual_result = get_var_value(env_list, last_status, key);
 
 	// ASSERT
-	mu_assert_string_eq(expected_result, actual_result);
+	mu_assert(actual_result == expected_result, "Expected result to be NULL for non-existing key");
 
 	// CLEANUP
-	free(expected_result);
-	free(actual_result);
 	ft_lstclear(&env_list, free_env_var);
 }
 
@@ -147,15 +145,13 @@ MU_TEST(test_get_var_value_case_sensitive)
 	env_var->value = strdup("student");
 	ft_lstadd_back(&env_list, ft_lstnew(env_var));
 
-	expected_result = strdup("");
+	expected_result = NULL;
 	actual_result = get_var_value(env_list, last_status, key);
 
 	// ASSERT
-	mu_assert_string_eq(expected_result, actual_result);
+	mu_assert(actual_result == expected_result, "Expected result to be NULL for case-sensitive key");
 
 	// CLEANUP
-	free(expected_result);
-	free(actual_result);
 	ft_lstclear(&env_list, free_env_var);
 }
 
@@ -223,14 +219,13 @@ MU_TEST(test_get_var_value_null_env)
 	int last_status = 0;
 
 	// ACT
-	expected_result = strdup("");
+	expected_result = NULL;
 	actual_result = get_var_value(env_list, last_status, key);
 
 	// ASSERT
-	mu_assert_string_eq(expected_result, actual_result);
+	mu_assert(actual_result == expected_result, "Expected result to be NULL for NULL env_list");
 
 	// CLEANUP
-	free(expected_result);
 	free(actual_result);
 }
 

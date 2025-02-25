@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test_expand_arguments.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 12:04:11 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/22 02:21:11 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/25 14:53:24 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ MU_TEST(test_expand_arguments_simple)
 	// ACT
 	lstadd_str(&args, "simple");
 	expected_result = 1;
-	actual_result = expand_arguments(env, last_status, args);
+	actual_result = expand_arguments(env, last_status, &args);
 
 	// ASSERT
 	mu_assert_int_eq(expected_result, actual_result);
@@ -47,7 +47,7 @@ MU_TEST(test_expand_arguments_single_quote)
 	// ACT
 	lstadd_str(&args, "'single_quote'");
 	expected_result = 1;
-	actual_result = expand_arguments(env, last_status, args);
+	actual_result = expand_arguments(env, last_status, &args);
 
 	// ASSERT
 	mu_assert_int_eq(expected_result, actual_result);
@@ -69,7 +69,7 @@ MU_TEST(test_expand_arguments_double_quote)
 	// ACT
 	lstadd_str(&args, "\"double_quote\"");
 	expected_result = 1;
-	actual_result = expand_arguments(env, last_status, args);
+	actual_result = expand_arguments(env, last_status, &args);
 
 	// ASSERT
 	mu_assert_int_eq(expected_result, actual_result);
@@ -92,7 +92,7 @@ MU_TEST(test_expand_arguments_valid_variable)
 	lstadd_env_var(&env, "HOME", "/home/user");
 	lstadd_str(&args, "$HOME");
 	expected_result = 1;
-	actual_result = expand_arguments(env, last_status, args);
+	actual_result = expand_arguments(env, last_status, &args);
 
 	// ASSERT
 	mu_assert_int_eq(expected_result, actual_result);
@@ -114,12 +114,12 @@ MU_TEST(test_expand_arguments_non_existing_variable)
 
 	// ACT
 	lstadd_str(&args, "$VAR");
-	expected_result = 1;
-	actual_result = expand_arguments(env, last_status, args);
+	expected_result = 0;
+	actual_result = expand_arguments(env, last_status, &args);
 
 	// ASSERT
 	mu_assert_int_eq(expected_result, actual_result);
-	mu_assert_string_eq("", (char *)args->content);
+	mu_assert(args == NULL, "Argument list should be NULL");
 
 	// CLEANUP
 	ft_lstclear(&args, free);
@@ -138,11 +138,11 @@ MU_TEST(test_expand_arguments_multiple_args)
 	lstadd_env_var(&env, "HOME", "/home/user");
 	lstadd_str(&args, "echo");
 	lstadd_str(&args, "$HOME");
+	lstadd_str(&args, "$VAR");
 	lstadd_str(&args, "'single_quote'");
 	lstadd_str(&args, "\"double_quote\"");
-	lstadd_str(&args, "$VAR");
 	expected_result = 1;
-	actual_result = expand_arguments(env, last_status, args);
+	actual_result = expand_arguments(env, last_status, &args);
 
 	// ASSERT
 	mu_assert_int_eq(expected_result, actual_result);
@@ -150,7 +150,6 @@ MU_TEST(test_expand_arguments_multiple_args)
 	mu_assert_string_eq("/home/user", (char *)args->next->content);
 	mu_assert_string_eq("single_quote", (char *)args->next->next->content);
 	mu_assert_string_eq("double_quote", (char *)args->next->next->next->content);
-	mu_assert_string_eq("", (char *)args->next->next->next->next->content);
 
 	// CLEANUP
 	ft_lstclear(&args, free);

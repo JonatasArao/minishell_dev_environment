@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 21:25:47 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/18 22:59:06 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/25 04:57:47 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -271,6 +271,28 @@ MU_TEST(test_expand_var_with_multiple_vars)
 	ft_lstclear(&env_list, free_env_var);
 }
 
+MU_TEST(test_expand_var_only_dollar)
+{
+	// ARRANGE
+	t_list *env_list = NULL;
+	char *var;
+	int expected_result;
+	int actual_result;
+
+	// ACT
+	var = ft_strdup("$");
+
+	expected_result = 1;
+	actual_result = expand_var(env_list, 0, &var);
+
+	// ASSERT
+	mu_assert_int_eq(expected_result, actual_result);
+	mu_assert_string_eq("$", var);
+
+	// CLEANUP
+	free(var);
+}
+
 MU_TEST_SUITE(expand_var_test_suite)
 {
 	MU_RUN_TEST(test_expand_var_simple);
@@ -284,6 +306,7 @@ MU_TEST_SUITE(expand_var_test_suite)
 	MU_RUN_TEST(test_expand_var_unclosed_single_and_double_quotes);
 	MU_RUN_TEST(test_expand_var_unclosed_double_and_single_quotes);
 	MU_RUN_TEST(test_expand_var_with_multiple_vars);
+	MU_RUN_TEST(test_expand_var_only_dollar);
 }
 
 int test_expand_var(void)

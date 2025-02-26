@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:10:11 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/19 14:24:31 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/26 08:19:02 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -333,6 +333,26 @@ MU_TEST(test_get_var_end_with_equal)
 		actual_result += get_var_end(input + actual_result);
 }
 
+MU_TEST(test_get_var_end_with_question_mark)
+{
+	// ARRANGE
+	const char *input;
+	size_t expected_result;
+	size_t actual_result;
+
+	// ACT
+	input = "$?variable";
+	expected_result = 2;
+	actual_result = get_var_end(input);
+
+	// ASSERT
+	mu_assert_int_eq(expected_result, actual_result);
+
+	// CLEANUP
+	while (actual_result < strlen(input))
+		actual_result += get_var_end(input + actual_result);
+}
+
 MU_TEST(test_get_var_end_within_single_quote)
 {
 	// ARRANGE
@@ -481,6 +501,7 @@ MU_TEST_SUITE(get_var_end_test_suite)
 	MU_RUN_TEST(test_get_var_end_with_asterisk);
 	MU_RUN_TEST(test_get_var_end_with_slash);
 	MU_RUN_TEST(test_get_var_end_with_equal);
+	MU_RUN_TEST(test_get_var_end_with_question_mark);
 	MU_RUN_TEST(test_get_var_end_within_single_quote);
 	MU_RUN_TEST(test_get_var_end_within_double_quote);
 	MU_RUN_TEST(test_get_var_end_single_quote_within_double_quote);

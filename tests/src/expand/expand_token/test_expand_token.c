@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test_expand_token.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 22:28:00 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/22 02:29:58 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/26 08:16:56 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,6 +246,44 @@ MU_TEST(test_expand_token_double_quote_within_single_quote)
 	free(actual_result);
 }
 
+MU_TEST(test_expand_token_with_last_status)
+{
+	// ARRANGE
+	t_list *env_list = NULL;
+	char *expected_result;
+	char *actual_result;
+	int last_status = 42;
+
+	// ACT
+	expected_result = "42";
+	actual_result = expand_token(env_list, last_status, "$?");
+
+	// ASSERT
+	mu_assert_string_eq(expected_result, actual_result);
+
+	// CLEANUP
+	free(actual_result);
+}
+
+MU_TEST(test_expand_token_last_status_and_text)
+{
+	// ARRANGE
+	t_list *env_list = NULL;
+	char *expected_result;
+	char *actual_result;
+	int last_status = 42;
+
+	// ACT
+	expected_result = "42School";
+	actual_result = expand_token(env_list, last_status, "$?School");
+
+	// ASSERT
+	mu_assert_string_eq(expected_result, actual_result);
+
+	// CLEANUP
+	free(actual_result);
+}
+
 MU_TEST(test_expand_token_complex_string)
 {
 	// ARRANGE
@@ -304,6 +342,8 @@ MU_TEST_SUITE(expand_token_test_suite)
 	MU_RUN_TEST(test_expand_token_within_double_quote);
 	MU_RUN_TEST(test_expand_token_single_quote_within_double_quote);
 	MU_RUN_TEST(test_expand_token_double_quote_within_single_quote);
+	MU_RUN_TEST(test_expand_token_with_last_status);
+	MU_RUN_TEST(test_expand_token_last_status_and_text);
 	MU_RUN_TEST(test_expand_token_complex_string);
 	MU_RUN_TEST(test_expand_token_empty);
 }

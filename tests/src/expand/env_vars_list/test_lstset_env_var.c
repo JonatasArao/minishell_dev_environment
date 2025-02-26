@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 15:54:09 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/12 16:11:01 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/26 07:52:11 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,12 +225,14 @@ MU_TEST(test_lstset_env_var_null_value)
 	// ACT
 	key = "PATH";
 	value = NULL;
-	expected_result = 0;
+	expected_result = 1;
 	actual_result = lstset_env_var(&head, key, value);
 
 	// ASSERT
 	mu_assert_int_eq(expected_result, actual_result);
-	mu_assert(head == NULL, "Head should be NULL");
+	mu_assert_string_eq(((t_env_var *)head->content)->key, key);
+	mu_assert(((t_env_var *)head->content)->value == NULL, "Value should be NULL");
+	ft_lstclear(&head, free_env_var);
 }
 
 MU_TEST(test_lstset_env_var_empty_list)

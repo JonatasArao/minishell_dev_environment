@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_v3-gugomes.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gugomes- <gugomes-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 21:32:34 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/20 10:52:32 by gugomes-         ###   ########.fr       */
+/*   Updated: 2025/02/26 08:58:51 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,8 @@ static char		*find_command_in_paths(char *cmd, char **paths);
 static void		free_array(char **array);
 static void		execute_command(t_command *cmd, t_list *env_vars);
 static int		is_builtin(t_command *cmd);
-static void		execute_builtin(t_command *cmd, t_minish *msh);
 static void		handle_error(char *message, int exit_code);
 static char		**ft_lst_to_array(t_list *lst);
-static void		builtin_cd(t_command *cmd, t_minish *msh);
 static char		*check_direct_path(char *cmd);
 static char		**get_paths_from_env(t_list *env_list);
 static char		*find_command_in_paths(char *cmd, char **paths);
@@ -62,7 +60,7 @@ static void	process_command(t_minish *msh, int pipe_fd[2], int *input_fd)
 		handle_error("pipe error", 1);
 	if (is_builtin((t_command *)msh->commands->content) && !has_next)
 	{
-		execute_builtin((t_command *)msh->commands->content, msh);
+		launch_builtin(msh, (t_command *)msh->commands->content);
 		msh->commands = msh->commands->next;
 		return ;
 	}
@@ -124,7 +122,7 @@ static int	apply_redirections(t_command *cmd)
 	t_redirection	*redir;
 	int				flags;
 
-	redir_node = cmd->output_redir;
+	redir_node = cmd->redirections;
 	while (redir_node)
 	{
 		redir = (t_redirection *)redir_node->content;
@@ -277,88 +275,18 @@ static int	is_builtin(t_command *cmd)
 	if (!cmd->arguments || !cmd->arguments->content)
 		return (0);
 	name = (char *)cmd->arguments->content;
-	return (ft_strncmp(name, "cd", 2) == 0);
-}
-
-static void	execute_builtin(t_command *cmd, t_minish *msh)
-{
-	// Implementação do cd
-	if (ft_strncmp((char *)cmd->arguments->content, "cd", 2) == 0)
-		builtin_cd(cmd, msh);
-}
-
-void	builtin_cd(t_command *cmd, t_minish *msh)
-{
-	char	*path;
-	char	cwd[1024];
-	char	*oldpwd;
-
-	if (!cmd->arguments->next)
-	{
-		ft_putstr_fd("minishell: cd: missing argument\n", 2);
-		msh->last_status = 1;
-		return ;
-	}
-	path = (char *)cmd->arguments->next->content;
-	oldpwd = getcwd(NULL, 0);
-	if (chdir(path) != 0)
-	{
-		ft_putstr_fd("minishell: cd: ", 2);
-		perror(path);
-		msh->last_status = 1;
-		free(oldpwd);
-		return ;
-	}
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-	{
-		lstset_env_var(&msh->env_vars, "PWD", cwd);
-		lstset_env_var(&msh->env_vars, "OLDPWD", oldpwd);
-	}
-	else
-		perror("minishell: cd");
-	free(oldpwd);
-	msh->last_status = 0;
+	if ((ft_strncmp(name, "echo", 4) == 0 && name[4] == '\0')
+		|| (ft_strncmp(name, "pwd", 3) == 0 && name[3] == '\0')
+		|| (ft_strncmp(name, "cd", 2) == 0 && name[2] == '\0')
+		|| (ft_strncmp(name, "env", 3) == 0 && name[3] == '\0')
+		|| (ft_strncmp(name, "export", 6) == 0 && name[6] == '\0')
+		|| (ft_strncmp(name, "unset", 5) == 0 && name[5] == '\0')
+		|| (ft_strncmp(name, "exit", 4) == 0 && name[4] == '\0'))
+		return (1);
+	return (0);
 }
 
 // ===================== MAIN ======================
-void	free_minishell_loop(t_minish *msh)
-{
-	if (msh->tokens)
-		ft_lstclear(&msh->tokens, free);
-	if (msh->commands)
-		ft_lstclear(&msh->commands, free_command);
-	if (msh->input)
-		ft_delpointer((void **) &msh->input);
-}
-
-void	destroy_minishell(t_minish *msh)
-{
-	rl_clear_history();
-	free_minishell_loop(msh);
-	if (msh->env_vars)
-		ft_lstclear(&msh->env_vars, free_env_var);
-}
-
-int	process_input(t_minish *msh)
-{
-	msh->tokens = extract_tokens(msh->input);
-	if (!msh->tokens || !is_token_list_valid(msh->tokens))
-	{
-		if (msh->tokens)
-			ft_lstclear(&msh->tokens, free);
-		return (0);
-	}
-	msh->commands = extract_commands(msh->tokens);
-	if (msh->commands)
-		msh->commands = expand_commands(msh->env_vars,
-				msh->last_status, msh->commands);
-	if (!msh->commands)
-	{
-		ft_lstclear(&msh->tokens, free);
-		return (0);
-	}
-	return (1);
-}
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -366,15 +294,13 @@ int	main(int argc, char **argv, char **envp)
 
 	(void) argc;
 	(void) argv;
-	msh.last_status = 0;
-	msh.env_vars = extract_env_vars(envp);
+	init_minishell(&msh, envp);
 	if (!msh.env_vars)
 		return (1);
 	while (1)
 	{
 		msh.input = readline("\033[0;31mGUGOMES EXECUTOR V3 $ \033[0m");
-		if (msh.input == NULL
-			|| (ft_strncmp(msh.input, "exit", 4) == 0 && msh.input[4] == '\0'))
+		if (msh.input == NULL)
 			break ;
 		if (process_input(&msh))
 			execute_pipeline(&msh);

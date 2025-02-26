@@ -54,7 +54,7 @@ re: fclean all
 	$(CC) $(CFLAGS) $(MSH_OBJS) $(INCLUDES) $< $(LDFLAGS) -o $@
 
 $(LIBFT_LIB):
-	@make -C $(LIBFT_DIR)
+	@make debug -C $(LIBFT_DIR)
 
 # Create the object directory for minishell objects
 $(MSH_OBJS_DIR):

@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 12:04:11 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/25 14:53:24 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/26 14:05:47 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ MU_TEST(test_expand_arguments_non_existing_variable)
 
 	// ACT
 	lstadd_str(&args, "$VAR");
-	expected_result = 0;
+	expected_result = 1;
 	actual_result = expand_arguments(env, last_status, &args);
 
 	// ASSERT

@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 21:32:34 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/26 08:58:51 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/26 11:23:01 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,45 +15,51 @@
 #include <fcntl.h>
 
 // ===================== DECLARAÇÕES DE FUNÇÕES ======================
-static void		setup_input(int input_fd);
-static void		setup_output(int pipe_fd[2], int has_next);
-static void		handle_child(t_minish *msh, int pipe_fd[2], \
-	int input_fd, int has_next);
-static void		handle_parent(int *input_fd, int pipe_fd[2], int has_next);
-static void		process_command(t_minish *msh, int pipe_fd[2], int *input_fd);
-static int		apply_redirections(t_command *cmd);
-static char		*get_command_path(char *cmd, t_list *env);
-static char		*check_direct_path(char *cmd);
-static char		**get_paths_from_env(t_list *env_list);
-static char		*find_command_in_paths(char *cmd, char **paths);
-static void		free_array(char **array);
-static void		execute_command(t_command *cmd, t_list *env_vars);
-static int		is_builtin(t_command *cmd);
-static void		handle_error(char *message, int exit_code);
-static char		**ft_lst_to_array(t_list *lst);
-static char		*check_direct_path(char *cmd);
-static char		**get_paths_from_env(t_list *env_list);
-static char		*find_command_in_paths(char *cmd, char **paths);
+static void setup_input(int input_fd);
+static void setup_output(int pipe_fd[2], int has_next);
+static void handle_child(t_minish *msh, int pipe_fd[2],
+						 int input_fd, int has_next);
+static void handle_parent(int *input_fd, int pipe_fd[2], int has_next);
+static void process_command(t_minish *msh, int pipe_fd[2], int *input_fd);
+static int apply_redirections(t_command *cmd);
+static char *get_command_path(char *cmd, t_list *env);
+static char *check_direct_path(char *cmd);
+static char **get_paths_from_env(t_list *env_list);
+static char *find_command_in_paths(char *cmd, char **paths);
+static void free_array(char **array);
+static void execute_command(t_command *cmd, t_list *env_vars);
+static int is_builtin(t_command *cmd);
+static void handle_error(char *message, int exit_code);
+static char **ft_lst_to_array(t_list *lst);
+static char *check_direct_path(char *cmd);
+static char **get_paths_from_env(t_list *env_list);
+static char *find_command_in_paths(char *cmd, char **paths);
 
 // ===================== IMPLEMENTAÇÃO DO PIPELINE ======================
-static void	execute_pipeline(t_minish *msh)
+static void execute_pipeline(t_minish *msh)
 {
-	int		pipe_fd[2];
-	int		input_fd;
+	int pipe_fd[2];
+	int input_fd;
+	int status;
 
 	input_fd = STDIN_FILENO;
 	while (msh->commands)
 		process_command(msh, pipe_fd, &input_fd);
-	while (wait(NULL) > 0)
-		;
+	while (waitpid(-1, &status, 0) > 0)
+	{
+		if (WIFEXITED(status))
+			msh->last_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			msh->last_status = WTERMSIG(status) + 128;
+	}
 	if (input_fd != STDIN_FILENO)
 		close(input_fd);
 }
 
-static void	process_command(t_minish *msh, int pipe_fd[2], int *input_fd)
+static void process_command(t_minish *msh, int pipe_fd[2], int *input_fd)
 {
-	int		has_next;
-	pid_t	pid;
+	int has_next;
+	pid_t pid;
 
 	has_next = (msh->commands->next != NULL);
 	if (has_next && pipe(pipe_fd) == -1)
@@ -62,7 +68,7 @@ static void	process_command(t_minish *msh, int pipe_fd[2], int *input_fd)
 	{
 		launch_builtin(msh, (t_command *)msh->commands->content);
 		msh->commands = msh->commands->next;
-		return ;
+		return;
 	}
 	pid = fork();
 	if (pid == 0)
@@ -75,7 +81,7 @@ static void	process_command(t_minish *msh, int pipe_fd[2], int *input_fd)
 }
 
 // ===================== MANIPULAÇÃO DE FD ======================
-static void	setup_input(int input_fd)
+static void setup_input(int input_fd)
 {
 	if (input_fd != STDIN_FILENO)
 	{
@@ -84,7 +90,7 @@ static void	setup_input(int input_fd)
 	}
 }
 
-static void	setup_output(int pipe_fd[2], int has_next)
+static void setup_output(int pipe_fd[2], int has_next)
 {
 	if (has_next)
 	{
@@ -94,9 +100,9 @@ static void	setup_output(int pipe_fd[2], int has_next)
 	}
 }
 
-static void	handle_child(t_minish *msh, int pipe_fd[2], int input_fd, int has_next)
+static void handle_child(t_minish *msh, int pipe_fd[2], int input_fd, int has_next)
 {
-	t_command	*cmd;
+	t_command *cmd;
 
 	cmd = (t_command *)msh->commands->content;
 	if (!apply_redirections(cmd))
@@ -106,7 +112,7 @@ static void	handle_child(t_minish *msh, int pipe_fd[2], int input_fd, int has_ne
 	execute_command(cmd, msh->env_vars);
 }
 
-static void	handle_parent(int *input_fd, int pipe_fd[2], int has_next)
+static void handle_parent(int *input_fd, int pipe_fd[2], int has_next)
 {
 	if (has_next)
 		close(pipe_fd[1]);
@@ -116,11 +122,11 @@ static void	handle_parent(int *input_fd, int pipe_fd[2], int has_next)
 }
 
 // ===================== REDIRECIONAMENTOS ======================
-static int	apply_redirections(t_command *cmd)
+static int apply_redirections(t_command *cmd)
 {
-	t_list			*redir_node;
-	t_redirection	*redir;
-	int				flags;
+	t_list *redir_node;
+	t_redirection *redir;
+	int flags;
 
 	redir_node = cmd->redirections;
 	while (redir_node)
@@ -143,11 +149,11 @@ static int	apply_redirections(t_command *cmd)
 }
 
 // ===================== RESOLUÇÃO DE COMANDOS ======================
-static void	execute_command(t_command *cmd, t_list *env)
+static void execute_command(t_command *cmd, t_list *env)
 {
-	char	**envp;
-	char	**args;
-	char	*path;
+	char **envp;
+	char **args;
+	char *path;
 
 	envp = get_envp(env);
 	args = ft_lst_to_array(cmd->arguments);
@@ -156,11 +162,11 @@ static void	execute_command(t_command *cmd, t_list *env)
 		(perror("minishell"), free_array(envp), free(path), free_array(args), exit(126));
 }
 
-static char	*get_command_path(char *cmd, t_list *env)
+static char *get_command_path(char *cmd, t_list *env)
 {
-	char	*direct_path;
-	char	**paths;
-	char	*command_path;
+	char *direct_path;
+	char **paths;
+	char *command_path;
 
 	direct_path = check_direct_path(cmd);
 	if (direct_path)
@@ -177,11 +183,11 @@ static char	*get_command_path(char *cmd, t_list *env)
 
 // ===================== FUNÇÕES AUXILIARES ======================
 
-static char	*find_command_in_paths(char *cmd, char **paths)
+static char *find_command_in_paths(char *cmd, char **paths)
 {
-	int		i;
-	char	*full_path;
-	char	*temp;
+	int i;
+	char *full_path;
+	char *temp;
 
 	i = 0;
 	while (paths[i])
@@ -200,9 +206,9 @@ static char	*find_command_in_paths(char *cmd, char **paths)
 	return (NULL);
 }
 
-static char	**get_paths_from_env(t_list *env_list)
+static char **get_paths_from_env(t_list *env_list)
 {
-	t_env_var	*path_var;
+	t_env_var *path_var;
 
 	path_var = get_env_var(env_list, "PATH");
 	if (!path_var || !path_var->value)
@@ -210,7 +216,7 @@ static char	**get_paths_from_env(t_list *env_list)
 	return (ft_split(path_var->value, ':'));
 }
 
-static char	*check_direct_path(char *cmd)
+static char *check_direct_path(char *cmd)
 {
 	if (ft_strchr(cmd, '/'))
 	{
@@ -221,19 +227,19 @@ static char	*check_direct_path(char *cmd)
 	return (NULL);
 }
 
-static void	free_array(char **array)
+static void free_array(char **array)
 {
-	int	i;
+	int i;
 
 	if (!array)
-		return ;
+		return;
 	i = -1;
 	while (array[++i])
 		free(array[i]);
 	free(array);
 }
 
-static void	handle_error(char *message, int exit_code)
+static void handle_error(char *message, int exit_code)
 {
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(message, 2);
@@ -241,11 +247,11 @@ static void	handle_error(char *message, int exit_code)
 	exit(exit_code);
 }
 
-char	**ft_lst_to_array(t_list *lst)
+char **ft_lst_to_array(t_list *lst)
 {
-	char	**array;
-	int		i;
-	int		size;
+	char **array;
+	int i;
+	int size;
 
 	size = ft_lstsize(lst);
 	i = 0;
@@ -268,32 +274,26 @@ char	**ft_lst_to_array(t_list *lst)
 }
 
 // ===================== FUNÇÕES BUILTIN (EXEMPLO) ======================
-static int	is_builtin(t_command *cmd)
+static int is_builtin(t_command *cmd)
 {
-	char	*name;
+	char *name;
 
 	if (!cmd->arguments || !cmd->arguments->content)
 		return (0);
 	name = (char *)cmd->arguments->content;
-	if ((ft_strncmp(name, "echo", 4) == 0 && name[4] == '\0')
-		|| (ft_strncmp(name, "pwd", 3) == 0 && name[3] == '\0')
-		|| (ft_strncmp(name, "cd", 2) == 0 && name[2] == '\0')
-		|| (ft_strncmp(name, "env", 3) == 0 && name[3] == '\0')
-		|| (ft_strncmp(name, "export", 6) == 0 && name[6] == '\0')
-		|| (ft_strncmp(name, "unset", 5) == 0 && name[5] == '\0')
-		|| (ft_strncmp(name, "exit", 4) == 0 && name[4] == '\0'))
+	if ((ft_strncmp(name, "echo", 4) == 0 && name[4] == '\0') || (ft_strncmp(name, "pwd", 3) == 0 && name[3] == '\0') || (ft_strncmp(name, "cd", 2) == 0 && name[2] == '\0') || (ft_strncmp(name, "env", 3) == 0 && name[3] == '\0') || (ft_strncmp(name, "export", 6) == 0 && name[6] == '\0') || (ft_strncmp(name, "unset", 5) == 0 && name[5] == '\0') || (ft_strncmp(name, "exit", 4) == 0 && name[4] == '\0'))
 		return (1);
 	return (0);
 }
 
 // ===================== MAIN ======================
 
-int	main(int argc, char **argv, char **envp)
+int main(int argc, char **argv, char **envp)
 {
-	t_minish	msh;
+	t_minish msh;
 
-	(void) argc;
-	(void) argv;
+	(void)argc;
+	(void)argv;
 	init_minishell(&msh, envp);
 	if (!msh.env_vars)
 		return (1);
@@ -301,7 +301,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		msh.input = readline("\033[0;31mGUGOMES EXECUTOR V3 $ \033[0m");
 		if (msh.input == NULL)
-			break ;
+			break;
 		if (process_input(&msh))
 			execute_pipeline(&msh);
 		if (!ft_strall(msh.input, ft_isspace))

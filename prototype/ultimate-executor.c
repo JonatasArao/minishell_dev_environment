@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ultimate-executor.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: gugomes- <gugomes-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:17:31 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/26 16:18:47 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/27 18:13:39 by gugomes-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,274 @@ int	init_redirections(t_list *commands)
 	return (1);
 }
 
+int	backup_fds(t_minish *msh)
+{
+	msh->saved_fd[0] = dup(STDIN_FILENO);
+	if (msh->saved_fd[0] == -1)
+	{
+		perror("minishell: redirection:");
+		return (-1);
+	}
+	msh->saved_fd[1] = dup(STDOUT_FILENO);
+	if (msh->saved_fd[1] == -1)
+	{
+		perror("minishell: redirection:");
+		close(msh->saved_fd[0]);
+		return (-1);
+	}
+	return (1);
+}
+
+void	restore_fds(t_minish *msh)
+{
+	if (msh->saved_fd[0] != -1)
+	{
+		if (dup2(msh->saved_fd[0], STDIN_FILENO) == -1)
+			perror("minishell: restore input:");
+		if (close(msh->saved_fd[0]) == -1)
+			perror("minishell: close input:");
+		msh->saved_fd[0] = -1;
+	}
+	if (msh->saved_fd[1] != -1)
+	{
+		if (dup2(msh->saved_fd[1], STDOUT_FILENO) == -1)
+			perror("minishell: restore output:");
+		if (close(msh->saved_fd[1]) == -1)
+			perror("minishell: close output:");
+		msh->saved_fd[1] = -1;
+	}
+}
+
+int	apply_input_redirection(int input_fd)
+{
+	if (input_fd != -1)
+	{
+		if (dup2(input_fd, STDIN_FILENO) == -1)
+		{
+			perror("minishell: input redirection: ");
+			return (0);
+		}
+		if (close(input_fd) == -1)
+		{
+			perror("minishell: input redirection: ");
+			return (0);
+		}
+	}
+	return (1);
+}
+
+int	apply_output_redirection(int output_fd)
+{
+	if (output_fd != -1)
+	{
+		if (dup2(output_fd, STDOUT_FILENO) == -1)
+		{
+			perror("minishell: output redirection: ");
+			return (0);
+		}
+		if (close(output_fd) == -1)
+		{
+			perror("minishell: output redirection: ");
+			return (0);
+		}
+	}
+	return (1);
+}
+
+int	apply_redirections(t_command *cmd)
+{
+	int	input_fd;
+	int	output_fd;
+
+	input_fd = cmd->input_fd;
+	output_fd = cmd->output_fd;
+	if (!apply_input_redirection(input_fd))
+		return (0);
+	cmd->input_fd = -1;
+	if (!apply_output_redirection(output_fd))
+		return (0);
+	cmd->output_fd = -1;
+	return (1);
+}
+
+void	child_process(t_minish *msh, t_command *cmd, int pipe_fd[2],
+	int (*launcher)(t_minish *, t_command *))
+{
+	close(pipe_fd[1]);
+	dup2(pipe_fd[0], STDIN_FILENO);
+	close(pipe_fd[0]);
+	if (!apply_redirections(cmd))
+		exit(1);
+	launcher(msh, cmd);
+}
+
+void	parent_process(int pipe_fd[2])
+{
+	close(pipe_fd[0]);
+	dup2(pipe_fd[1], STDOUT_FILENO);
+	close(pipe_fd[1]);
+}
+
+int	launch_process(t_minish *msh, t_command *cmd, int (*launcher)(t_minish *, t_command *))
+{
+	int		pipe_fd[2];
+	pid_t	pid;
+
+	if (pipe(pipe_fd) == -1)
+	{
+		perror("minishell: pipe:");
+		return (1);
+	}
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("minishell: fork:");
+		exit(1);
+	}
+	if (pid == 0)
+		child_process(msh, cmd, pipe_fd, launcher);
+	else
+		parent_process(pipe_fd);
+	return (1);
+}
+
+char	*get_full_path(char *token, char *cmd)
+{
+	char	*temp;
+	char	*full_path;
+
+	temp = ft_strjoin(token, "/");
+	if (!temp)
+		return (NULL);
+	full_path = ft_strjoin(temp, cmd);
+	free(temp);
+	if (!full_path)
+		return (NULL);
+	return (full_path);
+}
+
+char	*search_path(char *path, char *cmd)
+{
+	char	*token;
+	char	*full_path;
+
+	token = ft_strtok(path, ":");
+	while (token)
+	{
+		full_path = get_full_path(token, cmd);
+		if (!full_path)
+			return (NULL);
+		if (access(full_path, F_OK | X_OK) == 0)
+			return (full_path);
+		free(full_path);
+		token = ft_strtok(NULL, ":");
+	}
+	return (NULL);
+}
+
+char	*get_command_path(t_list *env, char *cmd)
+{
+	t_env_var	*path_env;
+	char		*path;
+	char		*full_path;
+
+	path_env = get_env_var(env, "PATH");
+	if (!path_env || (path_env && !path_env->value))
+		return (ft_strdup(cmd));
+	path = ft_strdup(path_env->value);
+	if (!path)
+		return (NULL);
+	full_path = search_path(path, cmd);
+	free(path);
+	if (full_path)
+		return (full_path);
+	return (ft_strdup(cmd));
+}
+
+void exit_execution(char **argv, char **envp, char *path, int exit_code)
+{
+	if (exit_code == 1)
+	{
+		if (argv && argv[0])
+			ft_putstr_fd(argv[0], 2);
+		else
+			ft_putstr_fd("minishell", 2);
+		ft_putstr_fd(": fail execution\n", 2);
+	}
+	if (exit_code == 127)
+	{
+		if (argv && argv[0])
+			ft_putstr_fd(argv[0], 2);
+		else
+			ft_putstr_fd("minishell", 2);
+		ft_putstr_fd(": command not found\n", 2);
+	}
+	if (argv)
+		ft_free_nt_matrix((void **) argv);
+	if (envp)
+		ft_free_nt_matrix((void **) envp);
+	if (path)
+		free(path);
+	exit(exit_code);
+}
+
+int	launch_executable(t_minish *msh, t_command *cmd)
+{
+	char	**envp;
+	char	**argv;
+	char	*path;
+
+	envp = get_envp(msh->env_vars);
+	argv = get_argv(cmd->arguments);
+	if (!argv)
+	{
+		destroy_minishell(msh);
+		exit_execution(argv, envp, NULL, 1);
+	}
+	path = get_command_path(msh->env_vars, argv[0]);
+	if (!path)
+	{
+		destroy_minishell(msh);
+		exit_execution(argv, envp, NULL, 127);
+	}
+	if (execve(path, argv, envp) == -1)
+	{
+		destroy_minishell(msh);
+		perror(argv[0]);
+		exit_execution(argv, envp, path, 126);
+	}
+	return (0);
+}
+
+int	execute_single(t_minish *msh)
+{
+	t_command	*cmd;
+	int	status;
+
+	cmd = (t_command *)msh->commands->content;
+	if(!backup_fds(msh))
+		return (1);
+	if (is_builtin(cmd))
+	{
+		if (!apply_redirections(cmd))
+			return (1);
+		cmd->status = launch_builtin(msh, cmd);
+	}
+	else
+	{
+		if (launch_process(msh, cmd, launch_executable))
+		{
+			wait(&status);
+			if (WIFEXITED(status))
+				cmd->status = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+				cmd->status = WTERMSIG(status) + 128;
+		}
+	}
+	restore_fds(msh);
+	return (cmd->status);
+}
+
 int	execute_commands(t_minish *msh)
 {
 	int	num_commands;
@@ -140,8 +408,8 @@ int	execute_commands(t_minish *msh)
 	status = 0;
 	if (!init_redirections(msh->commands))
 		return (1);
-	if (num_commands == 1 && is_builtin(msh->commands->content))
-		status = launch_builtin(msh, (t_command *)msh->commands->content);
+	if (num_commands == 1)
+		status = execute_single(msh);
 	return (status);
 }
 

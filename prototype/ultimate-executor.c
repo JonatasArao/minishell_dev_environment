@@ -6,14 +6,11 @@
 /*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:17:31 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/28 06:02:52 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/28 17:41:04 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <sys/stat.h>
-#include <sys/wait.h>
-#include <fcntl.h>
 
 int	is_fd_open(int fd, char *target)
 {
@@ -144,7 +141,7 @@ void	restore_fds(t_minish *msh)
 			perror("minishell: restore input:");
 		if (close(msh->saved_fd[0]) == -1)
 			perror("minishell: close input:");
-		msh->saved_fd[0] = -1;
+		msh->saved_fd[0] = STDIN_FILENO;
 	}
 	if (msh->saved_fd[1] != -1)
 	{
@@ -152,7 +149,7 @@ void	restore_fds(t_minish *msh)
 			perror("minishell: restore output:");
 		if (close(msh->saved_fd[1]) == -1)
 			perror("minishell: close output:");
-		msh->saved_fd[1] = -1;
+		msh->saved_fd[1] = STDOUT_FILENO;
 	}
 }
 
@@ -210,17 +207,20 @@ int	apply_redirections(t_command *cmd)
 	return (1);
 }
 
-void	child_process(t_minish *msh, t_list *cmd_node, int pipe_fd[2], int *input_fd,
+void	child_process(t_minish *msh, t_list *cmd_node, int input_fd,
 	int (*launcher)(t_minish *, t_command *))
 {
 	t_command	*cmd;
+	int			pipe_fd[2];
 	int			exit_code;
 
 	cmd = (t_command *)cmd_node->content;
-	if (*input_fd != STDIN_FILENO)
+	pipe_fd[0] = cmd->pipe_fd[0];
+	pipe_fd[1] = cmd->pipe_fd[1];
+	if (input_fd != STDIN_FILENO)
 	{
-		dup2(*input_fd, STDIN_FILENO);
-		close(*input_fd);
+		dup2(input_fd, STDIN_FILENO);
+		close(input_fd);
 	}
 	if (cmd_node->next)
 	{
@@ -229,41 +229,48 @@ void	child_process(t_minish *msh, t_list *cmd_node, int pipe_fd[2], int *input_f
 		close(pipe_fd[1]);
 	}
 	if (!apply_redirections(cmd))
+	{
+		destroy_minishell(msh);
 		exit(1);
+	}
 	exit_code = launcher(msh, cmd);
 	destroy_minishell(msh);
 	exit(exit_code);
 }
 
-void	parent_process(t_list *cmd_node, pid_t pid,
-		int *input_fd, int pipe_fd[2])
+int	parent_process(t_list *cmd_node, pid_t pid, int input_fd)
 {
 	t_command	*cmd;
+	int			pipe_fd[2];
 
 	cmd = (t_command *)cmd_node->content;
-	if (*input_fd != STDIN_FILENO)
-		close(*input_fd);
+	pipe_fd[0] = cmd->pipe_fd[0];
+	pipe_fd[1] = cmd->pipe_fd[1];
+	if (input_fd != STDIN_FILENO)
+		close(input_fd);
 	if (cmd_node->next)
 	{
 		close(pipe_fd[1]);
-		*input_fd = pipe_fd[0];
+		input_fd = pipe_fd[0];
 	}
 	else
 	{
 		close(pipe_fd[0]);
-		*input_fd = STDIN_FILENO;
+		input_fd = STDIN_FILENO;
 	}
 	cmd->pid = pid;
+	return (input_fd);
 }
 
 int	launch_process(t_minish *msh, t_list *cmd_node,
 		int (*launcher)(t_minish *, t_command *))
 {
 	static int			input_fd = STDIN_FILENO;
-	int					pipe_fd[2];
+	t_command			*cmd;
 	pid_t				pid;
 
-	if (pipe(pipe_fd) == -1)
+	cmd = (t_command *)cmd_node->content;
+	if (pipe(cmd->pipe_fd) == -1)
 	{
 		perror("minishell: pipe:");
 		return (1);
@@ -275,9 +282,9 @@ int	launch_process(t_minish *msh, t_list *cmd_node,
 		exit(1);
 	}
 	if (pid == 0)
-		child_process(msh, cmd_node, pipe_fd, &input_fd, launcher);
+		child_process(msh, cmd_node, input_fd, launcher);
 	else
-		parent_process(cmd_node, pid, &input_fd, pipe_fd);
+		input_fd = parent_process(cmd_node, pid, input_fd);
 	return (1);
 }
 
@@ -416,37 +423,38 @@ int	launch_executable(t_minish *msh, t_command *cmd)
 	return (0);
 }
 
-void wait_chilren_process(t_minish *msh, pid_t last_pid,int num_commands)
+int	wait_pipeline(pid_t last_pid, int num_commands)
 {
 	pid_t	pid;
 	int		status;
-	int		i;
+	int		last_status;
 
-	i = 0;
-	while (i < num_commands)
+	last_status = 0;
+	while (num_commands > 0)
 	{
 		pid = waitpid(-1, &status, 0);
 		if (pid == -1)
 		{
 			perror("minishell: waitpid");
-			msh->last_status = 1;
-			return ;
+			return (1);
 		}
 		if (pid == last_pid)
 		{
 			if (WIFEXITED(status))
-				msh->last_status = WEXITSTATUS(status);
+				last_status = WEXITSTATUS(status);
 			else if (WIFSIGNALED(status))
-				msh->last_status = WTERMSIG(status) + 128;
+				last_status = WTERMSIG(status) + 128;
 		}
-		i++;
+		num_commands--;
 	}
+	return (last_status);
 }
 
 int	execute_pipeline(t_minish *msh, int num_commands)
 {
 	t_list		*cmd_list;
 	t_command	*cmd;
+	int			last_status;
 
 	cmd_list = msh->commands;
 	while (cmd_list)
@@ -458,8 +466,8 @@ int	execute_pipeline(t_minish *msh, int num_commands)
 			launch_process(msh, cmd_list, launch_executable);
 		cmd_list = cmd_list->next;
 	}
-	wait_chilren_process(msh, cmd->pid, num_commands);
-	return (msh->last_status);
+	last_status = wait_pipeline(cmd->pid, num_commands);
+	return (last_status);
 }
 
 int	execute_single(t_minish *msh)

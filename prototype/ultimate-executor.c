@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:17:31 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/28 03:41:29 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/28 06:02:52 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,6 +214,7 @@ void	child_process(t_minish *msh, t_list *cmd_node, int pipe_fd[2], int *input_f
 	int (*launcher)(t_minish *, t_command *))
 {
 	t_command	*cmd;
+	int			exit_code;
 
 	cmd = (t_command *)cmd_node->content;
 	if (*input_fd != STDIN_FILENO)
@@ -229,7 +230,9 @@ void	child_process(t_minish *msh, t_list *cmd_node, int pipe_fd[2], int *input_f
 	}
 	if (!apply_redirections(cmd))
 		exit(1);
-	exit(launcher(msh, cmd));
+	exit_code = launcher(msh, cmd);
+	destroy_minishell(msh);
+	exit(exit_code);
 }
 
 void	parent_process(t_list *cmd_node, pid_t pid,
@@ -312,17 +315,6 @@ char	*search_path(char *path, char *cmd)
 	return (NULL);
 }
 
-int is_directory(char *path)
-{
-	struct stat	path_stat;
-
-	if (stat(path, &path_stat) != 0)
-		return (0);
-	if (S_ISDIR(path_stat.st_mode))
-		return (1);
-	return (0);
-}
-
 char	*get_command_path(t_list *env, char *cmd)
 {
 	t_env_var	*path_env;
@@ -332,8 +324,6 @@ char	*get_command_path(t_list *env, char *cmd)
 	if (cmd[0] == '/' || ft_strncmp("./", cmd, 2) == 0
 		|| ft_strncmp("../", cmd, 2) == 0)
 	{
-		if (!is_directory(cmd))
-			return (NULL);
 		full_path = ft_strdup(cmd);
 		if (!full_path)
 			return (NULL);
@@ -352,26 +342,54 @@ char	*get_command_path(t_list *env, char *cmd)
 	return (NULL);
 }
 
-void exit_execution(char **argv, char **envp, char *path, int exit_code)
+void	free_execution(char *path, char **argv, char **envp)
 {
-	if (exit_code == 127 || exit_code == 126)
-	{
-		if (argv && argv[0])
-			ft_putstr_fd(argv[0], 2);
-		else
-			ft_putstr_fd("minishell", 2);
-	}
-	if (exit_code == 127)
-		ft_putendl_fd(": command not found", 2);
-	if (exit_code == 126)
-		ft_putendl_fd(": is a directory", 2);
 	if (argv)
 		ft_free_nt_matrix((void **) argv);
 	if (envp)
 		ft_free_nt_matrix((void **) envp);
 	if (path)
 		free(path);
-	exit(exit_code);
+}
+
+int is_directory(char *path)
+{
+	struct stat	path_stat;
+
+	if (stat(path, &path_stat) != 0)
+		return (0);
+	if (S_ISDIR(path_stat.st_mode))
+		return (1);
+	return (0);
+}
+
+int	get_exec_error(char *path, char **argv)
+{
+	if (argv && argv[0])
+		ft_putstr_fd(argv[0], 2);
+	else
+		ft_putstr_fd("minishell", 2);
+	if (!path)
+	{
+		ft_putendl_fd(": command not found", 2);
+		return (127);
+	}
+	if (is_directory(path))
+	{
+		ft_putendl_fd(": is a directory", 2);
+		return (126);
+	}
+	if (access(path, F_OK) != 0)
+	{
+		ft_putendl_fd(": no such file or directiory", 2);
+		return (127);
+	}
+	if (access(path, X_OK) != 0)
+	{
+		ft_putendl_fd(": Permission Denied", 2);
+		return (126);
+	}
+	return (0);
 }
 
 int	launch_executable(t_minish *msh, t_command *cmd)
@@ -379,25 +397,21 @@ int	launch_executable(t_minish *msh, t_command *cmd)
 	char	**envp;
 	char	**argv;
 	char	*path;
+	int		exit_code;
 
 	envp = get_envp(msh->env_vars);
 	argv = get_argv(cmd->arguments);
 	if (!argv)
 	{
-		destroy_minishell(msh);
-		exit_execution(argv, envp, NULL, 0);
+		free_execution(NULL, argv, envp);
+		return (0);
 	}
 	path = get_command_path(msh->env_vars, argv[0]);
-	if (!path)
+	if (!path || execve(path, argv, envp) == -1)
 	{
-		destroy_minishell(msh);
-		exit_execution(argv, envp, NULL, 127);
-	}
-	if (execve(path, argv, envp) == -1)
-	{
-		destroy_minishell(msh);
-		perror(argv[0]);
-		exit_execution(argv, envp, path, 126);
+		exit_code = get_exec_error(path, argv);
+		free_execution(path, argv, envp);
+		return (exit_code);
 	}
 	return (0);
 }
@@ -434,8 +448,6 @@ int	execute_pipeline(t_minish *msh, int num_commands)
 	t_list		*cmd_list;
 	t_command	*cmd;
 
-	if (!backup_fds(msh))
-		return (1);
 	cmd_list = msh->commands;
 	while (cmd_list)
 	{
@@ -447,7 +459,6 @@ int	execute_pipeline(t_minish *msh, int num_commands)
 		cmd_list = cmd_list->next;
 	}
 	wait_chilren_process(msh, cmd->pid, num_commands);
-	restore_fds(msh);
 	return (msh->last_status);
 }
 
@@ -457,13 +468,14 @@ int	execute_single(t_minish *msh)
 	int			status;
 
 	cmd = (t_command *)msh->commands->content;
-	if (!backup_fds(msh))
-		return (1);
 	if (is_builtin(cmd))
 	{
+		if (!backup_fds(msh))
+			return (1);
 		if (!apply_redirections(cmd))
 			return (1);
 		status = launch_builtin(msh, cmd);
+		restore_fds(msh);
 	}
 	else
 	{
@@ -476,7 +488,6 @@ int	execute_single(t_minish *msh)
 				status = WTERMSIG(status) + 128;
 		}
 	}
-	restore_fds(msh);
 	return (status);
 }
 

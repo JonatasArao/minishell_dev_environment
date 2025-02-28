@@ -37,7 +37,14 @@ MSH_SRC_FILES = main.c \
 				builtin/export.c \
 				builtin/unset.c \
 				builtin/exit.c \
-				execute/launch_builtin.c
+				execute/apply_redirections.c \
+				execute/execute_commands.c \
+				execute/get_command_path.c \
+				execute/argv_manager.c	\
+				execute/launch_executable.c \
+				execute/launch_builtin.c \
+				execute/launch_process.c \
+				execute/open_redirections.c
 MSH_SRC = $(addprefix $(MSH_SRC_DIR)/, $(MSH_SRC_FILES))
 MSH_OBJS_DIR = minishell_objs
 MSH_OBJS = $(addprefix $(MSH_OBJS_DIR)/, $(subst /,-, $(MSH_SRC_FILES:.c=.o)))
@@ -92,7 +99,7 @@ SRC_FILES = main.c \
 			expand/extract_vars/test_get_next_var.c \
 			expand/extract_vars/test_extract_vars.c \
 			expand/expand_token/test_get_var_value.c \
-			expand/expand_token/test_concat_vars.c \
+			expand/concat_vars/test_concat_vars.c \
 			expand/expand_token/test_expand_quotes.c \
 			expand/expand_token/test_expand_var.c \
 			expand/expand_token/test_expand_token.c \

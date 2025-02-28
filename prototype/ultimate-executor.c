@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:17:31 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/28 17:41:04 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/02/28 18:02:07 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	open_output_redirections(t_redirection *redir, int *output_fd)
 		return (0);
 	fd = open(redir->target, flags, 0644);
 	if (!is_fd_open(fd, redir->target))
-		return (1);
+		return (0);
 	*output_fd = fd;
 	return (1);
 }
@@ -202,7 +202,11 @@ int	apply_redirections(t_command *cmd)
 		return (0);
 	cmd->input_fd = -1;
 	if (!apply_output_redirection(output_fd))
+	{
+		if (input_fd != -1)
+			close(input_fd);
 		return (0);
+	}
 	cmd->output_fd = -1;
 	return (1);
 }
@@ -211,12 +215,9 @@ void	child_process(t_minish *msh, t_list *cmd_node, int input_fd,
 	int (*launcher)(t_minish *, t_command *))
 {
 	t_command	*cmd;
-	int			pipe_fd[2];
 	int			exit_code;
 
 	cmd = (t_command *)cmd_node->content;
-	pipe_fd[0] = cmd->pipe_fd[0];
-	pipe_fd[1] = cmd->pipe_fd[1];
 	if (input_fd != STDIN_FILENO)
 	{
 		dup2(input_fd, STDIN_FILENO);
@@ -224,9 +225,9 @@ void	child_process(t_minish *msh, t_list *cmd_node, int input_fd,
 	}
 	if (cmd_node->next)
 	{
-		close(pipe_fd[0]);
-		dup2(pipe_fd[1], STDOUT_FILENO);
-		close(pipe_fd[1]);
+		close(cmd->pipe_fd[0]);
+		dup2(cmd->pipe_fd[1], STDOUT_FILENO);
+		close(cmd->pipe_fd[1]);
 	}
 	if (!apply_redirections(cmd))
 	{
@@ -241,21 +242,18 @@ void	child_process(t_minish *msh, t_list *cmd_node, int input_fd,
 int	parent_process(t_list *cmd_node, pid_t pid, int input_fd)
 {
 	t_command	*cmd;
-	int			pipe_fd[2];
 
 	cmd = (t_command *)cmd_node->content;
-	pipe_fd[0] = cmd->pipe_fd[0];
-	pipe_fd[1] = cmd->pipe_fd[1];
 	if (input_fd != STDIN_FILENO)
 		close(input_fd);
 	if (cmd_node->next)
 	{
-		close(pipe_fd[1]);
-		input_fd = pipe_fd[0];
+		close(cmd->pipe_fd[1]);
+		input_fd = cmd->pipe_fd[0];
 	}
 	else
 	{
-		close(pipe_fd[0]);
+		close(cmd->pipe_fd[0]);
 		input_fd = STDIN_FILENO;
 	}
 	cmd->pid = pid;
@@ -426,13 +424,13 @@ int	launch_executable(t_minish *msh, t_command *cmd)
 int	wait_pipeline(pid_t last_pid, int num_commands)
 {
 	pid_t	pid;
-	int		status;
+	int		pid_status;
 	int		last_status;
 
 	last_status = 0;
 	while (num_commands > 0)
 	{
-		pid = waitpid(-1, &status, 0);
+		pid = waitpid(-1, &pid_status, 0);
 		if (pid == -1)
 		{
 			perror("minishell: waitpid");
@@ -440,10 +438,10 @@ int	wait_pipeline(pid_t last_pid, int num_commands)
 		}
 		if (pid == last_pid)
 		{
-			if (WIFEXITED(status))
-				last_status = WEXITSTATUS(status);
-			else if (WIFSIGNALED(status))
-				last_status = WTERMSIG(status) + 128;
+			if (WIFEXITED(pid_status))
+				last_status = WEXITSTATUS(pid_status);
+			else if (WIFSIGNALED(pid_status))
+				last_status = WTERMSIG(pid_status) + 128;
 		}
 		num_commands--;
 	}
@@ -470,6 +468,20 @@ int	execute_pipeline(t_minish *msh, int num_commands)
 	return (last_status);
 }
 
+int	wait_single(pid_t pid)
+{
+	int	pid_status;
+	int	status;
+
+	status = 1;
+	waitpid(pid, &pid_status, 0);
+	if (WIFEXITED(pid_status))
+		status = WEXITSTATUS(pid_status);
+	else if (WIFSIGNALED(pid_status))
+		status = WTERMSIG(pid_status) + 128;
+	return (status);
+}
+
 int	execute_single(t_minish *msh)
 {
 	t_command	*cmd;
@@ -481,20 +493,17 @@ int	execute_single(t_minish *msh)
 		if (!backup_fds(msh))
 			return (1);
 		if (!apply_redirections(cmd))
+		{
+			restore_fds(msh);
 			return (1);
+		}
 		status = launch_builtin(msh, cmd);
 		restore_fds(msh);
 	}
 	else
 	{
 		if (launch_process(msh, msh->commands, launch_executable))
-		{
-			wait(&status);
-			if (WIFEXITED(status))
-				status = WEXITSTATUS(status);
-			else if (WIFSIGNALED(status))
-				status = WTERMSIG(status) + 128;
-		}
+			status = wait_single(cmd->pid);
 	}
 	return (status);
 }

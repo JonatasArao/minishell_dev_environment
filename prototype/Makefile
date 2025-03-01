@@ -29,8 +29,14 @@ MSH_SRC_FILES = main.c \
 				builtin/export.c \
 				builtin/unset.c \
 				builtin/exit.c \
+				execute/apply_redirections.c \
+				execute/execute_commands.c \
+				execute/get_command_path.c \
+				execute/argv_manager.c	\
+				execute/launch_executable.c \
 				execute/launch_builtin.c \
-				execute/argv_manager.c
+				execute/launch_process.c \
+				execute/open_redirections.c	
 MSH_SRC = $(addprefix $(MSH_SRC_DIR)/, $(MSH_SRC_FILES))
 MSH_OBJS_DIR = minishell_objs
 MSH_OBJS = $(addprefix $(MSH_OBJS_DIR)/, $(subst /,-, $(MSH_SRC_FILES:.c=.o)))

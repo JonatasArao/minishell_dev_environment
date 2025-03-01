@@ -1,5 +1,6 @@
 {
 	"files.associations": {
+		"*.css": "css",
 		"mock.h": "c",
 		"minishell_tests.h": "c",
 		"stdlib.h": "c",
@@ -9,6 +10,7 @@
 		"minunit.h": "c",
 		"cmath": "c",
 		"stdio.h": "c",
-		"string.h": "c"
+		"string.h": "c",
+		"unistd.h": "c"
 	}
 }

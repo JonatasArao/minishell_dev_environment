@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_token-jarao-de.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 08:55:13 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/13 15:59:53 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/03/01 02:55:18 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,41 +22,34 @@ typedef struct s_env_var
 	char	*value;
 }	t_env_var;
 
-size_t	get_var_end(const char *token)
+size_t	p_get_var_end(const char *line)
 {
-	static char	quote_char;
 	size_t		end;
 
-	if (token[0] == '\0')
+	if (line[0] == '\0')
 		return (0);
 	end = 0;
-	if (!quote_char && ft_strchr("\"'", token[end]))
-		quote_char = token[end++];
-	while (token[end] && (!ft_strchr("\"'", token[end]) || quote_char))
+	while (line[end])
 	{
-		if (token[end] == quote_char || (token[0] == '$'
-				&& (ft_isspace(token[end]) || ft_strchr("\"'", token[end]))))
+		if (line[0] == '$' && (ft_isspace(line[end])
+				|| ft_strchr("\"';()[]{}+-*/=", line[end])
+				|| (end > 0 && line[end - 1] == '?')))
 			break ;
-		if (quote_char != '\'' && token[end] == '$' && end != 0)
+		if (line[end] == '$' && end != 0)
 			return (end);
-		end++;
-	}
-	if (token[0] != '$' && token[end] == quote_char)
-	{
-		quote_char = 0;
 		end++;
 	}
 	return (end);
 }
 
-char	*get_next_var(char const *token)
+char	*p_get_next_var(char const *token)
 {
 	char			*word;
 	unsigned int	start;
 	size_t			end;
 
 	start = 0;
-	end = get_var_end(token);
+	end = p_get_var_end(token);
 	if (start == end)
 		return (NULL);
 	word = ft_substr(token, start, end - start);
@@ -65,7 +58,7 @@ char	*get_next_var(char const *token)
 	return (word);
 }
 
-t_list	*extract_vars(const char *token)
+t_list	*p_extract_vars(const char *token)
 {
 	t_list	*head;
 	t_list	*current;
@@ -74,7 +67,7 @@ t_list	*extract_vars(const char *token)
 	head = NULL;
 	while (*token)
 	{
-		word = get_next_var(token);
+		word = p_get_next_var(token);
 		if (!word && head)
 			ft_lstclear(&head, free);
 		if (!word)
@@ -89,7 +82,7 @@ t_list	*extract_vars(const char *token)
 	return (head);
 }
 
-char	*concat_vars(t_list *vars)
+char	*p_concat_vars(t_list *vars)
 {
 	char	*result;
 	size_t	total_length;
@@ -118,7 +111,7 @@ char	*concat_vars(t_list *vars)
 	return (result);
 }
 
-char	*get_var_value(const char *key)
+char	*p_get_var_value(const char *key)
 {
 	char	*value;
 
@@ -130,7 +123,7 @@ char	*get_var_value(const char *key)
 	return (ft_strdup(""));
 }
 
-int	expand_var(char	**var)
+int	p_expand_var(char	**var)
 {
 	char	*new_value;
 	char	*content;
@@ -140,7 +133,7 @@ int	expand_var(char	**var)
 	new_value = NULL;
 	content = (char *)(*var);
 	if (content[0] == '$')
-		new_value = get_var_value(content + 1);
+		new_value = p_get_var_value(content + 1);
 	else
 	{
 		quote = ft_strrchr(content, '\'');
@@ -158,20 +151,20 @@ int	expand_var(char	**var)
 	return (1);
 }
 
-char	*expand_token(char *s)
+char	*p_expand_token(char *s)
 {
 	t_list	*var_list;
 	t_list	*current;
 	char	*new_tok;
 
-	var_list = extract_vars(s);
+	var_list = p_extract_vars(s);
 	current = var_list;
 	while (current)
 	{
-		expand_var((char **)&current->content);
+		p_expand_var((char **)&current->content);
 		current = current->next;
 	}
-	new_tok = concat_vars(var_list);
+	new_tok = p_concat_vars(var_list);
 	ft_lstclear(&var_list, free);
 	return (new_tok);
 }
@@ -184,14 +177,14 @@ int	main(void)
 	char	*new_str;
 
 	str = "He\"ll\"o\" $USER'Vulgo'\"\"'$HOME'\", Welcome to '\"$PATH\"' in $LANG \".\" $?";
-	var_list = extract_vars(str);
+	var_list = p_extract_vars(str);
 	temp = var_list;
 	while (temp)
 	{
 		printf("Variable: {%s}\n", (char *)temp->content);
 		temp = temp->next;
 	}
-	new_str = expand_token(str);
+	new_str = p_expand_token(str);
 	if (new_str)
 	{
 		printf("%s\n", new_str);

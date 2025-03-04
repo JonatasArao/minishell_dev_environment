@@ -36,7 +36,10 @@ MSH_SRC_FILES = main.c \
 				execute/launch_executable.c \
 				execute/launch_builtin.c \
 				execute/launch_process.c \
-				execute/open_redirections.c	
+				execute/open_redirections.c \
+				execute/capture_heredoc.c \
+				execute/open_heredoc.c \
+				execute/expand_heredoc.c	
 MSH_SRC = $(addprefix $(MSH_SRC_DIR)/, $(MSH_SRC_FILES))
 MSH_OBJS_DIR = minishell_objs
 MSH_OBJS = $(addprefix $(MSH_OBJS_DIR)/, $(subst /,-, $(MSH_SRC_FILES:.c=.o)))

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executer_command-gugomes-.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gugomes- <gugomes-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 10:26:17 by gugomes-          #+#    #+#             */
-/*   Updated: 2025/02/13 14:21:56 by gugomes-         ###   ########.fr       */
+/*   Updated: 2025/03/05 00:52:54 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ char *ft_strndup(const char *s, size_t n)
 	result[len] = '\0';
 	return (result);
 }
-void	builtin_export(t_minish *msh, t_command *command)
+void	builtin_export(t_msh *msh, t_command *command)
 {
 	char	*arg;
 	char	*key;
@@ -162,7 +162,7 @@ void	builtin_export(t_minish *msh, t_command *command)
 	free(value);
 }
 
-void builtin_unset(t_minish *msh, t_command *command)
+void builtin_unset(t_msh *msh, t_command *command)
 {
 	if (!command->arguments || !command->arguments->next)
 	{
@@ -186,7 +186,7 @@ void	builtin_env(void)
 	}
 }
 
-void	builtin_exit(t_minish *msh)
+void	builtin_exit(t_msh *msh)
 {
 	if (msh->input)
 		free(msh->input);
@@ -219,7 +219,7 @@ int	is_builtin(t_command *command)
 	return (0);
 }
 
-void	execute_builtin(t_minish *msh, t_command *command)
+void	execute_builtin(t_msh *msh, t_command *command)
 {
 	const char	*cmd;
 
@@ -440,7 +440,7 @@ void execute_pipe_commands(t_list *commands)
 	}
 }
 
-void execute_command(t_minish *msh, t_command *command, int is_pipeline)
+void execute_command(t_msh *msh, t_command *command, int is_pipeline)
 {
 	if (is_builtin(command))
 	{
@@ -506,7 +506,7 @@ void execute_command(t_minish *msh, t_command *command, int is_pipeline)
 	}
 }
 
-void process_commands(t_minish *msh)
+void process_commands(t_msh *msh)
 {
 	t_list *command_node;
 	int is_pipeline = ft_lstsize(msh->commands) > 1;
@@ -521,7 +521,7 @@ void process_commands(t_minish *msh)
 }
 
 
-void process_inputs(t_minish *msh)
+void process_inputs(t_msh *msh)
 {
 	msh->tokens = extract_tokens(msh->input);
 	if (!is_token_list_valid(msh->tokens))
@@ -539,7 +539,7 @@ void process_inputs(t_minish *msh)
 
 int main(int argc, char **argv)
 {
-	t_minish msh;
+	t_msh msh;
 
 	(void)argc;
 	(void)argv;

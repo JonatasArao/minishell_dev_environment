@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 20:36:43 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/03/02 02:25:53 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/03/05 00:52:54 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	setup_signal_handlers(void)
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_minish	msh;
+	t_msh	msh;
 
 	(void) argc;
 	(void) argv;

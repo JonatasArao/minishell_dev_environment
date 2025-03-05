@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:17:31 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/02/28 18:02:07 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/03/05 00:52:54 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ int	is_builtin(t_command *cmd)
 	return (0);
 }
 
-int	backup_fds(t_minish *msh)
+int	backup_fds(t_msh *msh)
 {
 	msh->saved_fd[0] = dup(STDIN_FILENO);
 	if (msh->saved_fd[0] == -1)
@@ -133,7 +133,7 @@ int	backup_fds(t_minish *msh)
 	return (1);
 }
 
-void	restore_fds(t_minish *msh)
+void	restore_fds(t_msh *msh)
 {
 	if (msh->saved_fd[0] != -1)
 	{
@@ -211,8 +211,8 @@ int	apply_redirections(t_command *cmd)
 	return (1);
 }
 
-void	child_process(t_minish *msh, t_list *cmd_node, int input_fd,
-	int (*launcher)(t_minish *, t_command *))
+void	child_process(t_msh *msh, t_list *cmd_node, int input_fd,
+	int (*launcher)(t_msh *, t_command *))
 {
 	t_command	*cmd;
 	int			exit_code;
@@ -260,8 +260,8 @@ int	parent_process(t_list *cmd_node, pid_t pid, int input_fd)
 	return (input_fd);
 }
 
-int	launch_process(t_minish *msh, t_list *cmd_node,
-		int (*launcher)(t_minish *, t_command *))
+int	launch_process(t_msh *msh, t_list *cmd_node,
+		int (*launcher)(t_msh *, t_command *))
 {
 	static int			input_fd = STDIN_FILENO;
 	t_command			*cmd;
@@ -397,7 +397,7 @@ int	get_exec_error(char *path, char **argv)
 	return (0);
 }
 
-int	launch_executable(t_minish *msh, t_command *cmd)
+int	launch_executable(t_msh *msh, t_command *cmd)
 {
 	char	**envp;
 	char	**argv;
@@ -448,7 +448,7 @@ int	wait_pipeline(pid_t last_pid, int num_commands)
 	return (last_status);
 }
 
-int	execute_pipeline(t_minish *msh, int num_commands)
+int	execute_pipeline(t_msh *msh, int num_commands)
 {
 	t_list		*cmd_list;
 	t_command	*cmd;
@@ -482,7 +482,7 @@ int	wait_single(pid_t pid)
 	return (status);
 }
 
-int	execute_single(t_minish *msh)
+int	execute_single(t_msh *msh)
 {
 	t_command	*cmd;
 	int			status;
@@ -508,7 +508,7 @@ int	execute_single(t_minish *msh)
 	return (status);
 }
 
-int	execute_commands(t_minish *msh)
+int	execute_commands(t_msh *msh)
 {
 	int	num_commands;
 	int	status;
@@ -524,7 +524,7 @@ int	execute_commands(t_minish *msh)
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_minish	msh;
+	t_msh	msh;
 
 	(void)argc;
 	(void)argv;

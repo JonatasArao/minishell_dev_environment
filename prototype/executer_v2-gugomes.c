@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executer_v2-gugomes.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 13:13:50 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/18 20:10:01 by marvin           ###   ########.fr       */
+/*   Updated: 2025/03/05 00:52:54 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,13 @@ char		**ft_lst_to_array(t_list *lst);
 char		*get_command_path(char *cmd, char **env);
 static void	handle_error(char **args, char *message, int exit_code);
 static void	execute_command(t_command *cmd, t_list *env_vars);
-static void	execute_pipeline(t_list *commands, t_minish *msh);
+static void	execute_pipeline(t_list *commands, t_msh *msh);
 int			open_file(const char *filepath, int flags);
 int			is_builtin(t_command *cmd);
-void		execute_builtin(t_command *cmd, t_minish *msh);
-void		builtin_cd(t_command *cmd, t_minish *msh);
+void		execute_builtin(t_command *cmd, t_msh *msh);
+void		builtin_cd(t_command *cmd, t_msh *msh);
 
-void	builtin_cd(t_command *cmd, t_minish *msh)
+void	builtin_cd(t_command *cmd, t_msh *msh)
 {
 	char	*path;
 	char	cwd[1024];
@@ -302,7 +302,7 @@ static void	handle_child(t_command *cmd, int pipe_fd[2], \
 	execute_command(cmd, env_vars);
 }
 
-void	execute_builtin(t_command *cmd, t_minish *msh)
+void	execute_builtin(t_command *cmd, t_msh *msh)
 {
 	char	*cmd_name;
 
@@ -353,7 +353,7 @@ char	*create_env_string(const char *key, const char *value)
 	return (result);
 }
 
-static void	execute_pipeline(t_list *commands, t_minish *msh)
+static void	execute_pipeline(t_list *commands, t_msh *msh)
 {
 	int		pipe_fd[2];
 	int		input_fd;
@@ -408,7 +408,7 @@ int	open_file(const char *filepath, int flags)
 
 int	main(int argc, char **argv, char **env)
 {
-	t_minish	msh;
+	t_msh	msh;
 
 	(void)argc;
 	(void)argv;

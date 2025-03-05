@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_v3-gugomes.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jarao-de <jarao-de@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 21:32:34 by marvin            #+#    #+#             */
-/*   Updated: 2025/02/26 11:23:01 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/03/05 00:52:54 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@
 // ===================== DECLARAÇÕES DE FUNÇÕES ======================
 static void setup_input(int input_fd);
 static void setup_output(int pipe_fd[2], int has_next);
-static void handle_child(t_minish *msh, int pipe_fd[2],
+static void handle_child(t_msh *msh, int pipe_fd[2],
 						 int input_fd, int has_next);
 static void handle_parent(int *input_fd, int pipe_fd[2], int has_next);
-static void process_command(t_minish *msh, int pipe_fd[2], int *input_fd);
+static void process_command(t_msh *msh, int pipe_fd[2], int *input_fd);
 static int apply_redirections(t_command *cmd);
 static char *get_command_path(char *cmd, t_list *env);
 static char *check_direct_path(char *cmd);
@@ -36,7 +36,7 @@ static char **get_paths_from_env(t_list *env_list);
 static char *find_command_in_paths(char *cmd, char **paths);
 
 // ===================== IMPLEMENTAÇÃO DO PIPELINE ======================
-static void execute_pipeline(t_minish *msh)
+static void execute_pipeline(t_msh *msh)
 {
 	int pipe_fd[2];
 	int input_fd;
@@ -56,7 +56,7 @@ static void execute_pipeline(t_minish *msh)
 		close(input_fd);
 }
 
-static void process_command(t_minish *msh, int pipe_fd[2], int *input_fd)
+static void process_command(t_msh *msh, int pipe_fd[2], int *input_fd)
 {
 	int has_next;
 	pid_t pid;
@@ -100,7 +100,7 @@ static void setup_output(int pipe_fd[2], int has_next)
 	}
 }
 
-static void handle_child(t_minish *msh, int pipe_fd[2], int input_fd, int has_next)
+static void handle_child(t_msh *msh, int pipe_fd[2], int input_fd, int has_next)
 {
 	t_command *cmd;
 
@@ -290,7 +290,7 @@ static int is_builtin(t_command *cmd)
 
 int main(int argc, char **argv, char **envp)
 {
-	t_minish msh;
+	t_msh msh;
 
 	(void)argc;
 	(void)argv;

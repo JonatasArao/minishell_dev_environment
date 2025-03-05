@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:17:31 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/03/05 00:52:54 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/03/05 04:31:46 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,11 +231,11 @@ void	child_process(t_msh *msh, t_list *cmd_node, int input_fd,
 	}
 	if (!apply_redirections(cmd))
 	{
-		destroy_minishell(msh);
+		destroy_minishell();
 		exit(1);
 	}
 	exit_code = launcher(msh, cmd);
-	destroy_minishell(msh);
+	destroy_minishell();
 	exit(exit_code);
 }
 
@@ -542,6 +542,6 @@ int	main(int argc, char **argv, char **envp)
 			add_history(msh.input);
 		free_minishell_loop(&msh);
 	}
-	destroy_minishell(&msh);
+	destroy_minishell();
 	return (0);
 }

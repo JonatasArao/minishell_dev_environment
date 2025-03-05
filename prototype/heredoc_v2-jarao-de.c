@@ -6,7 +6,7 @@
 /*   By: jarao-de <jarao-de@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/01 01:54:11 by jarao-de          #+#    #+#             */
-/*   Updated: 2025/03/05 00:52:54 by jarao-de         ###   ########.fr       */
+/*   Updated: 2025/03/05 04:31:46 by jarao-de         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,7 +256,7 @@ int	main(int argc, char **argv, char **envp)
 		close(doc_fd);
 		free(input);
 	}
-	destroy_minishell(&msh);
+	destroy_minishell();
 	rl_clear_history();
 	return (0);
 }
